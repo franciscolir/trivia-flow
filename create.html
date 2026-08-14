@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Crear Trivia - TriviaFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: { extend: {
+    colors: {
+      "primary": "#630ed4", "tertiary-fixed-dim": "#ffb2b7", "background": "#f7f9fb",
+      "inverse-surface": "#2d3133", "tertiary-fixed": "#ffdadb", "on-primary": "#ffffff",
+      "on-secondary-fixed-variant": "#005236", "on-secondary-container": "#00714d",
+      "secondary-container": "#6cf8bb", "surface-container": "#eceef0", "on-secondary-fixed": "#002113",
+      "tertiary-container": "#c81a42", "surface-bright": "#f7f9fb", "primary-fixed-dim": "#d2bbff",
+      "surface-container-high": "#e6e8ea", "surface-container-lowest": "#ffffff", "secondary": "#006c49",
+      "on-secondary": "#ffffff", "secondary-fixed": "#6ffbbe", "on-error-container": "#93000a",
+      "error": "#ba1a1a", "on-surface": "#191c1e", "surface-dim": "#d8dadc", "primary-container": "#7c3aed",
+      "inverse-on-surface": "#eff1f3", "on-primary-container": "#ede0ff", "on-tertiary": "#ffffff",
+      "on-background": "#191c1e", "surface-tint": "#732ee4", "secondary-fixed-dim": "#4edea3",
+      "on-error": "#ffffff", "on-tertiary-fixed": "#40000d", "inverse-primary": "#d2bbff",
+      "on-primary-fixed": "#25005a", "outline-variant": "#ccc3d8", "surface": "#f7f9fb",
+      "error-container": "#ffdad6", "surface-container-highest": "#e0e3e5", "on-tertiary-container": "#ffdedf",
+      "tertiary": "#a0002f", "on-surface-variant": "#4a4455", "on-tertiary-fixed-variant": "#92002a",
+      "surface-variant": "#e0e3e5", "on-primary-fixed-variant": "#5a00c6", "surface-container-low": "#f2f4f6",
+      "outline": "#7b7487", "primary-fixed": "#eaddff"
+    },
+    borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+    spacing: { sm: "12px", xs: "4px", "margin-mobile": "20px", "margin-desktop": "auto", md: "16px", gutter: "16px", lg: "24px", xl: "32px", base: "8px" },
+    fontFamily: { "body-md": ["Plus Jakarta Sans"], "display": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"] },
+    fontSize: {
+      "body-md": ["16px", { lineHeight: "24px", fontWeight: "500" }],
+      "display": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "800" }],
+      "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "700" }],
+      "headline-md": ["24px", { lineHeight: "32px", fontWeight: "700" }],
+      "body-lg": ["18px", { lineHeight: "28px", fontWeight: "500" }],
+      "label-sm": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700" }],
+      "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "600" }]
+    }
+  }}
+};
+</script>
+<style>
+  .custom-shadow { box-shadow: 0px 10px 25px rgba(124, 58, 237, 0.08); }
+  .input-ghost { background: #f2f4f6; border-color: transparent; border-radius: 0.75rem; }
+  .input-ghost:focus { border-color: #630ed4; background: #ffffff; outline: none; box-shadow: 0 0 0 3px rgba(99, 14, 212, 0.12); }
+  .btn-primary { background: #630ed4; color: #ffffff; border-radius: 0.75rem; box-shadow: 0 2px 0 0 rgba(90, 12, 192, 1); transition: all 0.1s; }
+  .btn-primary:active { box-shadow: none; transform: translateY(2px); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+</style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col antialiased">
+<header class="w-full sticky top-0 z-50 shadow-sm bg-surface dark:bg-inverse-surface h-16">
+  <div class="max-w-7xl mx-auto px-lg flex justify-between items-center h-full">
+    <div class="flex items-center gap-md">
+      <a class="font-display text-headline-md text-primary dark:text-primary-fixed-dim hover:opacity-90 transition-opacity" href="index.html">TriviaFlow</a>
+    </div>
+    <nav class="hidden md:flex items-center gap-lg h-full">
+      <a class="font-body-md text-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container px-sm rounded-md py-1" href="index.html">Home</a>
+      <a class="font-body-md text-body-md text-primary dark:text-primary-fixed-dim border-b-2 border-primary pb-1 font-bold h-full flex items-center mt-1" href="create.html">Crear</a>
+    </nav>
+    <div class="flex items-center gap-sm">
+      <button data-login-btn class="px-md py-sm rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-[0_2px_0_0_rgba(90,12,192,1)] active:shadow-none active:translate-y-[2px] transition-all">Iniciar sesión</button>
+      <div data-user-menu class="hidden flex items-center gap-sm">
+        <button data-signout-btn class="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all" title="Cerrar sesión">
+          <span class="material-symbols-outlined">logout</span>
+        </button>
+        <button class="ml-xs w-9 h-9 rounded-full overflow-hidden border border-outline-variant active:scale-95 transition-transform bg-surface-container">
+          <img class="w-full h-full object-cover" alt="Foto de perfil"/>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Auth gate -->
+<div id="auth-gate" class="hidden flex-grow flex items-center justify-center p-margin-mobile">
+  <div class="max-w-md w-full bg-surface-container-lowest rounded-xl custom-shadow border border-surface-variant p-xl text-center">
+    <div class="w-16 h-16 rounded-full bg-primary-container flex items-center justify-center mx-auto mb-md">
+      <span class="material-symbols-outlined text-primary text-[32px]" style="font-variation-settings: 'FILL' 1;">lock</span>
+    </div>
+    <h1 class="font-headline-lg text-headline-lg text-on-surface">Inicia sesión para crear</h1>
+    <p class="font-body-md text-body-md text-on-surface-variant mt-sm">Usa tu cuenta de Google. Tus trivias quedarán asociadas a tu perfil.</p>
+    <button id="gate-login" class="mt-lg w-full flex items-center justify-center gap-sm bg-surface-container-low rounded-xl px-lg py-md font-label-md text-label-md text-on-surface hover:bg-surface-container transition-colors border border-surface-variant">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-5 h-5"/>
+      Continuar con Google
+    </button>
+  </div>
+</div>
+
+<main id="create-content" class="hidden flex-grow w-full max-w-7xl mx-auto p-margin-mobile md:px-lg py-xl">
+  <header class="mb-xl flex items-center justify-between">
+    <div>
+      <h1 class="font-headline-lg text-headline-lg text-on-surface">Create Trivia</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-xs">Craft your next viral quiz.</p>
+    </div>
+    <div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container border-2 border-surface-container-high shrink-0">
+      <img class="w-full h-full object-cover" alt="Foto de perfil"/>
+    </div>
+  </header>
+
+  <form class="grid grid-cols-1 lg:grid-cols-12 gap-md items-start" id="create-form">
+
+    <!-- Columna izquierda: info + preguntas -->
+    <div class="lg:col-span-8 flex flex-col gap-md">
+
+      <!-- Trivia info -->
+      <section class="bg-surface-container-lowest rounded-xl p-lg custom-shadow relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary-container opacity-50"></div>
+        <h2 class="font-label-md text-label-md text-on-surface-variant mb-md flex items-center gap-xs">
+          <span class="material-symbols-outlined text-[18px]">emoji_events</span> Información de la trivia
+        </h2>
+        <div class="flex flex-col gap-md">
+          <div>
+            <label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="trivia-title">Título</label>
+            <input id="trivia-title" class="w-full input-ghost font-body-lg text-body-lg p-md" placeholder="¿Cómo se llamará tu trivia?" type="text"/>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+            <div>
+              <label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="trivia-category">Categoría</label>
+              <select id="trivia-category" class="w-full input-ghost font-body-md text-body-md py-sm px-md"></select>
+            </div>
+            <div>
+              <label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="trivia-difficulty">Dificultad</label>
+              <select id="trivia-difficulty" class="w-full input-ghost font-body-md text-body-md py-sm px-md">
+                <option>Easy</option>
+                <option selected>Medium</option>
+                <option>Hard</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs">Portada (Opcional)</label>
+            <div id="cover-dropzone" class="border-2 border-dashed border-outline-variant rounded-xl p-lg flex flex-col items-center justify-center text-center cursor-pointer hover:bg-surface-container-low hover:border-primary transition-colors group">
+              <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center mb-sm group-hover:bg-primary-container transition-colors">
+                <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">upload_file</span>
+              </div>
+              <p class="font-label-md text-label-md text-on-surface">Haz clic para subir o arrastra una imagen</p>
+              <p class="font-label-sm text-label-sm text-on-surface-variant mt-xs">SVG, PNG, JPG o GIF (máx. 800x400px)</p>
+            </div>
+            <div id="cover-preview" class="hidden relative mt-sm rounded-xl overflow-hidden">
+              <img id="cover-img" class="w-full max-h-48 object-cover rounded-xl border border-surface-container-high" alt="Portada"/>
+              <button type="button" id="cover-remove" class="absolute top-sm right-sm w-9 h-9 rounded-full bg-surface-container-lowest shadow-md flex items-center justify-center text-error hover:bg-error-container transition-colors">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+            <input id="cover-input" type="file" accept="image/*" class="hidden"/>
+          </div>
+        </div>
+      </section>
+
+      <!-- Question builder -->
+      <section class="bg-surface-container-lowest rounded-xl p-lg custom-shadow">
+        <h2 class="font-label-md text-label-md text-on-surface-variant mb-md flex items-center gap-xs">
+          <span class="material-symbols-outlined text-[18px]">list_alt</span> Respuesta
+        </h2>
+
+        <div class="flex flex-col gap-md">
+          <div>
+            <label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="q-text">Texto de la pregunta</label>
+            <textarea id="q-text" class="w-full input-ghost font-body-lg text-body-lg p-md resize-none" rows="3" placeholder="¿Cuál es la capital de...?"></textarea>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs">
+              <span class="material-symbols-outlined text-[18px]">playlist_add_check</span> Opciones
+            </label>
+            <p class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-sm py-xs rounded-full">Marca la correcta</p>
+          </div>
+
+          <div id="q-options" class="flex flex-col gap-sm"></div>
+
+          <button type="button" id="q-add-option" class="w-full py-md border-2 border-dashed border-surface-container-high rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-low hover:text-primary transition-colors flex items-center justify-center gap-xs">
+            <span class="material-symbols-outlined text-[20px]">add</span> Agregar opción
+          </button>
+
+          <div class="flex items-center gap-sm">
+            <button type="button" id="q-save" class="btn-primary flex items-center justify-center gap-sm px-lg py-md font-label-md text-label-md flex-1">
+              <span class="material-symbols-outlined text-[20px]">save</span> <span id="q-save-label">Guardar pregunta</span>
+            </button>
+            <button type="button" id="q-cancel" class="hidden px-lg py-md text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-low rounded-xl transition-colors">Cancelar</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Columna derecha: preguntas guardadas + acciones -->
+    <aside class="lg:col-span-4 flex flex-col gap-md">
+      <section class="bg-surface-container-lowest rounded-xl p-lg custom-shadow">
+        <div class="flex items-center justify-between mb-md">
+          <h3 class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs">
+            <span class="material-symbols-outlined text-[18px]">quiz</span> Preguntas (<span id="q-count">0</span>)
+          </h3>
+        </div>
+        <div id="questions-list" class="flex flex-col gap-sm"></div>
+        <p id="questions-empty" class="font-body-md text-body-md text-on-surface-variant text-center py-md">Aún no has agregado preguntas.</p>
+      </section>
+
+      <section class="bg-surface-container-lowest rounded-xl p-lg custom-shadow lg:sticky lg:top-lg">
+        <div class="grid grid-cols-2 gap-md">
+          <div>
+            <label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="trivia-time">Tiempo (seg)</label>
+            <div class="flex items-center gap-sm bg-surface-container-low rounded-xl px-md py-sm focus-within:ring-2 focus-within:ring-primary transition-colors">
+              <span class="material-symbols-outlined text-outline-variant">timer</span>
+              <input id="trivia-time" class="w-full bg-transparent border-none focus:ring-0 font-body-md text-body-md p-0" max="60" min="5" type="number" value="15"/>
+            </div>
+          </div>
+          <div>
+            <label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="trivia-points">Puntos</label>
+            <div class="flex items-center gap-sm bg-surface-container-low rounded-xl px-md py-sm focus-within:ring-2 focus-within:ring-primary transition-colors">
+              <span class="material-symbols-outlined text-outline-variant">military_tech</span>
+              <input id="trivia-points" class="w-full bg-transparent border-none focus:ring-0 font-body-md text-body-md p-0" min="10" step="10" type="number" value="100"/>
+            </div>
+          </div>
+        </div>
+        <p class="font-body-md text-body-md text-on-surface-variant mb-md mt-lg text-center">¿Listo para poner a prueba al mundo?</p>
+        <button id="publish-btn" class="w-full btn-primary flex items-center justify-center gap-sm font-label-md text-label-md text-lg py-3" type="button">
+          <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">rocket_launch</span> Publicar trivia
+        </button>
+        <p id="status-msg" class="hidden mt-sm font-label-md text-label-md text-center"></p>
+      </section>
+    </aside>
+  </form>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/firestore.js"></script>
+<script src="js/create.js"></script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Jugar - TriviaFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: { extend: {
+    colors: {
+      "primary": "#630ed4", "tertiary-fixed-dim": "#ffb2b7", "background": "#f7f9fb",
+      "inverse-surface": "#2d3133", "tertiary-fixed": "#ffdadb", "on-primary": "#ffffff",
+      "on-secondary-fixed-variant": "#005236", "on-secondary-container": "#00714d",
+      "secondary-container": "#6cf8bb", "surface-container": "#eceef0", "on-secondary-fixed": "#002113",
+      "tertiary-container": "#c81a42", "surface-bright": "#f7f9fb", "primary-fixed-dim": "#d2bbff",
+      "surface-container-high": "#e6e8ea", "surface-container-lowest": "#ffffff", "secondary": "#006c49",
+      "on-secondary": "#ffffff", "secondary-fixed": "#6ffbbe", "on-error-container": "#93000a",
+      "error": "#ba1a1a", "on-surface": "#191c1e", "surface-dim": "#d8dadc", "primary-container": "#7c3aed",
+      "inverse-on-surface": "#eff1f3", "on-primary-container": "#ede0ff", "on-tertiary": "#ffffff",
+      "on-background": "#191c1e", "surface-tint": "#732ee4", "secondary-fixed-dim": "#4edea3",
+      "on-error": "#ffffff", "on-tertiary-fixed": "#40000d", "inverse-primary": "#d2bbff",
+      "on-primary-fixed": "#25005a", "outline-variant": "#ccc3d8", "surface": "#f7f9fb",
+      "error-container": "#ffdad6", "surface-container-highest": "#e0e3e5", "on-tertiary-container": "#ffdedf",
+      "tertiary": "#a0002f", "on-surface-variant": "#4a4455", "on-tertiary-fixed-variant": "#92002a",
+      "surface-variant": "#e0e3e5", "on-primary-fixed-variant": "#5a00c6", "surface-container-low": "#f2f4f6",
+      "outline": "#7b7487", "primary-fixed": "#eaddff"
+    },
+    borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+    spacing: { sm: "12px", xs: "4px", "margin-mobile": "20px", "margin-desktop": "auto", md: "16px", gutter: "16px", lg: "24px", xl: "32px", base: "8px" },
+    fontFamily: { "body-md": ["Plus Jakarta Sans"], "display": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"] },
+    fontSize: {
+      "body-md": ["16px", { lineHeight: "24px", fontWeight: "500" }],
+      "display": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "800" }],
+      "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "700" }],
+      "headline-md": ["24px", { lineHeight: "32px", fontWeight: "700" }],
+      "body-lg": ["18px", { lineHeight: "28px", fontWeight: "500" }],
+      "label-sm": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700" }],
+      "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "600" }]
+    }
+  }}
+};
+</script>
+<style>
+  .card-shadow { box-shadow: 0px 10px 25px rgba(124, 58, 237, 0.08); }
+  .btn-shadow { box-shadow: inset 0 -2px 0 0 rgba(0,0,0,0.15); }
+  .answer-chip { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+  .answer-chip:hover { transform: translateY(-2px); box-shadow: 0px 8px 20px rgba(124, 58, 237, 0.12); border-color: #7c3aed; }
+  .answer-chip:disabled { transform: none !important; box-shadow: none !important; cursor: default; }
+  .timer-circle { transition: stroke-dashoffset 1s linear, stroke 0.3s; transform: rotate(-90deg); transform-origin: 50% 50%; }
+  .btn-primary { background: #630ed4; color: #ffffff; border-radius: 0.75rem; box-shadow: 0 2px 0 0 rgba(90, 12, 192, 1); transition: all 0.1s; }
+  .btn-primary:active { box-shadow: none; transform: translateY(2px); }
+</style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased">
+<header class="w-full sticky top-0 z-50 shadow-sm bg-surface dark:bg-inverse-surface h-16">
+  <div class="max-w-7xl mx-auto px-lg flex justify-between items-center h-full">
+    <a class="font-display text-headline-md text-primary dark:text-primary-fixed-dim hover:opacity-90 transition-opacity" href="index.html">TriviaFlow</a>
+    <nav class="hidden md:flex items-center gap-lg h-full">
+      <a class="font-body-md text-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container px-sm rounded-md py-1" href="index.html">Home</a>
+      <a class="font-body-md text-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container px-sm rounded-md py-1" href="create.html">Crear</a>
+    </nav>
+    <a href="index.html" class="px-md py-sm rounded-full bg-surface-container-low text-on-surface-variant font-label-md text-label-md hover:bg-surface-container transition-colors">Salir</a>
+  </div>
+</header>
+
+<!-- Cargando -->
+<div id="loading" class="flex-grow flex flex-col items-center justify-center gap-sm p-margin-mobile">
+  <div class="w-12 h-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin"></div>
+  <p class="font-body-md text-body-md text-on-surface-variant">Cargando trivia...</p>
+</div>
+
+<!-- Error -->
+<div id="error" class="hidden flex-grow flex flex-col items-center justify-center gap-sm p-margin-mobile text-center">
+  <span class="material-symbols-outlined text-[48px] text-outline-variant">search_off</span>
+  <h1 class="font-headline-md text-headline-md text-on-surface">Trivia no encontrada</h1>
+  <a href="index.html" class="btn-primary px-lg py-md font-label-md text-label-md mt-sm">Volver al inicio</a>
+</div>
+
+<!-- Juego -->
+<main id="game" class="hidden flex-grow w-full max-w-[1024px] mx-auto px-margin-mobile md:px-lg py-xl flex flex-col gap-xl">
+  <div class="flex justify-between items-end mb-sm">
+    <div class="flex flex-col gap-xs">
+      <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider" id="round-label">Round 1</span>
+      <h2 class="font-headline-md text-headline-md text-on-surface">Pregunta <span id="q-num">1</span> <span class="text-on-surface-variant text-body-lg font-normal">/ <span id="q-total">10</span></span></h2>
+    </div>
+    <div class="flex items-center gap-lg">
+      <div class="bg-gradient-to-br from-primary to-primary-container rounded-xl px-lg py-sm shadow-sm flex items-center gap-sm">
+        <span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+        <span class="font-headline-md text-headline-md text-on-primary" id="score">0</span>
+      </div>
+      <div class="relative w-16 h-16 flex items-center justify-center">
+        <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
+          <circle class="stroke-surface-container-highest" cx="50" cy="50" fill="none" r="45" stroke-width="8"></circle>
+          <circle id="timer-circle" class="stroke-secondary-container timer-circle" cx="50" cy="50" fill="none" r="45" stroke-dasharray="283" stroke-dashoffset="0" stroke-linecap="round" stroke-width="8"></circle>
+        </svg>
+        <span class="font-headline-md text-headline-md text-secondary relative z-10" id="timer-text">15</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-full h-4 rounded-full bg-primary/10 overflow-hidden relative">
+    <div id="progress-bar" class="h-full rounded-full bg-primary absolute left-0 top-0 transition-all duration-500 ease-out" style="width: 0%;"></div>
+  </div>
+
+  <div class="bg-surface-container-lowest rounded-xl p-xl md:p-12 card-shadow flex flex-col items-center justify-center min-h-[240px] border border-outline-variant/30 relative overflow-hidden text-center">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-primary/5 blur-3xl rounded-full pointer-events-none"></div>
+    <span id="category-chip" class="font-label-md text-label-md text-primary-container mb-md px-md py-xs rounded-full bg-primary/10 border border-primary/20"></span>
+    <img id="question-image" class="hidden max-h-48 rounded-xl mb-md object-cover border border-surface-container-high" alt="Imagen de la pregunta"/>
+    <h1 id="question-text" class="font-display text-2xl md:text-display text-on-surface text-center max-w-3xl leading-tight"></h1>
+  </div>
+
+  <div id="answers-grid" class="grid grid-cols-1 md:grid-cols-2 gap-gutter"></div>
+
+  <div class="flex justify-end mt-sm">
+    <button class="bg-surface-container-low text-on-surface-variant font-label-md text-label-md px-lg py-sm rounded-full hover:bg-surface-container-high transition-colors flex items-center gap-xs">
+      <span class="material-symbols-outlined text-[18px]">flag</span> Reportar problema
+    </button>
+  </div>
+</main>
+
+<!-- Resultados -->
+<div id="results" class="hidden flex-grow flex items-center justify-center p-margin-mobile">
+  <div class="max-w-md w-full bg-surface-container-lowest rounded-xl card-shadow border border-outline-variant/30 p-xl text-center">
+    <div class="w-20 h-20 rounded-full bg-primary-container flex items-center justify-center mx-auto mb-md">
+      <span class="material-symbols-outlined text-primary text-[40px]" style="font-variation-settings: 'FILL' 1;">trophy</span>
+    </div>
+    <h1 class="font-headline-lg text-headline-lg text-on-surface">¡Trivia completada!</h1>
+    <div class="flex items-center justify-center gap-sm mt-md">
+      <span class="material-symbols-outlined text-[28px] text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+      <span class="font-display text-5xl text-on-surface" id="final-score">0</span>
+    </div>
+    <p class="font-body-md text-body-md text-on-surface-variant mt-sm">Acertaste <span id="final-correct" class="font-bold text-primary">0</span> de <span id="final-total" class="font-bold">0</span> preguntas
+      <span class="block mt-xs">Precisión: <span id="final-accuracy" class="font-bold text-primary">0%</span></span></p>
+    <div class="flex flex-col gap-sm mt-lg">
+      <button id="play-again" class="btn-primary px-lg py-md font-label-md text-label-md">Jugar de nuevo</button>
+      <a href="index.html" class="px-lg py-md text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-low rounded-xl transition-colors">Volver al inicio</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/firestore.js"></script>
+<script src="js/play.js"></script>
+</body>
+</html>

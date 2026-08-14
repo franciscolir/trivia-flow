@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TriviaFlow - Master the Flow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: { extend: {
+    colors: {
+      "primary": "#630ed4", "tertiary-fixed-dim": "#ffb2b7", "background": "#f7f9fb",
+      "inverse-surface": "#2d3133", "tertiary-fixed": "#ffdadb", "on-primary": "#ffffff",
+      "on-secondary-fixed-variant": "#005236", "on-secondary-container": "#00714d",
+      "secondary-container": "#6cf8bb", "surface-container": "#eceef0", "on-secondary-fixed": "#002113",
+      "tertiary-container": "#c81a42", "surface-bright": "#f7f9fb", "primary-fixed-dim": "#d2bbff",
+      "surface-container-high": "#e6e8ea", "surface-container-lowest": "#ffffff", "secondary": "#006c49",
+      "on-secondary": "#ffffff", "secondary-fixed": "#6ffbbe", "on-error-container": "#93000a",
+      "error": "#ba1a1a", "on-surface": "#191c1e", "surface-dim": "#d8dadc", "primary-container": "#7c3aed",
+      "inverse-on-surface": "#eff1f3", "on-primary-container": "#ede0ff", "on-tertiary": "#ffffff",
+      "on-background": "#191c1e", "surface-tint": "#732ee4", "secondary-fixed-dim": "#4edea3",
+      "on-error": "#ffffff", "on-tertiary-fixed": "#40000d", "inverse-primary": "#d2bbff",
+      "on-primary-fixed": "#25005a", "outline-variant": "#ccc3d8", "surface": "#f7f9fb",
+      "error-container": "#ffdad6", "surface-container-highest": "#e0e3e5", "on-tertiary-container": "#ffdedf",
+      "tertiary": "#a0002f", "on-surface-variant": "#4a4455", "on-tertiary-fixed-variant": "#92002a",
+      "surface-variant": "#e0e3e5", "on-primary-fixed-variant": "#5a00c6", "surface-container-low": "#f2f4f6",
+      "outline": "#7b7487", "primary-fixed": "#eaddff"
+    },
+    borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+    spacing: { sm: "12px", xs: "4px", "margin-mobile": "20px", "margin-desktop": "auto", md: "16px", gutter: "16px", lg: "24px", xl: "32px", base: "8px" },
+    fontFamily: { "body-md": ["Plus Jakarta Sans"], "display": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"] },
+    fontSize: {
+      "body-md": ["16px", { lineHeight: "24px", fontWeight: "500" }],
+      "display": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "800" }],
+      "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "700" }],
+      "headline-md": ["24px", { lineHeight: "32px", fontWeight: "700" }],
+      "body-lg": ["18px", { lineHeight: "28px", fontWeight: "500" }],
+      "label-sm": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700" }],
+      "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "600" }]
+    }
+  }}
+};
+</script>
+<style>
+  .card-shadow { box-shadow: 0px 10px 25px rgba(124, 58, 237, 0.08); }
+  .trivia-card { transition: transform 0.2s cubic-bezier(0.4,0,0.2,1), box-shadow 0.2s; }
+  .trivia-card:hover { transform: translateY(-4px); box-shadow: 0px 18px 35px rgba(124, 58, 237, 0.15); }
+  .gradient-fallback { background: linear-gradient(135deg, #7c3aed, #6cf8bb); }
+</style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased">
+<header class="w-full sticky top-0 z-50 shadow-sm bg-surface dark:bg-inverse-surface h-16">
+  <div class="max-w-7xl mx-auto px-lg flex justify-between items-center h-full">
+    <div class="flex items-center gap-md">
+      <a class="font-display text-headline-md text-primary dark:text-primary-fixed-dim hover:opacity-90 transition-opacity" href="index.html">TriviaFlow</a>
+      <div class="hidden md:flex items-center bg-surface-container-low rounded-full px-md py-xs ml-sm group hover:bg-surface-container transition-colors">
+        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors text-[20px]">search</span>
+        <input id="search-input" class="bg-transparent border-none focus:ring-0 text-body-md text-on-surface w-40 placeholder:text-on-surface-variant/50" placeholder="Buscar..." type="text"/>
+      </div>
+    </div>
+    <nav class="hidden md:flex items-center gap-lg h-full">
+      <a class="font-body-md text-body-md text-primary dark:text-primary-fixed-dim border-b-2 border-primary pb-1 font-bold h-full flex items-center mt-1" href="index.html">Home</a>
+      <a class="font-body-md text-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container px-sm rounded-md py-1" href="create.html">Crear</a>
+    </nav>
+    <div class="flex items-center gap-sm">
+      <button data-login-btn class="px-md py-sm rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-[0_2px_0_0_rgba(90,12,192,1)] active:shadow-none active:translate-y-[2px] transition-all">Iniciar sesión</button>
+      <div data-user-menu class="hidden flex items-center gap-sm">
+        <button data-signout-btn class="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all" title="Cerrar sesión">
+          <span class="material-symbols-outlined">logout</span>
+        </button>
+        <button class="ml-xs w-9 h-9 rounded-full overflow-hidden border border-outline-variant active:scale-95 transition-transform bg-surface-container">
+          <img class="w-full h-full object-cover" alt="Foto de perfil"/>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="flex-grow w-full max-w-7xl mx-auto px-margin-mobile md:px-lg py-xl flex flex-col gap-xl">
+  <section class="flex flex-col md:flex-row md:items-center justify-between gap-lg">
+    <div>
+      <h1 class="font-display text-3xl md:text-display text-on-surface leading-tight">Pon a prueba tus<br/><span class="text-primary">conocimientos</span></h1>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-sm">Explora trivias creadas por la comunidad o crea la tuya.</p>
+    </div>
+    <a href="create.html" class="w-full md:w-auto flex items-center justify-center gap-sm btn-primary bg-primary text-on-primary rounded-xl font-label-md text-label-md px-lg py-md shadow-[0_2px_0_0_rgba(90,12,192,1)] active:shadow-none active:translate-y-[2px] transition-all">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+      Crear trivia
+    </a>
+  </section>
+
+  <div id="trivias-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg"></div>
+
+  <div id="empty-state" class="hidden text-center py-xl">
+    <span class="material-symbols-outlined text-[48px] text-outline-variant">quiz</span>
+    <h2 class="font-headline-md text-headline-md text-on-surface mt-sm">Aún no hay trivias</h2>
+    <p class="font-body-md text-body-md text-on-surface-variant mt-xs">Sé el primero en crear una y compartirla con la comunidad.</p>
+  </div>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/firestore.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>
