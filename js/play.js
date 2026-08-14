@@ -58,6 +58,7 @@ function startTimer() {
   renderTimer();
   game.timerId = setInterval(() => {
     game.timeLeft--;
+    playTick();
     renderTimer();
     if (game.timeLeft <= 0) {
       stopTimer();
@@ -113,6 +114,9 @@ function selectOption(i) {
   if (correct) {
     game.score += game.trivia.points || 100;
     game.correct++;
+    playCorrect();
+  } else {
+    playWrong();
   }
   $g.score.textContent = formatNumber(game.score);
 
@@ -153,6 +157,7 @@ function revealAnswer(_) {
   if (game.answered) return;
   game.answered = true;
   stopTimer();
+  playWrong();
   $$('.answer-chip', $g.answersGrid).forEach(btn => {
     btn.disabled = true;
     const idx = +btn.dataset.index;
@@ -185,6 +190,7 @@ function advance() {
 // ---------- Resultados ----------
 function endGame() {
   stopTimer();
+  playFinish();
   $g.game.classList.add('hidden');
   $g.results.classList.remove('hidden');
   $g.finalScore.textContent = formatNumber(game.score);
