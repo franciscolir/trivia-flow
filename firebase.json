@@ -1,0 +1,13 @@
+{
+  "hosting": {
+    "public": ".",
+    "cleanUrls": true,
+    "ignore": [
+      "firebase.json",
+      ".git/**",
+      "**/.*",
+      "**/node_modules/**",
+      "seed.html"
+    ]
+  }
+}
