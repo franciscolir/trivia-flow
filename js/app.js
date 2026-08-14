@@ -6,7 +6,6 @@
 const app = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
-const storage = firebase.storage();
 
 // ---------- Helpers de DOM ----------
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -44,36 +43,31 @@ async function signOutUser() {
   }
 }
 
-// ---------- Storage ----------
-async function uploadImage(dataUrl, folder, name) {
-  const ref = storage.ref(`${folder}/${name}-${Date.now()}`);
-  const blob = dataURLToBlob(dataUrl);
-  await ref.put(blob, { contentType: 'image/jpeg' });
-  return ref.getDownloadURL();
-}
-
 // ---------- Utilidades ----------
-function dataURLToBlob(dataUrl) {
-  const [meta, base64] = dataUrl.split(',');
-  const mime = meta.match(/data:(.*?);/)[1];
-  const bin = atob(base64);
-  const arr = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
-  return new Blob([arr], { type: mime });
-}
-
-function fileToDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
 function formatNumber(n) {
   return n.toLocaleString('en-US');
 }
+
+// ---------- Modo claro / oscuro ----------
+function initTheme() {
+  const saved = localStorage.getItem('triviaflow_theme');
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const dark = saved ? saved === 'dark' : prefersDark;
+  document.documentElement.classList.toggle('dark', dark);
+  const icon = $('#theme-toggle .material-symbols-outlined');
+  if (icon) icon.textContent = dark ? 'light_mode' : 'dark_mode';
+}
+
+function toggleTheme() {
+  const dark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem('triviaflow_theme', dark ? 'dark' : 'light');
+  const icon = $('#theme-toggle .material-symbols-outlined');
+  if (icon) icon.textContent = dark ? 'light_mode' : 'dark_mode';
+}
+
+const themeToggle = $('#theme-toggle');
+if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+initTheme();
 
 function shuffleArray(arr) {
   const a = arr.slice();

@@ -1,0 +1,57 @@
+/* ============================================================
+   Modo oscuro (html.dark) — overrides de tokens de superficie
+   ============================================================ */
+
+html.dark {
+  color-scheme: dark;
+}
+
+/* Fondos */
+html.dark .bg-background { background-color: #17191b; }
+html.dark .bg-surface { background-color: #1c1f21; }
+html.dark .bg-surface-container-lowest { background-color: #2a2e30; }
+html.dark .bg-surface-container-low { background-color: #222527; }
+html.dark .bg-surface-container { background-color: #2e3234; }
+html.dark .bg-surface-container-high { background-color: #34383b; }
+html.dark .bg-surface-container-highest { background-color: #383c3f; }
+html.dark .bg-surface-bright { background-color: #303437; }
+html.dark .bg-surface-variant { background-color: #383c3f; }
+html.dark .bg-primary-container { background-color: #3d1f75; }
+html.dark .bg-error-container { background-color: #4a1414; }
+html.dark .bg-secondary-container { background-color: #2e6b55; }
+html.dark .bg-primary\/10 { background-color: rgba(210, 187, 255, 0.12); }
+html.dark .bg-white { background-color: #2a2e30; }
+html.dark .bg-inverse-surface { background-color: #2d3133; }
+
+/* Textos */
+html.dark .text-on-surface { color: #eceff1; }
+html.dark .text-on-surface-variant { color: #a8afb6; }
+html.dark .text-on-background { color: #eceff1; }
+html.dark .text-primary { color: #d2bbff; }
+html.dark .text-primary-container { color: #d2bbff; }
+html.dark .text-on-primary-container { color: #eaddff; }
+html.dark .text-outline { color: #8f96a0; }
+html.dark .text-outline-variant { color: #3a3f42; }
+html.dark .text-on-error-container { color: #ffdad6; }
+html.dark .text-on-secondary-container { color: #a7f3d4; }
+html.dark .text-on-primary { color: #ffffff; }
+html.dark .text-on-secondary { color: #ffffff; }
+
+/* Bordes */
+html.dark .border-outline-variant { border-color: #3a3f42; }
+html.dark .border-surface-container-high { border-color: #34383b; }
+html.dark .border-surface-container-highest { border-color: #383c3f; }
+html.dark .border-surface-variant { border-color: #383c3f; }
+
+/* Clases personalizadas por página */
+html.dark .input-ghost { background: #222527; border-color: transparent; color: #eceff1; }
+html.dark .input-ghost:focus { background: #2a2e30; border-color: #d2bbff; color: #eceff1; }
+html.dark .btn-primary { background: #7c3aed; color: #ffffff; box-shadow: 0 2px 0 0 rgba(210, 187, 255, 0.35); }
+
+/* Anillos de foco y temporizador */
+html.dark .focus\:ring-primary:focus { --tw-ring-color: #d2bbff; }
+html.dark .peer-checked\:bg-surface-container-lowest { background-color: #2a2e30; }
+html.dark .stroke-surface-container-highest { stroke: #383c3f; }
+
+/* Placeholder más visible en oscuro */
+html.dark ::placeholder { color: #8f96a0; }

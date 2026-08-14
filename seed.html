@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Seed - TriviaFlow</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+  body { font-family: "Plus Jakarta Sans", sans-serif; }
+  .btn-primary { background: #630ed4; color: #fff; border-radius: 0.75rem; box-shadow: 0 2px 0 0 rgba(90,12,192,1); transition: all 0.1s; }
+  .btn-primary:active { box-shadow: none; transform: translateY(2px); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+</style>
+</head>
+<body class="bg-[#f7f9fb] text-[#191c1e] min-h-screen flex items-center justify-center p-6">
+<div class="w-full max-w-md bg-white rounded-xl shadow-[0px_10px_25px_rgba(124,58,237,0.08)] border border-[#e0e3e5] p-8 text-center">
+  <div class="w-16 h-16 rounded-full bg-[#7c3aed] flex items-center justify-center mx-auto mb-4">
+    <span class="material-symbols-outlined text-white text-[32px]" style="font-variation-settings: 'FILL' 1;">database</span>
+  </div>
+  <h1 class="text-2xl font-extrabold text-[#191c1e]">Semillas de ejemplo</h1>
+  <p class="text-[#4a4455] mt-2 mb-6">Este script crea la colección <code class="bg-[#eceef0] px-1.5 py-0.5 rounded font-mono text-sm">trivias</code> en Firestore con trivias de demostración.</p>
+
+  <button id="login-btn" class="w-full btn-primary py-3 font-semibold mb-3">Iniciar sesión con Google</button>
+  <button id="seed-btn" class="w-full py-3 font-semibold border-2 border-[#e0e3e5] rounded-xl hover:bg-[#f2f4f6] disabled:opacity-50" disabled>Generar trivias de ejemplo</button>
+
+  <p id="status" class="mt-4 text-sm font-medium text-[#4a4455]"></p>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script>
+const app = firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+const $ = s => document.querySelector(s);
+const status = $('#status');
+const loginBtn = $('#login-btn');
+const seedBtn = $('#seed-btn');
+
+const demoTrivias = [
+  {
+    title: 'Cocina del mundo',
+    category: 'General',
+    difficulty: 'Medium',
+    timeLimit: 15,
+    points: 100,
+    questions: [
+      { text: '¿Cuál es el ingrediente principal del miso tradicional japonés?', options: [
+        { text: 'Extractos de algas', correct: false },
+        { text: 'Soja fermentada', correct: true },
+        { text: 'Bonito seco', correct: false },
+        { text: 'Edamame triturado', correct: false } ] },
+      { text: '¿Qué país es la cuna de la pasta fresca?', options: [
+        { text: 'Francia', correct: false },
+        { text: 'Italia', correct: true },
+        { text: 'España', correct: false },
+        { text: 'Grecia', correct: false } ] }
+    ]
+  },
+  {
+    title: 'Ciencia básica',
+    category: 'Ciencia',
+    difficulty: 'Hard',
+    timeLimit: 10,
+    points: 150,
+    questions: [
+      { text: '¿Qué símbolo químico corresponde al oro?', options: [
+        { text: 'Ag', correct: false },
+        { text: 'Au', correct: true },
+        { text: 'Go', correct: false },
+        { text: 'Or', correct: false } ] },
+      { text: '¿Cuál es el planeta más grande del sistema solar?', options: [
+        { text: 'Saturno', correct: false },
+        { text: 'Neptuno', correct: false },
+        { text: 'Júpiter', correct: true },
+        { text: 'Urano', correct: false } ] },
+      { text: '¿Cuántos planetas orbitan alrededor del Sol?', options: [
+        { text: '7', correct: false },
+        { text: '8', correct: true },
+        { text: '9', correct: false },
+        { text: '10', correct: false } ] }
+    ]
+  },
+  {
+    title: 'Historia rápida',
+    category: 'Historia',
+    difficulty: 'Easy',
+    timeLimit: 20,
+    points: 80,
+    questions: [
+      { text: '¿Quién llegó a América en 1492?', options: [
+        { text: 'Vasco da Gama', correct: false },
+        { text: 'Cristóbal Colón', correct: true },
+        { text: 'Magallanes', correct: false },
+        { text: 'Pizarro', correct: false } ] },
+      { text: '¿En qué año cayó el Muro de Berlín?', options: [
+        { text: '1985', correct: false },
+        { text: '1989', correct: true },
+        { text: '1991', correct: false },
+        { text: '1979', correct: false } ] }
+    ]
+  }
+];
+
+function setStatus(msg, color) {
+  status.textContent = msg;
+  status.style.color = color || '#4a4455';
+}
+
+async function seed() {
+  const user = auth.currentUser;
+  if (!user) { setStatus('Primero inicia sesión.', '#93000a'); return; }
+  seedBtn.disabled = true;
+  setStatus('Guardando trivias de ejemplo...', '#630ed4');
+  try {
+    for (const t of demoTrivias) {
+      await db.collection('trivias').add({
+        ...t,
+        status: 'published',
+        uid: user.uid,
+        userName: user.displayName || 'Anónimo',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+    setStatus('Listo. 3 trivias creadas en la colección "trivias". Vuelve a la página principal.', '#006c49');
+  } catch (err) {
+    console.error(err);
+    setStatus('Error: ' + err.message, '#93000a');
+    seedBtn.disabled = false;
+  }
+}
+
+auth.onAuthStateChanged(user => {
+  const authed = !!user;
+  loginBtn.classList.toggle('hidden', authed);
+  seedBtn.disabled = !authed;
+  if (authed) setStatus(`Sesión iniciada como ${user.displayName || user.email}.`, '#006c49');
+});
+
+loginBtn.addEventListener('click', async () => {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  try { await auth.signInWithPopup(provider); }
+  catch (err) { setStatus('No se pudo iniciar sesión: ' + err.message, '#93000a'); }
+});
+
+seedBtn.addEventListener('click', seed);
+</script>
+</body>
+</html>

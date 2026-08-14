@@ -50,6 +50,7 @@ tailwind.config = {
   .trivia-card:hover { transform: translateY(-4px); box-shadow: 0px 18px 35px rgba(124, 58, 237, 0.15); }
   .gradient-fallback { background: linear-gradient(135deg, #7c3aed, #6cf8bb); }
 </style>
+<link rel="stylesheet" href="css/dark.css">
 </head>
 <body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased">
 <header class="w-full sticky top-0 z-50 shadow-sm bg-surface dark:bg-inverse-surface h-16">
@@ -66,6 +67,9 @@ tailwind.config = {
       <a class="font-body-md text-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container px-sm rounded-md py-1" href="create.html">Crear</a>
     </nav>
     <div class="flex items-center gap-sm">
+      <button id="theme-toggle" class="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all" title="Cambiar tema">
+        <span class="material-symbols-outlined">dark_mode</span>
+      </button>
       <button data-login-btn class="px-md py-sm rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-[0_2px_0_0_rgba(90,12,192,1)] active:shadow-none active:translate-y-[2px] transition-all">Iniciar sesión</button>
       <div data-user-menu class="hidden flex items-center gap-sm">
         <button data-signout-btn class="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all" title="Cerrar sesión">
@@ -103,7 +107,6 @@ tailwind.config = {
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-storage-compat.js"></script>
 <script src="js/firebase-config.js"></script>
 <script src="js/app.js"></script>
 <script src="js/firestore.js"></script>

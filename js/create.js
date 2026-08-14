@@ -6,7 +6,7 @@ const LS_KEY = 'triviaflow_draft';
 
 const state = {
   title: '', category: 'General', difficulty: 'Medium',
-  timeLimit: 15, points: 100, coverDataUrl: null,
+  timeLimit: 15, points: 100, useTimer: true,
   questions: []
 };
 
@@ -17,9 +17,8 @@ let editingIndex = -1;
 const $els = {
   gate: $('#auth-gate'), content: $('#create-content'), gateLogin: $('#gate-login'),
   title: $('#trivia-title'), category: $('#trivia-category'), difficulty: $('#trivia-difficulty'),
-  time: $('#trivia-time'), points: $('#trivia-points'),
-  coverInput: $('#cover-input'), coverDropzone: $('#cover-dropzone'),
-  coverPreview: $('#cover-preview'), coverImg: $('#cover-img'), coverRemove: $('#cover-remove'),
+  time: $('#trivia-time'), points: $('#trivia-points'), timeField: $('#time-field'),
+  timerOn: $('#timer-on'), timerOff: $('#timer-off'),
   qText: $('#q-text'), qOptions: $('#q-options'), qAddOption: $('#q-add-option'),
   qSave: $('#q-save'), qCancel: $('#q-cancel'),
   questionsList: $('#questions-list'), questionsEmpty: $('#questions-empty'), qCount: $('#q-count'),
@@ -188,16 +187,6 @@ function saveQuestion() {
   setTimeout(() => $els.statusMsg.classList.add('hidden'), 2500);
 }
 
-// ---------- Portada ----------
-async function handleCoverFile(file) {
-  if (!file || !file.type.startsWith('image/')) return;
-  state.coverDataUrl = await fileToDataUrl(file);
-  $els.coverImg.src = state.coverDataUrl;
-  $els.coverDropzone.classList.add('hidden');
-  $els.coverPreview.classList.remove('hidden');
-  saveLocal();
-}
-
 // ---------- Publicar ----------
 async function publish() {
   const title = state.title.trim();
@@ -209,28 +198,30 @@ async function publish() {
   $els.publishBtn.disabled = true;
 
   try {
-    let coverUrl = null;
-    if (state.coverDataUrl) {
-      coverUrl = await uploadImage(state.coverDataUrl, 'covers', `cover-${user.uid.slice(-6)}`);
-    }
     const id = await createTrivia({
       title,
       category: state.category,
       difficulty: state.difficulty,
-      timeLimit: Math.min(60, Math.max(5, +state.timeLimit || 15)),
+      timeLimit: state.useTimer ? Math.min(60, Math.max(5, +state.timeLimit || 15)) : 0,
       points: Math.max(10, +state.points || 100),
-      coverUrl,
       uid: user.uid,
       userName: user.displayName || 'Anónimo',
       questions: state.questions
     });
     clearLocal();
-    window.location.href = `play.html?id=${id}`;
+    window.location.href = `play?id=${id}`;
   } catch (err) {
     console.error('Error al publicar:', err);
     setStatus('Ocurrió un error al publicar. Revisa tu configuración de Firebase.', true);
     $els.publishBtn.disabled = false;
   }
+}
+
+function setTimerUI() {
+  $els.timerOn.checked = state.useTimer;
+  $els.timerOff.checked = !state.useTimer;
+  $els.time.disabled = !state.useTimer;
+  $els.timeField.classList.toggle('opacity-40', !state.useTimer);
 }
 
 // ---------- Inicialización ----------
@@ -242,11 +233,7 @@ function init() {
   $els.difficulty.value = state.difficulty;
   $els.time.value = state.timeLimit;
   $els.points.value = state.points;
-  if (state.coverDataUrl) {
-    $els.coverImg.src = state.coverDataUrl;
-    $els.coverDropzone.classList.add('hidden');
-    $els.coverPreview.classList.remove('hidden');
-  }
+  setTimerUI();
   draft.text = draft.text || '';
   $els.qText.value = draft.text;
   renderOptions();
@@ -264,6 +251,12 @@ $els.category.addEventListener('change', e => { state.category = e.target.value;
 $els.difficulty.addEventListener('change', e => { state.difficulty = e.target.value; saveLocal(); });
 $els.time.addEventListener('input', e => { state.timeLimit = +e.target.value || 15; saveLocal(); });
 $els.points.addEventListener('input', e => { state.points = +e.target.value || 100; saveLocal(); });
+$els.timerOn.addEventListener('change', () => {
+  if ($els.timerOn.checked) { state.useTimer = true; setTimerUI(); saveLocal(); }
+});
+$els.timerOff.addEventListener('change', () => {
+  if ($els.timerOff.checked) { state.useTimer = false; setTimerUI(); saveLocal(); }
+});
 $els.qText.addEventListener('input', e => { draft.text = e.target.value; saveLocal(); });
 $els.qAddOption.addEventListener('click', () => {
   if (draft.options.length >= 4) { setStatus('Máximo 4 opciones por pregunta.', true); return; }
@@ -273,22 +266,6 @@ $els.qAddOption.addEventListener('click', () => {
 });
 $els.qSave.addEventListener('click', saveQuestion);
 $els.qCancel.addEventListener('click', resetDraft);
-$els.coverInput.addEventListener('change', e => handleCoverFile(e.target.files[0]));
-$els.coverDropzone.addEventListener('click', () => $els.coverInput.click());
-$els.coverDropzone.addEventListener('dragover', e => { e.preventDefault(); $els.coverDropzone.classList.add('border-primary'); });
-$els.coverDropzone.addEventListener('dragleave', () => $els.coverDropzone.classList.remove('border-primary'));
-$els.coverDropzone.addEventListener('drop', e => {
-  e.preventDefault();
-  $els.coverDropzone.classList.remove('border-primary');
-  handleCoverFile(e.dataTransfer.files[0]);
-});
-$els.coverRemove.addEventListener('click', () => {
-  state.coverDataUrl = null;
-  $els.coverImg.src = '';
-  $els.coverDropzone.classList.remove('hidden');
-  $els.coverPreview.classList.add('hidden');
-  saveLocal();
-});
 $els.publishBtn.addEventListener('click', publish);
 
 $els.gateLogin.addEventListener('click', async () => {

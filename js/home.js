@@ -17,9 +17,6 @@ function categoryChip(category) {
 }
 
 function coverBlock(trivia) {
-  if (trivia.coverUrl) {
-    return `<img src="${trivia.coverUrl}" alt="${escapeHtml(trivia.title)}" class="w-full h-40 object-cover"/>`;
-  }
   return `<div class="gradient-fallback w-full h-40 flex items-center justify-center">
     <span class="material-symbols-outlined text-white text-[56px]" style="font-variation-settings: 'FILL' 1;">psychology</span>
   </div>`;
@@ -34,8 +31,9 @@ function escapeHtml(s) {
 function cardTemplate(t) {
   const creator = t.userName || 'Anónimo';
   const count = Array.isArray(t.questions) ? t.questions.length : 0;
+  const timeLabel = t.timeLimit ? `${t.timeLimit}s` : 'Sin límite';
   return `
-  <a href="play.html?id=${t.id}" class="trivia-card bg-surface-container-lowest rounded-xl card-shadow overflow-hidden border border-surface-container-high block group">
+  <a href="play?id=${t.id}" class="trivia-card bg-surface-container-lowest rounded-xl card-shadow overflow-hidden border border-surface-container-high block group">
     ${coverBlock(t)}
     <div class="p-lg flex flex-col gap-sm">
       <div class="flex items-center justify-between gap-sm">
@@ -45,7 +43,7 @@ function cardTemplate(t) {
       <h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors line-clamp-2">${escapeHtml(t.title)}</h3>
       <div class="flex items-center gap-md mt-auto pt-sm text-on-surface-variant">
         <span class="flex items-center gap-xs text-body-md"><span class="material-symbols-outlined text-[18px]">quiz</span>${count} preguntas</span>
-        <span class="flex items-center gap-xs text-body-md"><span class="material-symbols-outlined text-[18px]">timer</span>${t.timeLimit || 15}s</span>
+        <span class="flex items-center gap-xs text-body-md"><span class="material-symbols-outlined text-[18px]">timer</span>${timeLabel}</span>
       </div>
       <div class="flex items-center gap-sm pt-sm border-t border-surface-container-high">
         <div class="w-7 h-7 rounded-full bg-primary-container text-primary flex items-center justify-center text-label-sm font-bold uppercase">${escapeHtml((creator[0] || '?').toUpperCase())}</div>

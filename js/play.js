@@ -20,7 +20,7 @@ const $g = {
   loading: $('#loading'), error: $('#error'), game: $('#game'), results: $('#results'),
   roundLabel: $('#round-label'), qNum: $('#q-num'), qTotal: $('#q-total'), score: $('#score'),
   timerText: $('#timer-text'), timerCircle: $('#timer-circle'), progressBar: $('#progress-bar'),
-  categoryChip: $('#category-chip'), questionImage: $('#question-image'), questionText: $('#question-text'),
+  categoryChip: $('#category-chip'), questionText: $('#question-text'),
   answersGrid: $('#answers-grid'),
   finalScore: $('#final-score'), finalCorrect: $('#final-correct'), finalTotal: $('#final-total'), finalAccuracy: $('#final-accuracy')
 };
@@ -44,6 +44,16 @@ function renderTimer() {
 
 function startTimer() {
   stopTimer();
+  if (!game.timeLimit) {
+    game.timeLeft = 0;
+    $g.timerText.textContent = '∞';
+    $g.timerText.classList.add('text-on-surface-variant');
+    $g.timerText.classList.remove('text-secondary', 'text-error');
+    $g.timerCircle.classList.add('stroke-surface-container-highest');
+    $g.timerCircle.classList.remove('stroke-secondary-container', 'stroke-error');
+    $g.timerCircle.style.strokeDashoffset = 0;
+    return;
+  }
   game.timeLeft = game.timeLimit;
   renderTimer();
   game.timerId = setInterval(() => {
@@ -72,13 +82,6 @@ function renderQuestion() {
 
   $g.categoryChip.textContent = `Categoría: ${game.trivia.category || 'General'}`;
   $g.questionText.textContent = q.text;
-
-  if (q.imageUrl) {
-    $g.questionImage.src = q.imageUrl;
-    $g.questionImage.classList.remove('hidden');
-  } else {
-    $g.questionImage.classList.add('hidden');
-  }
 
   const correctIndex = q.options.findIndex(o => o.correct);
   $g.answersGrid.innerHTML = q.options.map((opt, i) => {
@@ -209,7 +212,7 @@ async function init() {
 
   game.trivia = trivia;
   game.questions = shuffleArray(trivia.questions);
-  game.timeLimit = trivia.timeLimit || 15;
+  game.timeLimit = trivia.timeLimit || 0;
   game.index = 0;
   game.score = 0;
   game.correct = 0;

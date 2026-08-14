@@ -54,6 +54,7 @@ tailwind.config = {
   .btn-primary { background: #630ed4; color: #ffffff; border-radius: 0.75rem; box-shadow: 0 2px 0 0 rgba(90, 12, 192, 1); transition: all 0.1s; }
   .btn-primary:active { box-shadow: none; transform: translateY(2px); }
 </style>
+<link rel="stylesheet" href="css/dark.css">
 </head>
 <body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased">
 <header class="w-full sticky top-0 z-50 shadow-sm bg-surface dark:bg-inverse-surface h-16">
@@ -63,7 +64,12 @@ tailwind.config = {
       <a class="font-body-md text-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container px-sm rounded-md py-1" href="index.html">Home</a>
       <a class="font-body-md text-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container px-sm rounded-md py-1" href="create.html">Crear</a>
     </nav>
-    <a href="index.html" class="px-md py-sm rounded-full bg-surface-container-low text-on-surface-variant font-label-md text-label-md hover:bg-surface-container transition-colors">Salir</a>
+    <div class="flex items-center gap-sm">
+      <button id="theme-toggle" class="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all" title="Cambiar tema">
+        <span class="material-symbols-outlined">dark_mode</span>
+      </button>
+      <a href="index.html" class="px-md py-sm rounded-full bg-surface-container-low text-on-surface-variant font-label-md text-label-md hover:bg-surface-container transition-colors">Salir</a>
+    </div>
   </div>
 </header>
 
@@ -92,7 +98,7 @@ tailwind.config = {
         <span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">star</span>
         <span class="font-headline-md text-headline-md text-on-primary" id="score">0</span>
       </div>
-      <div class="relative w-16 h-16 flex items-center justify-center">
+      <div id="timer-box" class="relative w-16 h-16 flex items-center justify-center">
         <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
           <circle class="stroke-surface-container-highest" cx="50" cy="50" fill="none" r="45" stroke-width="8"></circle>
           <circle id="timer-circle" class="stroke-secondary-container timer-circle" cx="50" cy="50" fill="none" r="45" stroke-dasharray="283" stroke-dashoffset="0" stroke-linecap="round" stroke-width="8"></circle>
@@ -109,7 +115,6 @@ tailwind.config = {
   <div class="bg-surface-container-lowest rounded-xl p-xl md:p-12 card-shadow flex flex-col items-center justify-center min-h-[240px] border border-outline-variant/30 relative overflow-hidden text-center">
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-primary/5 blur-3xl rounded-full pointer-events-none"></div>
     <span id="category-chip" class="font-label-md text-label-md text-primary-container mb-md px-md py-xs rounded-full bg-primary/10 border border-primary/20"></span>
-    <img id="question-image" class="hidden max-h-48 rounded-xl mb-md object-cover border border-surface-container-high" alt="Imagen de la pregunta"/>
     <h1 id="question-text" class="font-display text-2xl md:text-display text-on-surface text-center max-w-3xl leading-tight"></h1>
   </div>
 
@@ -145,7 +150,6 @@ tailwind.config = {
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-storage-compat.js"></script>
 <script src="js/firebase-config.js"></script>
 <script src="js/app.js"></script>
 <script src="js/firestore.js"></script>
