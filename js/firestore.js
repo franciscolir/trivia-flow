@@ -36,10 +36,14 @@ async function getTrivia(id) {
 async function createTrivia(data) {
   const docRef = await db.collection('trivias').add({
     ...data,
-    status: 'published',
+    status: data.status || 'published',
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
   return docRef.id;
+}
+
+async function updateTrivia(id, data) {
+  await db.collection('trivias').doc(id).update(data);
 }
 
 async function deleteTrivia(id) {

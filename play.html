@@ -47,6 +47,7 @@
 </div>
 <div id="word-widget"></div>
 <div id="tombola-slot"></div>
+<div id="turn-tombola" class="mt-4"></div>
 <div id="conductor-actions" class="flex flex-col gap-3 mt-6">
   <button id="show-answer" class="w-full py-3 rounded-lg border border-primary/40 text-primary font-label-caps text-label-caps hover:bg-primary/10 transition-colors">MOSTRAR RESPUESTA</button>
   <div class="flex gap-3">
@@ -176,6 +177,13 @@
     $q.turnLabel.textContent = isCircuit && t ? ('TURNO: ' + t.name) : '';
     if (t) $q.turnLabel.classList.remove('hidden');
     else $q.turnLabel.classList.add('hidden');
+    // Tómbola del equipo en turno
+    const slot = $('#turn-tombola');
+    if (slot && isCircuit && t && sess && sess.tombola && sess.tombola.active) {
+      renderTombola(slot, { session: sess, teamId: t.id });
+    } else if (slot) {
+      slot.innerHTML = '';
+    }
   }
 
   // ---------------- Preguntas ----------------

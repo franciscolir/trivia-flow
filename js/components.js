@@ -45,16 +45,21 @@ function renderScoreboardTeams(containerId) {
 // ---------- TÓMBOLA INCRUSTABLE (compacta e interactiva) ----------
 function renderTombola(container, opts) {
   const sess = opts.session || getSession();
-  const pool = (sess && sess.tombola && sess.tombola.pool) ? sess.tombola.pool.slice() : [];
+  const team = opts.teamId ? ((sess && sess.teams || []).find(t => t.id === opts.teamId)) : null;
+  const teamParticipants = team && sess.participants
+    ? sess.participants.filter(p => p.teamId === team.id).map(p => p.name)
+    : [];
+  const fallback = (sess && sess.tombola && sess.tombola.pool) ? sess.tombola.pool.slice() : [];
+  const pool = (team ? teamParticipants : fallback).slice();
   let spinning = false;
 
   container.innerHTML = `
     <div class="glass-panel rounded-xl p-4 flex flex-col items-center gap-3 w-full">
       <div class="flex items-center gap-2">
         <span class="material-symbols-outlined text-secondary" style="font-variation-settings:'FILL' 1;">casino</span>
-        <span class="font-label-caps text-label-caps text-secondary">TÓMBOLA</span>
+        <span class="font-label-caps text-label-caps text-secondary">TÓMBOLA${team ? ' — ' + escapeHtml(team.name) : ''}</span>
       </div>
-      <div class="tombola-display h-12 w-full bg-surface rounded-lg flex items-center justify-center overflow-hidden relative font-headline-md text-headline-md text-primary-fixed" style="background-image:linear-gradient(to bottom, rgba(14,20,23,0.9), rgba(14,20,23,0.3), rgba(14,20,23,0.9));">—</div>
+      <div class="tombola-display h-12 w-full bg-surface rounded-lg flex items-center justify-center overflow-hidden relative font-headline-md text-headline-md text-primary-fixed" style="background-image:linear-gradient(to bottom, rgba(14,20,23,0.9), rgba(14,20,23,0.3), rgba(14,20,23,0.9));">${team && !pool.length ? 'SIN INTEGRANTES' : '—'}</div>
       <div class="flex gap-2 w-full">
         <button class="tombola-spin glass-button-primary flex-1 px-4 py-2 rounded-lg font-label-caps text-label-caps">GIRAR</button>
         <button class="tombola-reset px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-bright transition-colors" title="Reiniciar">
@@ -68,12 +73,11 @@ function renderTombola(container, opts) {
   const spinBtn = $('.tombola-spin', container);
   const resetBtn = $('.tombola-reset', container);
   const poolEl = $('.tombola-pool', container);
-  const store = sess ? sess.tombola : null;
+  const origPool = pool.slice();
 
   function updatePool() {
-    if (store) { store.pool = pool; }
     poolEl.textContent = pool.length + ' participantes';
-    if (typeof persistSession === 'function') persistSession();
+    if (typeof persistSession === 'function' && !team) persistSession();
   }
 
   function spin() {
@@ -84,10 +88,6 @@ function renderTombola(container, opts) {
     const total = 2200;
     const iv = setInterval(() => {
       t += 90;
-      const pause = 120 * (t / total);
-      setTimeout(() => {
-        display.textContent = randomSelect(pool);
-      }, t * 0.6);
       if (t >= total) {
         clearInterval(iv);
         const winner = randomSelect(pool);
@@ -95,27 +95,31 @@ function renderTombola(container, opts) {
         display.style.color = '#a5e7ff';
         display.style.textShadow = '0 0 20px rgba(71,214,255,0.5)';
         if (typeof playFinish === 'function') playFinish();
-        if (store) store.history.unshift(winner);
-        pool.splice(pool.indexOf(winner), 1);
+        if (!team) {
+          if (sess.tombola) sess.tombola.history.unshift(winner);
+          pool.splice(pool.indexOf(winner), 1);
+        } else {
+          pool.splice(pool.indexOf(winner), 1);
+        }
         updatePool();
         spinning = false;
         spinBtn.disabled = false;
         if (opts.onSelect) opts.onSelect(winner);
-        if (typeof logEvent === 'function') logEvent('RANDOM_SELECTION', { name: winner });
+        if (typeof logEvent === 'function') logEvent('RANDOM_SELECTION', { name: winner, teamId: team ? team.id : null });
+      } else {
+        setTimeout(() => { display.textContent = randomSelect(pool); }, t * 0.6);
       }
     }, 90);
   }
 
   spinBtn.addEventListener('click', spin);
   resetBtn.addEventListener('click', () => {
-    const orig = (sess && sess.tombola && sess.tombola.originalPool) || pool;
     pool.length = 0;
-    pool.push(...orig);
+    pool.push(...origPool);
     updatePool();
-    display.textContent = '—';
+    display.textContent = team && !pool.length ? 'SIN INTEGRANTES' : '—';
     display.style.color = '';
     display.style.textShadow = '';
-    if (typeof persistSession === 'function') persistSession();
   });
 
   if (opts.autoSpin) spin();

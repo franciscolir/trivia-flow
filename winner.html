@@ -8,172 +8,183 @@
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;family=Inter:wght@400;500;600&amp;family=Montserrat:wght@700;800;900&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "tertiary-fixed": "#56ffa8", "secondary-container": "#ff24e4", "secondary": "#fface8",
-                    "on-tertiary-fixed": "#002110", "surface-container-highest": "#2f3639", "on-tertiary-fixed-variant": "#00522f",
-                    "surface-tint": "#47d6ff", "tertiary-fixed-dim": "#00e38b", "primary": "#a5e7ff", "surface": "#0e1417",
-                    "on-error": "#690005", "outline-variant": "#3c494e", "surface-container-low": "#161d1f", "on-primary": "#003543",
-                    "on-primary-fixed-variant": "#004e60", "surface-dim": "#0e1417", "surface-container-high": "#242b2e",
-                    "error-container": "#93000a", "inverse-surface": "#dde3e7", "primary-fixed": "#b6ebff", "background": "#0e1417",
-                    "error": "#ffb4ab", "on-secondary-fixed": "#3a0033", "on-primary-container": "#00566a", "outline": "#859399",
-                    "tertiary-container": "#00dd87", "tertiary": "#00fd9b", "on-primary-fixed": "#001f28", "on-tertiary": "#00391f",
-                    "on-tertiary-container": "#005b35", "on-surface": "#dde3e7", "surface-bright": "#333a3d", "on-surface-variant": "#bbc9cf",
-                    "on-background": "#dde3e7", "on-secondary": "#5e0053", "surface-container-lowest": "#090f12", "on-error-container": "#ffdad6",
-                    "inverse-primary": "#00677f", "on-secondary-container": "#520049", "primary-container": "#00d2ff", "secondary-fixed-dim": "#fface8",
-                    "inverse-on-surface": "#2b3134", "surface-container": "#1a2123", "primary-fixed-dim": "#47d6ff", "on-secondary-fixed-variant": "#840076",
-                    "secondary-fixed": "#ffd7f0", "surface-variant": "#2f3639"
-            },
-            "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
-            "spacing": { "unit": "8px", "margin-desktop": "64px", "gutter": "24px", "margin-mobile": "16px", "container-max": "1440px" },
-            "fontFamily": { "label-caps": ["JetBrains Mono"], "display-lg-mobile": ["Montserrat"], "display-xl": ["Montserrat"], "body-lg": ["Inter"], "display-lg": ["Montserrat"], "body-md": ["Inter"], "headline-md": ["Montserrat"] },
-            "fontSize": {
-                    "label-caps": ["14px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700" }],
-                    "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
-                    "display-xl": ["80px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "900" }],
-                    "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
-                    "display-lg": ["48px", { "lineHeight": "1.2", "fontWeight": "800" }],
-                    "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
-                    "headline-md": ["24px", { "lineHeight": "1.4", "fontWeight": "700" }]
-            }
-          },
-        },
-      }
-    </script>
+tailwind.config = { darkMode: "class", theme: { extend: {
+  colors: { "tertiary-fixed": "#56ffa8", "secondary-container": "#ff24e4", "secondary": "#fface8", "on-tertiary-fixed": "#002110", "surface-container-highest": "#2f3639", "on-tertiary-fixed-variant": "#00522f", "surface-tint": "#47d6ff", "tertiary-fixed-dim": "#00e38b", "primary": "#a5e7ff", "surface": "#0e1417", "on-error": "#690005", "outline-variant": "#3c494e", "surface-container-low": "#161d1f", "on-primary": "#003543", "on-primary-fixed-variant": "#004e60", "surface-dim": "#0e1417", "surface-container-high": "#242b2e", "error-container": "#93000a", "inverse-surface": "#dde3e7", "primary-fixed": "#b6ebff", "background": "#0e1417", "error": "#ffb4ab", "on-secondary-fixed": "#3a0033", "on-primary-container": "#00566a", "outline": "#859399", "tertiary-container": "#00dd87", "tertiary": "#00fd9b", "on-primary-fixed": "#001f28", "on-tertiary": "#00391f", "on-tertiary-container": "#005b35", "on-surface": "#dde3e7", "surface-bright": "#333a3d", "on-surface-variant": "#bbc9cf", "on-background": "#dde3e7", "on-secondary": "#5e0053", "surface-container-lowest": "#090f12", "on-error-container": "#ffdad6", "inverse-primary": "#00677f", "on-secondary-container": "#520049", "primary-container": "#00d2ff", "secondary-fixed-dim": "#fface8", "inverse-on-surface": "#2b3134", "surface-container": "#1a2123", "primary-fixed-dim": "#47d6ff", "on-secondary-fixed-variant": "#840076", "secondary-fixed": "#ffd7f0", "surface-variant": "#2f3639" },
+  borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+  spacing: { unit: "8px", "margin-desktop": "64px", gutter: "24px", "margin-mobile": "16px", "container-max": "1440px" },
+  fontFamily: { "label-caps": ["JetBrains Mono"], "display-lg-mobile": ["Montserrat"], "display-xl": ["Montserrat"], "body-lg": ["Inter"], "display-lg": ["Montserrat"], "body-md": ["Inter"], "headline-md": ["Montserrat"] },
+  fontSize: { "label-caps": ["14px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "700" }], "display-lg-mobile": ["32px", { lineHeight: "1.2", fontWeight: "800" }], "display-xl": ["80px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "900" }], "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }], "display-lg": ["48px", { lineHeight: "1.2", fontWeight: "800" }], "body-md": ["16px", { lineHeight: "1.5", fontWeight: "400" }], "headline-md": ["24px", { lineHeight: "1.4", fontWeight: "700" }] }
+} } }
+</script>
 <style>
-        body {
-            background-color: #0B0E14;
-            background-image: radial-gradient(circle at top left, rgba(0,210,255,0.15) 0%, transparent 40%),
-                              radial-gradient(circle at bottom right, rgba(255,36,228,0.15) 0%, transparent 40%);
-            min-height: 100vh;
-            color: #dde3e7;
-            overflow-x: hidden;
-        }
-        .glass-panel { background: rgba(14, 20, 23, 0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid transparent; background-clip: padding-box; position: relative; }
-        .glass-panel::before { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: -1; margin: -1px; border-radius: inherit; background: linear-gradient(to bottom right, rgba(165, 231, 255, 0.4), rgba(165, 231, 255, 0)); }
-        .glow-primary { box-shadow: 0 0 30px rgba(0, 210, 255, 0.3); }
-        .text-glow { text-shadow: 0 0 20px rgba(0, 210, 255, 0.5); }
-        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.4), inset 0 0 20px rgba(255, 215, 0, 0.2); transform: scale(1); } 50% { box-shadow: 0 0 80px rgba(255, 215, 0, 0.8), inset 0 0 40px rgba(255, 215, 0, 0.4); transform: scale(1.02); } }
-        .trophy-container { animation: pulse-glow 3s infinite ease-in-out; background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%); border-radius: 50%; }
-        .confetti-particle { position: absolute; width: 10px; height: 10px; background-color: var(--color); opacity: 0; pointer-events: none; z-index: 10; }
-    </style>
+body { background-color: #0B0E14; background-image: radial-gradient(circle at top left, rgba(0,210,255,0.15) 0%, transparent 40%), radial-gradient(circle at bottom right, rgba(255,36,228,0.15) 0%, transparent 40%); min-height: 100vh; color: #dde3e7; overflow-x: hidden; }
+.glass-panel { background: rgba(14,20,23,0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid transparent; background-clip: padding-box; position: relative; }
+.glass-panel::before { content: ''; position: absolute; top:0; right:0; bottom:0; left:0; z-index:-1; margin:-1px; border-radius:inherit; background: linear-gradient(to bottom right, rgba(165,231,255,0.4), rgba(165,231,255,0)); }
+.glow-primary { box-shadow: 0 0 30px rgba(0,210,255,0.3); }
+.text-glow { text-shadow: 0 0 20px rgba(0,210,255,0.5); }
+.btn-primary { background: linear-gradient(90deg, #47d6ff, #00d2ff); color: #003543; transition: all 0.3s ease; }
+.btn-primary:hover { transform: scale(1.03); box-shadow: 0 0 20px rgba(0,210,255,0.6); }
+@keyframes pulse-glow { 0%,100% { box-shadow: 0 0 40px rgba(255,215,0,0.4); transform: scale(1); } 50% { box-shadow: 0 0 80px rgba(255,215,0,0.8); transform: scale(1.02); } }
+.trophy-container { animation: pulse-glow 3s infinite ease-in-out; background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%); border-radius: 50%; }
+.confetti-particle { position: absolute; width: 10px; height: 10px; background-color: var(--color); opacity: 0; pointer-events: none; z-index: 10; }
+</style>
 <link rel="stylesheet" href="css/arena.css"/>
 </head>
-<body class="flex flex-col items-center justify-center pt-20 pb-24 md:py-margin-desktop relative">
+<body class="flex flex-col items-center justify-center pt-20 pb-24 relative">
 <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" id="confetti-container"></div>
 <div class="fixed inset-0 pointer-events-none z-0 flex justify-center overflow-hidden opacity-30">
 <div class="absolute top-full left-1/4 w-[100px] h-[200vh] bg-gradient-to-t from-primary to-transparent blur-3xl transform -rotate-45 origin-bottom-left"></div>
 <div class="absolute top-full right-1/4 w-[100px] h-[200vh] bg-gradient-to-t from-secondary to-transparent blur-3xl transform rotate-45 origin-bottom-right"></div>
 </div>
-<main class="w-full max-w-container-max px-margin-mobile md:px-margin-desktop z-10 flex flex-col items-center">
 <div class="absolute top-4 right-4">
-  <button id="theme-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Cambiar tema">
-    <span class="material-symbols-outlined">light_mode</span>
-  </button>
+  <button id="theme-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Cambiar tema"><span class="material-symbols-outlined">light_mode</span></button>
 </div>
-<div class="text-center mb-12">
-<h2 class="font-label-caps text-label-caps text-primary tracking-[0.2em] mb-4 uppercase">GANADOR DEL CIRCUITO</h2>
-<div class="trophy-container w-64 h-64 md:w-80 md:h-80 mx-auto flex items-center justify-center mb-8 relative">
-<div class="absolute inset-4 rounded-full border-2 border-yellow-400/30"></div>
-<span class="material-symbols-outlined text-[120px] md:text-[160px] text-yellow-400" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 0 20px rgba(255,215,0,0.5));">emoji_events</span>
+
+<!-- GATE: circuito terminado -->
+<main id="gate" class="w-full max-w-2xl px-margin-mobile z-10 flex flex-col items-center text-center">
+  <span class="material-symbols-outlined text-7xl text-tertiary mb-4" style="font-variation-settings:'FILL' 1;">flag</span>
+  <h1 class="font-display-xl text-display-lg-mobile md:text-display-xl text-on-surface uppercase tracking-wider mb-2">Circuito Terminado</h1>
+  <p class="font-body-lg text-body-lg text-on-surface-variant mb-10">Todos los juegos finalizaron. Confirma para cerrar las dinámicas y ver el puntaje.</p>
+  <button id="finalize-btn" class="btn-primary rounded-xl px-12 py-5 font-headline-md text-headline-md uppercase tracking-wider">FINALIZAR Y VER PUNTAJE</button>
+</main>
+
+<!-- RESULTADO -->
+<main id="result" class="hidden w-full max-w-container-max px-margin-mobile md:px-margin-desktop z-10 flex flex-col items-center">
+<div class="text-center mb-10">
+  <div id="word-banner" class="hidden mb-8"></div>
+  <h2 class="font-label-caps text-label-caps text-primary tracking-[0.2em] mb-4 uppercase">Ganador del Circuito</h2>
+  <div class="trophy-container w-56 h-56 md:w-72 md:h-72 mx-auto flex items-center justify-center mb-6 relative">
+    <div class="absolute inset-4 rounded-full border-2 border-yellow-400/30"></div>
+    <span class="material-symbols-outlined text-[110px] md:text-[150px] text-yellow-400" style="font-variation-settings:'FILL' 1; filter: drop-shadow(0 0 20px rgba(255,215,0,0.5));">emoji_events</span>
+  </div>
+  <h1 class="font-display-xl text-display-lg-mobile md:text-display-xl text-white text-glow mb-2 uppercase">¡Campeón!</h1>
+  <h3 id="winner-name" class="font-headline-md text-headline-md text-primary-fixed uppercase">EQUIPO</h3>
 </div>
-<h1 class="font-display-xl text-display-lg-mobile md:text-display-xl text-white text-glow mb-2 uppercase">¡CAMPEÓN!</h1>
-<h3 id="winner-name" class="font-headline-md text-headline-md text-primary-fixed uppercase">EQUIPO</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter w-full max-w-4xl mb-10">
+  <div class="glass-panel rounded-xl p-8 flex flex-col items-center justify-center text-center">
+    <span class="material-symbols-outlined text-4xl text-tertiary mb-4" style="font-variation-settings:'FILL' 1;">sports_esports</span>
+    <span id="stat-games" class="font-display-lg text-display-lg-mobile md:text-display-lg text-white mb-2">0</span>
+    <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Juegos</span>
+  </div>
+  <div class="glass-panel rounded-xl p-8 flex flex-col items-center justify-center text-center glow-primary border border-primary/50 relative overflow-hidden">
+    <div class="absolute inset-0 bg-primary/10"></div>
+    <span class="material-symbols-outlined text-5xl text-primary mb-4 z-10" style="font-variation-settings:'FILL' 1;">military_tech</span>
+    <span id="stat-points" class="font-display-xl text-display-xl text-primary mb-2 z-10 text-glow">0</span>
+    <span class="font-label-caps text-label-caps text-primary-fixed uppercase z-10">Puntos</span>
+  </div>
+  <div class="glass-panel rounded-xl p-8 flex flex-col items-center justify-center text-center">
+    <span class="material-symbols-outlined text-4xl text-secondary mb-4" style="font-variation-settings:'FILL' 1;">card_giftcard</span>
+    <span id="stat-rewards" class="font-display-lg text-display-lg-mobile md:text-display-lg text-white mb-2">0</span>
+    <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Recompensas</span>
+  </div>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter w-full max-w-4xl mb-16">
-<div class="glass-panel rounded-xl p-8 flex flex-col items-center justify-center text-center">
-<span class="material-symbols-outlined text-4xl text-tertiary mb-4" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
-<span id="stat-games" class="font-display-lg text-display-lg-mobile md:text-display-lg text-white mb-2">0</span>
-<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Juegos en Circuito</span>
-</div>
-<div class="glass-panel rounded-xl p-8 flex flex-col items-center justify-center text-center glow-primary border border-primary/50 relative overflow-hidden">
-<div class="absolute inset-0 bg-primary/10"></div>
-<span class="material-symbols-outlined text-5xl text-primary mb-4 z-10" style="font-variation-settings: 'FILL' 1;">military_tech</span>
-<span id="stat-points" class="font-display-xl text-display-xl text-primary mb-2 z-10 text-glow">0</span>
-<span class="font-label-caps text-label-caps text-primary-fixed uppercase z-10">Puntos Totales</span>
-</div>
-<div class="glass-panel rounded-xl p-8 flex flex-col items-center justify-center text-center">
-<span class="material-symbols-outlined text-4xl text-secondary mb-4" style="font-variation-settings: 'FILL' 1;">card_giftcard</span>
-<span id="stat-rewards" class="font-display-lg text-display-lg-mobile md:text-display-lg text-white mb-2">0</span>
-<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Recompensas</span>
-</div>
-</div>
-<div id="ranking" class="w-full max-w-2xl flex flex-col gap-3 mb-16"></div>
+<div id="ranking" class="w-full max-w-2xl flex flex-col gap-3 mb-10"></div>
 <div class="flex flex-col sm:flex-row gap-6 w-full sm:w-auto">
-<button id="new-session" class="bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline-md text-headline-md px-12 py-4 rounded-lg shadow-[0_0_20px_rgba(0,210,255,0.4)] hover:shadow-[0_0_30px_rgba(0,210,255,0.6)] hover:scale-105 transition-all duration-300 uppercase tracking-wide">NUEVA SESIÓN</button>
-<button id="view-history" class="bg-transparent border-2 border-secondary text-secondary font-headline-md text-headline-md px-12 py-4 rounded-lg hover:bg-secondary/10 hover:shadow-[0_0_20px_rgba(255,36,228,0.2)] hover:scale-105 transition-all duration-300 uppercase tracking-wide">VER HISTORIAL</button>
+<button id="new-session" class="bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline-md text-headline-md px-12 py-4 rounded-lg shadow-[0_0_20px_rgba(0,210,255,0.4)] hover:scale-105 transition-all duration-300 uppercase tracking-wide">Nueva Sesión</button>
+<button id="view-history" class="bg-transparent border-2 border-secondary text-secondary font-headline-md text-headline-md px-12 py-4 rounded-lg hover:bg-secondary/10 transition-all duration-300 uppercase tracking-wide">Ver Historial</button>
 </div>
 </main>
+
 <script src="js/sounds.js"></script>
 <script src="js/arena.js"></script>
+<script src="js/turn.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/game.js"></script>
+<script src="js/registry.js"></script>
 <script src="js/session.js"></script>
 <script>
   loadSession();
   const sess = getSession();
-  const ranking = sess && sess.teams ? getRanking() : [];
-  const winner = ranking[0];
+  const isCircuit = !!(sess && sess.mode === 'circuit' && sess.games && sess.games.length);
 
-  $('#winner-name').textContent = winner ? winner.name : 'Sin equipos';
-  $('#stat-points').textContent = fmt(winner ? winner.score : 0);
-  $('#stat-games').textContent = (sess && sess.games ? sess.games.length : 0);
-  $('#stat-rewards').textContent = (sess && sess.events ? sess.events.filter(e => e.type === 'REWARD_GRANTED').length : 0);
+  function showResult() {
+    const ranking = sess && sess.teams ? getRanking() : [];
+    const winner = ranking[0];
+    $('#winner-name').textContent = winner ? winner.name : 'Sin equipos';
+    $('#stat-points').textContent = fmt(winner ? winner.score : 0);
+    $('#stat-games').textContent = sess && sess.games ? sess.games.length : 0;
+    $('#stat-rewards').textContent = sess && sess.events ? sess.events.filter(e => e.type === 'REWARD_GRANTED').length : 0;
+    $('#ranking').innerHTML = ranking.map((t, i) => {
+      const color = COLORS[t.color] || COLORS.rojo;
+      return `<div class="glass-panel rounded-xl p-5 flex items-center justify-between ${i === 0 ? 'border border-primary/50 glow-primary' : ''}">
+        <div class="flex items-center gap-4">
+          <span class="font-display-lg text-display-lg-mobile md:text-display-lg ${color.text}">${i + 1}</span>
+          <span class="font-headline-md text-headline-md text-on-surface uppercase">${escapeHtml(t.name)}</span>
+        </div>
+        <span class="font-display-lg text-display-lg-mobile md:text-display-lg ${color.text}">${fmt(t.score)}</span>
+      </div>`;
+    }).join('');
+    $('#gate').classList.add('hidden');
+    $('#result').classList.remove('hidden');
+    playFinish();
+    startConfetti();
+  }
 
-  $('#ranking').innerHTML = ranking.map((t, i) => {
-    const color = COLORS[t.color] || COLORS.rojo;
-    return `
-    <div class="glass-panel rounded-xl p-5 flex items-center justify-between ${i === 0 ? 'border border-primary/50 glow-primary' : ''}">
-      <div class="flex items-center gap-4">
-        <span class="font-display-lg text-display-lg-mobile md:text-display-lg ${color.text}">${i + 1}</span>
-        <span class="font-headline-md text-headline-md text-on-surface uppercase">${escapeHtml(t.name)}</span>
-      </div>
-      <span class="font-display-lg text-display-lg-mobile md:text-display-lg ${color.text}">${fmt(t.score)}</span>
-    </div>`;
-  }).join('');
+  function showWordBanner(completed) {
+    const w = sess && sess.word;
+    const banner = $('#word-banner');
+    if (!w || !w.text) { banner.classList.add('hidden'); return; }
+    banner.classList.remove('hidden');
+    banner.innerHTML = completed
+      ? `<div class="glass-panel border-2 border-tertiary/50 rounded-2xl p-8">
+          <span class="material-symbols-outlined text-5xl text-tertiary" style="font-variation-settings:'FILL' 1;">celebration</span>
+          <div class="font-display-xl text-display-xl text-tertiary uppercase tracking-widest mt-2 mb-1">¡Palabra Descubierta!</div>
+          <div class="font-display-lg text-display-lg text-on-surface tracking-[0.3em]">${w.text.split('').join(' ')}</div>
+        </div>`
+      : `<div class="glass-panel border-2 border-error/50 rounded-2xl p-8">
+          <span class="material-symbols-outlined text-5xl text-error" style="font-variation-settings:'FILL' 1;">search_off</span>
+          <div class="font-display-xl text-display-xl text-error uppercase tracking-widest mt-2 mb-1">No se logró descubrir la palabra</div>
+          <div class="font-display-lg text-display-lg text-on-surface tracking-[0.3em]">${wordProgressText()}</div>
+        </div>`;
+  }
 
-  $('#new-session').addEventListener('click', () => {
-    clearSession();
-    window.location.href = 'index';
-  });
+  if (isCircuit) {
+    $('#finalize-btn').addEventListener('click', () => {
+      // Capturar el resultado ANTES de desactivar la dinámica
+      const completed = sess.word && sess.word.active ? isWordComplete() : null;
+      if (sess.word && sess.word.active) {
+        sess.word.active = false;
+        persistSession();
+      }
+      showWordBanner(completed);
+      showResult();
+    });
+  } else {
+    $('#gate').classList.add('hidden');
+    $('#result').classList.remove('hidden');
+    showResult();
+  }
+
+  $('#new-session').addEventListener('click', () => { clearSession(); window.location.href = 'index'; });
   $('#view-history').addEventListener('click', () => {
     const events = sess && sess.events ? sess.events.slice(-12).reverse().map(e => '• ' + e.type + (e.teamId ? ' [' + (sess.teams.find(t => t.id === e.teamId)?.name || '') + ']' : '')).join('\n') : 'Sin eventos';
     alert('Historial de eventos:\n' + events);
   });
 
-  playFinish();
-
-  // Confeti
-  const container = document.getElementById('confetti-container');
-  const colors = ['#00d2ff', '#ff24e4', '#00fd9b', '#ffd700', '#ffffff'];
-  const particleCount = 100;
-  for (let i = 0; i < particleCount; i++) createParticle();
-
-  function createParticle() {
-    const p = document.createElement('div');
-    p.classList.add('confetti-particle');
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    const size = 5 + Math.random() * 10;
-    p.style.setProperty('--color', color);
-    p.style.width = size + 'px';
-    p.style.height = size + 'px';
-    p.style.left = (Math.random() * window.innerWidth) + 'px';
-    p.style.top = (-20 - Math.random() * 100) + 'px';
-    if (Math.random() > 0.5) p.style.borderRadius = '50%';
-    container.appendChild(p);
-    const duration = 3000 + Math.random() * 4000;
-    const delay = Math.random() * 2000;
-    const endY = window.innerHeight + 20;
-    const endX = parseFloat(p.style.left) + (Math.random() * 200 - 100);
-    const rotation = Math.random() * 720 - 360;
-    p.animate([
-      { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
-      { transform: 'translate(' + (endX - parseFloat(p.style.left)) + 'px, ' + endY + 'px) rotate(' + rotation + 'deg)', opacity: 0 }
-    ], { duration, delay, easing: 'cubic-bezier(.37,0,.63,1)', fill: 'forwards' }).onfinish = () => {
-      p.remove();
-      createParticle();
-    };
+  function startConfetti() {
+    const container = document.getElementById('confetti-container');
+    const colors = ['#00d2ff', '#ff24e4', '#00fd9b', '#ffd700', '#ffffff'];
+    for (let i = 0; i < 90; i++) createParticle();
+    function createParticle() {
+      const p = document.createElement('div');
+      p.classList.add('confetti-particle');
+      p.style.setProperty('--color', colors[Math.floor(Math.random() * colors.length)]);
+      const size = 5 + Math.random() * 10;
+      p.style.width = size + 'px'; p.style.height = size + 'px';
+      p.style.left = (Math.random() * window.innerWidth) + 'px';
+      p.style.top = (-20 - Math.random() * 100) + 'px';
+      if (Math.random() > 0.5) p.style.borderRadius = '50%';
+      container.appendChild(p);
+      const duration = 3000 + Math.random() * 4000;
+      const delay = Math.random() * 2000;
+      const endY = window.innerHeight + 20;
+      const endX = parseFloat(p.style.left) + (Math.random() * 200 - 100);
+      const rotation = Math.random() * 720 - 360;
+      p.animate([
+        { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+        { transform: 'translate(' + (endX - parseFloat(p.style.left)) + 'px, ' + endY + 'px) rotate(' + rotation + 'deg)', opacity: 0 }
+      ], { duration, delay, easing: 'cubic-bezier(.37,0,.63,1)', fill: 'forwards' }).onfinish = () => { p.remove(); createParticle(); };
+    }
   }
 </script>
 </body></html>
