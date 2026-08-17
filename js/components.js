@@ -24,19 +24,29 @@ function closeOverlay() {
   if (ov) ov.remove();
 }
 
-// ---------- Marcador de equipos (dinámico desde sesión) ----------
+// ---------- Marcador de equipos (sidebar derecho / barra en móvil) ----------
 function renderScoreboardTeams(containerId) {
   const c = $(containerId);
   if (!c) return;
+  const bar = document.getElementById('scorebar');
   const sess = getSession();
   const teams = (sess && sess.teams) ? sess.teams : [];
-  if (!teams.length) { c.innerHTML = ''; return; }
+  if (!teams.length) {
+    c.innerHTML = '';
+    if (bar) bar.classList.add('hidden');
+    renderScoreboard();
+    return;
+  }
+  if (bar) bar.classList.remove('hidden');
   c.innerHTML = teams.map(t => {
     const color = COLORS[t.color] || COLORS.rojo;
     return `
-    <div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2">
-      <span class="material-symbols-outlined ${color.text} mb-1" style="font-variation-settings:'FILL' 1;">groups</span>
-      <span class="font-label-caps ${teams.length > 4 ? 'text-[10px]' : 'text-label-caps'} text-center">${escapeHtml(t.name)}<br/><span class="${color.text}" data-score="${t.id}">0</span></span>
+    <div class="flex items-center gap-3 px-4 py-3 border-b border-outline-variant/40 shrink-0 min-w-0">
+      <span class="w-3 h-3 md:w-4 md:h-4 rounded-full shrink-0" style="background:${color.hex}"></span>
+      <div class="flex-1 min-w-0 flex flex-col justify-center">
+        <span class="font-label-caps text-label-sm text-on-surface-variant uppercase truncate">${escapeHtml(t.name)}</span>
+        <span class="font-headline-md text-headline-md md:font-display-lg-mobile md:text-display-lg-mobile leading-none ${color.text}" data-score="${t.id}">0</span>
+      </div>
     </div>`;
   }).join('');
   renderScoreboard();

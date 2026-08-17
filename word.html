@@ -40,7 +40,7 @@
   <div id="top-progress" class="text-primary font-headline-md text-headline-md font-bold border-b-2 border-primary pb-1">PALABRA</div>
 </div>
 </nav>
-<main class="relative z-10 pt-28 pb-32 px-margin-mobile md:px-margin-desktop min-h-screen flex flex-col items-center justify-center gap-10">
+<main class="has-scorebar relative z-10 pt-28 pb-32 px-margin-mobile md:pl-72 md:pr-72 lg:pl-80 lg:pr-80 min-h-screen flex flex-col items-center justify-center gap-10">
 <div class="text-center w-full max-w-4xl">
 <h1 id="game-label" class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface uppercase tracking-wider mb-2">Nivel <span class="text-primary glow-text-primary">Avanzado</span></h1>
 <p class="font-body-lg text-body-lg text-on-surface-variant">Selecciona un panel para revelar pistas o letras.</p>
@@ -63,9 +63,10 @@
 </div>
 </div>
 </main>
-<nav class="bg-surface-container-highest/90 backdrop-blur-md border-t border-primary/30 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] fixed bottom-0 left-0 w-full z-50 rounded-t-xl">
-<div id="scoreboard" class="flex justify-around items-center h-24 px-4 overflow-x-auto"></div>
-</nav>
+<aside id="scorebar" class="fixed z-40 flex flex-col right-0 top-20 bottom-0 w-48 sm:w-56 md:w-64 border-l border-primary/30 bg-surface-container-highest/85 backdrop-blur-md shadow-[-10px_0_30px_rgba(0,0,0,0.5)] max-md:top-auto max-md:left-0 max-md:right-0 max-md:bottom-0 max-md:w-full max-md:h-24 max-md:flex-row max-md:border-l-0 max-md:border-t max-md:rounded-t-xl max-md:shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+<div class="shrink-0 px-4 py-2.5 border-b border-primary/20 font-label-caps text-label-caps text-secondary uppercase tracking-wider max-md:hidden">MARCADOR</div>
+<div id="scoreboard" class="flex flex-1 flex-col overflow-y-auto max-md:flex-row max-md:overflow-x-auto max-md:overflow-y-hidden"></div>
+</aside>
 
 <script src="js/sounds.js"></script>
 <script src="js/arena.js"></script>

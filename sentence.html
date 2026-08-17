@@ -36,7 +36,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
   <div id="top-progress" class="text-primary font-bold border-b-2 border-primary pb-1 font-headline-md text-headline-md">ORACIÓN</div>
 </div>
 </header>
-<main class="flex-1 pt-24 pb-40 md:px-margin-desktop px-margin-mobile flex flex-col items-center relative overflow-y-auto">
+<main class="has-scorebar flex-1 pt-24 pb-40 px-margin-mobile md:pl-72 md:pr-72 lg:pl-80 lg:pr-80 flex flex-col items-center relative overflow-y-auto">
 <div id="wordbar" class="mb-6 w-full max-w-4xl"></div>
 <div id="round-info" class="hidden flex flex-col items-center gap-1 mb-5">
   <div id="round-label" class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">RONDA 1 / 3</div>
@@ -68,9 +68,10 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
 <button onclick="openPublicScreen()" class="px-8 py-4 rounded-xl border border-tertiary/40 text-tertiary font-label-caps transition-colors hover:bg-tertiary/10"><span class="material-symbols-outlined align-middle mr-2 text-[18px]">tv</span>PANTALLA PÚBLICA</button>
 </div>
 </main>
-<footer class="bg-surface-container-highest/90 backdrop-blur-md border-t border-primary/30 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] fixed bottom-0 left-0 w-full z-50 rounded-t-xl">
-<div id="scoreboard" class="flex justify-around items-center h-24 px-4 overflow-x-auto"></div>
-</footer>
+<aside id="scorebar" class="fixed z-40 flex flex-col right-0 top-20 bottom-0 w-48 sm:w-56 md:w-64 border-l border-primary/30 bg-surface-container-highest/85 backdrop-blur-md shadow-[-10px_0_30px_rgba(0,0,0,0.5)] max-md:top-auto max-md:left-0 max-md:right-0 max-md:bottom-0 max-md:w-full max-md:h-24 max-md:flex-row max-md:border-l-0 max-md:border-t max-md:rounded-t-xl max-md:shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+<div class="shrink-0 px-4 py-2.5 border-b border-primary/20 font-label-caps text-label-caps text-secondary uppercase tracking-wider max-md:hidden">MARCADOR</div>
+<div id="scoreboard" class="flex flex-1 flex-col overflow-y-auto max-md:flex-row max-md:overflow-x-auto max-md:overflow-y-hidden"></div>
+</aside>
 
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
