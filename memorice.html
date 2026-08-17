@@ -184,8 +184,7 @@
         rankings: getRanking(), nextLabel: 'SIGUIENTE JUEGO →',
         onNext: () => window.location.href = nextGameUrl(), onHome: () => window.location.href = 'index'
       });
-      if (sess.word && sess.word.active && !isWordComplete()) openCellPicker({ winnerTeam: winner, onDone: afterWord });
-      else afterWord();
+      resolveGameReward(winner, afterWord);
     } else {
       $b.gameLabel.textContent = '¡COMPLETADO!';
       $b.goHome.classList.remove('hidden');

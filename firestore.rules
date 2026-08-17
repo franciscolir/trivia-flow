@@ -12,5 +12,17 @@ service cloud.firestore {
     match /sessions/{sessionId} {
       allow read, write: if true;
     }
+
+    // Conjuntos de contenido (memorice, sinónimos/oraciones): management
+    // desde el panel del conductor y lectura al configurar juegos.
+    match /memorySets/{docId} {
+      allow read, write: if true;
+    }
+    match /synonymSets/{docId} {
+      allow read, write: if true;
+    }
+    match /sentenceSets/{docId} {
+      allow read, write: if true;
+    }
   }
 }

@@ -219,8 +219,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
         rankings: getRanking(), nextLabel: 'SIGUIENTE JUEGO →',
         onNext: () => window.location.href = nextGameUrl(), onHome: () => window.location.href = 'index'
       });
-      if (sess.word && sess.word.active && !isWordComplete()) openCellPicker({ winnerTeam: winner, onDone: afterWord });
-      else afterWord();
+      resolveGameReward(winner, afterWord);
     } else {
       $s.roundInfo.classList.add('hidden');
       $s.board.classList.add('hidden');

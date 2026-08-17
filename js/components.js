@@ -334,18 +334,18 @@ function resolveGameReward(winnerTeam, onDone) {
   const sess = getSession();
   const mode = (sess && sess.rewardMode) || 'cell';
   const cellActive = !!(sess && sess.word && sess.word.active && !isWordComplete());
+  const awardPoints = () => {
+    if (winnerTeam) addScore(winnerTeam.id, (sess.word.rewardWinner || 10), 'Ganó el juego', 'reward');
+    logEvent('REWARD_GRANTED', { teamId: winnerTeam ? winnerTeam.id : null, type: 'points' });
+  };
   const doCell = () => {
     if (cellActive) openCellPicker({ winnerTeam, onDone });
     else onDone();
   };
-  if (!cellActive || mode === 'points') { onDone(); return; }
+  if (!cellActive) { onDone(); return; }
+  if (mode === 'points') { awardPoints(); onDone(); return; }
   if (mode === 'cell') { doCell(); return; }
-  if (mode === 'both') {
-    if (winnerTeam) addScore(winnerTeam.id, (sess.word.rewardWinner || 10), 'Ganó el juego', 'reward');
-    logEvent('REWARD_GRANTED', { teamId: winnerTeam ? winnerTeam.id : null, type: 'points' });
-    doCell();
-    return;
-  }
+  if (mode === 'both') { awardPoints(); doCell(); return; }
   // choice: elige entre +puntos o descubrir casilla
   openOverlay(`
     <div class="glass-panel rounded-2xl p-8 text-center">

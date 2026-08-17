@@ -289,8 +289,7 @@
         rankings: getRanking(), nextLabel: 'SIGUIENTE JUEGO →',
         onNext: () => window.location.href = nextGameUrl(), onHome: () => window.location.href = 'index'
       });
-      if (sess.word && sess.word.active && !isWordComplete()) openCellPicker({ winnerTeam: winner, onDone: afterWord });
-      else afterWord();
+      resolveGameReward(winner, afterWord);
     } else {
       $q.roundControls.classList.add('hidden');
       $q.timedNote.classList.add('hidden');
@@ -395,9 +394,7 @@
         rankings: getRanking(), nextLabel: 'SIGUIENTE JUEGO →',
         onNext: () => window.location.href = nextGameUrl(), onHome: () => window.location.href = 'index'
       });
-      if (sess.word && sess.word.active && !isWordComplete()) {
-        openCellPicker({ winnerTeam: winner, onDone: afterWord });
-      } else afterWord();
+      resolveGameReward(winner, afterWord);
     } else {
       $q.gameLabel.textContent = 'RESULTADO';
       $q.question.textContent = 'Aciertos: ' + state.correct + ' / ' + state.questions.length;
