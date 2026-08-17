@@ -40,7 +40,7 @@
   <div id="top-progress" class="text-primary font-bold border-b-2 border-primary pb-1 font-headline-md text-headline-md">TRIVIA</div>
 </div>
 </header>
-<aside class="hidden md:flex bg-surface-container/80 backdrop-blur-2xl border-r border-secondary/20 shadow-2xl fixed left-0 top-0 h-full z-40 flex-col p-6 w-72 pt-28 overflow-y-auto">
+<aside data-conductor class="hidden md:flex bg-surface-container/80 backdrop-blur-2xl border-r border-secondary/20 shadow-2xl fixed left-0 top-0 h-full z-40 flex-col p-6 w-72 pt-28 overflow-y-auto">
 <div class="mb-6">
 <div class="font-headline-md text-headline-md text-secondary mb-2">CONTROL PANEL</div>
 <div id="session-label" class="font-label-caps text-label-caps text-on-surface-variant">Live Session</div>
@@ -55,6 +55,9 @@
   </div>
   <button id="guess-word" class="hidden w-full py-3 rounded-lg border border-secondary/40 text-secondary font-label-caps text-label-caps hover:bg-secondary/10 transition-colors">INTENTAR RESOLVER PALABRA</button>
   <button id="finish-tournament" class="w-full py-3 rounded-lg border border-error/50 text-error font-label-caps text-label-caps hover:bg-error/10 transition-colors">FINALIZAR TORNEO</button>
+  <button onclick="openPublicScreen()" class="w-full py-3 rounded-lg border border-tertiary/40 text-tertiary font-label-caps text-label-caps hover:bg-tertiary/10 transition-colors">
+    <span class="material-symbols-outlined align-middle mr-2 text-[18px]">tv</span>PANTALLA PÚBLICA
+  </button>
 </div>
 </aside>
 <main class="flex-1 pt-24 pb-40 md:pl-72 md:pr-margin-desktop px-margin-mobile flex flex-col relative overflow-y-auto">
@@ -82,11 +85,11 @@
 <h1 id="question-text" class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-10 drop-shadow-lg relative z-10">¿Pregunta?</h1>
 <div id="answers" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 relative z-10"></div>
 </div>
-<div id="award-row" class="hidden flex flex-col items-center gap-3 mb-6">
+<div id="award-row" data-conductor class="hidden flex flex-col items-center gap-3 mb-6">
   <p class="font-label-caps text-label-caps text-on-surface-variant">EQUIPO QUE ACERTÓ</p>
   <div id="award-buttons" class="flex flex-wrap justify-center gap-3"></div>
 </div>
-<div class="flex flex-wrap justify-center gap-4">
+<div data-conductor class="flex flex-wrap justify-center gap-4">
 <button id="next-game" class="hidden btn-primary rounded-xl px-10 py-4 font-label-caps text-label-caps uppercase tracking-wider">SIGUIENTE</button>
 <button id="restart" class="hidden px-8 py-4 rounded-xl border border-outline-variant text-on-surface font-label-caps transition-colors hover:bg-surface-bright">REINICIAR</button>
 <a id="go-home" class="hidden px-8 py-4 rounded-xl border border-outline-variant text-on-surface font-label-caps transition-colors hover:bg-surface-bright" href="index">INICIO</a>

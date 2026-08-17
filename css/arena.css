@@ -96,6 +96,15 @@ html.light .tombola-gradient { background: radial-gradient(circle at center, rgb
 html.light .glow-text-primary { text-shadow: 0 0 20px rgba(0, 107, 150, 0.4); }
 html.light .text-glow { text-shadow: 0 0 20px rgba(0, 107, 150, 0.4); }
 
+/* ---------- Pantalla pública (?public=1) ---------- */
+.public-mode [data-conductor] { display: none !important; }
+.public-mode .answer-option,
+.public-mode .memory-card,
+.public-mode .tile { pointer-events: none !important; }
+.public-mode .btn-primary { pointer-events: none !important; }
+.public-mode main { overflow: visible; }
+.public-mode .public-badge { display: flex; }
+
 /* ---------- Scrollbars ---------- */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }

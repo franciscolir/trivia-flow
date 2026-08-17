@@ -234,6 +234,12 @@ function persistSession() {
         .catch(err => console.warn('Firestore persist', err));
     } catch (e) { console.warn('Firestore persist', e); }
   }
+  // Notificar a la pantalla pública (otra pestaña)
+  try {
+    if (typeof ArenaSync !== 'undefined' && ArenaSync) {
+      ArenaSync.postMessage({ type: 'session', session: serializableSession() });
+    }
+  } catch (e) { /* noop */ }
 }
 
 function serializableSession() {

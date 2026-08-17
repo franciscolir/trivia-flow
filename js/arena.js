@@ -52,7 +52,43 @@ function initScoreboard() {
   if ($('[data-score]')) renderScoreboard();
 }
 
+// ---------- Pantalla pública vs conductor ----------
+function isPublic() {
+  return new URLSearchParams(window.location.search).get('public') === '1';
+}
+
+const ArenaSync = (typeof BroadcastChannel !== 'undefined') ? new BroadcastChannel('arena-sync') : null;
+
+if (ArenaSync) {
+  ArenaSync.onmessage = e => {
+    if (e.data && e.data.type === 'session' && isPublic()) {
+      try { localStorage.setItem('arena_session', JSON.stringify(e.data.session)); } catch (err) { /* noop */ }
+      if (typeof loadSession === 'function') loadSession();
+      if (typeof updateWordBar === 'function') updateWordBar();
+      if (typeof renderScoreboard === 'function') renderScoreboard();
+    }
+  };
+}
+
+function applyPublicMode() {
+  if (!isPublic()) return;
+  document.documentElement.classList.add('public-mode');
+  const tb = $('#theme-toggle');
+  if (tb) tb.classList.add('hidden');
+  const badge = document.createElement('div');
+  badge.className = 'public-badge hidden fixed top-2 left-2 z-[80] px-3 py-1 rounded-full bg-tertiary/20 border border-tertiary/50 text-tertiary font-label-caps text-label-caps';
+  badge.textContent = '● PANTALLA PÚBLICA';
+  document.body.appendChild(badge);
+}
+
+function openPublicScreen() {
+  const u = new URL(window.location.href);
+  u.searchParams.set('public', '1');
+  window.open(u.href, '_blank');
+}
+
 // ---------- Arranque ----------
 const themeToggle = $('#theme-toggle');
 if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
 initTheme();
+applyPublicMode();
