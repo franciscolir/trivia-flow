@@ -109,38 +109,37 @@
 </main>
 <script src="js/sounds.js"></script>
 <script src="js/arena.js"></script>
+<script src="js/session.js"></script>
 <script>
-  const scores = getScores();
-  const circuit = getCircuit();
-  const teamLabels = TEAMS.map(t => {
-    const label = circuit && circuit.teams ? (circuit.teams.find(x => x.id === t.id)?.label || t.label) : t.label;
-    return { ...t, label };
-  });
+  loadSession();
+  const sess = getSession();
+  const ranking = sess && sess.teams ? getRanking() : [];
+  const winner = ranking[0];
 
-  const sorted = teamLabels.map(t => ({ ...t, score: scores[t.id] })).sort((a, b) => b.score - a.score);
-  const winner = sorted[0];
+  $('#winner-name').textContent = winner ? winner.name : 'Sin equipos';
+  $('#stat-points').textContent = fmt(winner ? winner.score : 0);
+  $('#stat-games').textContent = (sess && sess.games ? sess.games.length : 0);
+  $('#stat-rewards').textContent = (sess && sess.events ? sess.events.filter(e => e.type === 'REWARD_GRANTED').length : 0);
 
-  $('#winner-name').textContent = winner.label;
-  $('#stat-points').textContent = fmt(winner.score);
-  $('#stat-games').textContent = (circuit && circuit.games ? circuit.games.length : 0);
-  $('#stat-rewards').textContent = '0';
-
-  $('#ranking').innerHTML = sorted.map((t, i) => `
+  $('#ranking').innerHTML = ranking.map((t, i) => {
+    const color = COLORS[t.color] || COLORS.rojo;
+    return `
     <div class="glass-panel rounded-xl p-5 flex items-center justify-between ${i === 0 ? 'border border-primary/50 glow-primary' : ''}">
       <div class="flex items-center gap-4">
-        <span class="font-display-lg text-display-lg-mobile md:text-display-lg ${t.color}">${i + 1}</span>
-        <span class="font-headline-md text-headline-md text-on-surface uppercase">${escapeHtml(t.label)}</span>
+        <span class="font-display-lg text-display-lg-mobile md:text-display-lg ${color.text}">${i + 1}</span>
+        <span class="font-headline-md text-headline-md text-on-surface uppercase">${escapeHtml(t.name)}</span>
       </div>
-      <span class="font-display-lg text-display-lg-mobile md:text-display-lg ${t.color}">${fmt(t.score)}</span>
-    </div>`).join('');
+      <span class="font-display-lg text-display-lg-mobile md:text-display-lg ${color.text}">${fmt(t.score)}</span>
+    </div>`;
+  }).join('');
 
   $('#new-session').addEventListener('click', () => {
-    resetScores();
-    clearCircuit();
-    window.location.href = 'index.html';
+    clearSession();
+    window.location.href = 'index';
   });
   $('#view-history').addEventListener('click', () => {
-    alert('Historial de eventos próximamente. Sesión actual:\n' + teamLabels.map(t => t.label + ': ' + fmt(scores[t.id])).join('\n'));
+    const events = sess && sess.events ? sess.events.slice(-12).reverse().map(e => '• ' + e.type + (e.teamId ? ' [' + (sess.teams.find(t => t.id === e.teamId)?.name || '') + ']' : '')).join('\n') : 'Sin eventos';
+    alert('Historial de eventos:\n' + events);
   });
 
   playFinish();

@@ -122,21 +122,26 @@
 </main>
 </div>
 <!-- Scoreboard -->
-<footer class="bg-surface-container-highest/90 backdrop-blur-md border-t border-primary/30 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-24 px-4 pb-safe rounded-t-xl">
-<div class="flex flex-col items-center justify-center text-on-surface-variant px-6 py-2"><span class="material-symbols-outlined text-error mb-1" style="font-variation-settings: 'FILL' 1;">groups</span><span class="font-label-caps text-[10px] text-center">RED TEAM<br/><span class="text-error" data-score="rojo">0</span></span></div>
-<div class="flex flex-col items-center justify-center text-on-surface-variant px-6 py-2"><span class="material-symbols-outlined text-primary mb-1" style="font-variation-settings: 'FILL' 1;">groups</span><span class="font-label-caps text-[10px] text-center">BLUE TEAM<br/><span class="text-primary" data-score="azul">0</span></span></div>
-<div class="flex flex-col items-center justify-center text-on-surface-variant px-6 py-2"><span class="material-symbols-outlined text-tertiary mb-1" style="font-variation-settings: 'FILL' 1;">groups</span><span class="font-label-caps text-[10px] text-center">GREEN TEAM<br/><span class="text-tertiary" data-score="verde">0</span></span></div>
+<footer class="bg-surface-container-highest/90 backdrop-blur-md border-t border-primary/30 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] fixed bottom-0 left-0 w-full z-50 rounded-t-xl">
+<div id="scoreboard" class="flex justify-around items-center h-24 px-4 overflow-x-auto"></div>
 </footer>
 
 <script src="js/sounds.js"></script>
 <script src="js/arena.js"></script>
+<script src="js/session.js"></script>
+<script src="js/components.js"></script>
 <script>
-  const circuit = getCircuit();
-  const gi = getGameIndex();
-  const cfg = circuit && circuit.games && circuit.games[gi] ? circuit.games[gi] : null;
+  initSessionFromUrlOrLocal();
+  const gi = getGameIndexFromUrl();
+  const sess = getSession();
+  if (sess.games && sess.games.length) sess.currentGameIndex = gi;
+  const isCircuit = !!(sess && sess.mode === 'circuit' && sess.games && sess.games.length);
 
   const DEFAULT_NAMES = ['Alex Rivera', 'María Gómez', 'Carlos Chen', 'Sara Connor', 'David Smith', 'Elena Ruiz'];
-  let pool = [...DEFAULT_NAMES];
+  const sourcePool = (sess && sess.tombola && sess.tombola.pool && sess.tombola.pool.length)
+    ? sess.tombola.pool.slice()
+    : (sess && sess.participants && sess.participants.length ? sess.participants.map(p => p.name) : DEFAULT_NAMES);
+  let pool = [...sourcePool];
   let history = [];
   let spinning = false;
   let lastPick = null;
@@ -214,7 +219,7 @@
     renderHistory();
   });
   $t.reset.addEventListener('click', () => {
-    pool = [...DEFAULT_NAMES];
+    pool = [...sourcePool];
     lastPick = null;
     history = [];
     $t.exclude.disabled = false;
@@ -227,11 +232,13 @@
   });
   $t.next.addEventListener('click', () => window.location.href = nextGameUrl());
 
-  if (circuit) {
+  if (isCircuit) {
     $t.topProgress.classList.remove('hidden');
-    $t.topProgress.textContent = 'JUEGO ' + (gi + 1) + ' / ' + circuit.games.length;
+    $t.topProgress.textContent = 'JUEGO ' + (gi + 1) + ' / ' + sess.games.length;
     $t.next.classList.remove('hidden');
   }
+
+  renderScoreboardTeams('#scoreboard');
 
   renderParticipants();
   renderHistory();

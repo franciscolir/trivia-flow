@@ -8,5 +8,11 @@ service cloud.firestore {
       allow create: if request.auth != null;
       allow update, delete: if request.auth != null && request.auth.uid == resource.data.uid;
     }
+
+    // Sesiones: la pantalla pública las lee y el conductor las escribe.
+    // Datos de competencia (no confidenciales) en un entorno de juego.
+    match /sessions/{sessionId} {
+      allow read, write: if true;
+    }
   }
 }

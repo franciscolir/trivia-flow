@@ -3,7 +3,7 @@
 <html class="dark" lang="es"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Crear Circuito - ULTRA ARENA</title>
+<title>Configuración - ULTRA ARENA</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;family=Montserrat:wght@400;700;800;900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
@@ -44,177 +44,152 @@
         }
     </script>
 <style>
-        body {
-            background-color: #0B0E14;
-            background-image: radial-gradient(circle at top left, rgba(165, 231, 255, 0.1) 0%, transparent 40%),
-                              radial-gradient(circle at bottom right, rgba(255, 172, 232, 0.1) 0%, transparent 40%);
-            background-attachment: fixed;
-            min-height: 100vh;
-            color: #dde3e7;
-        }
-
-        .glass-panel {
-            background-color: rgba(22, 29, 31, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid transparent;
-            background-clip: padding-box;
-            position: relative;
-        }
-        .glass-panel::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0; bottom: 0; left: 0;
-            border-radius: inherit;
-            padding: 1px;
-            background: linear-gradient(to bottom right, rgba(165, 231, 255, 0.3), rgba(165, 231, 255, 0));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-        }
-
+        body { background-color: #0B0E14; background-image: radial-gradient(circle at top left, rgba(165,231,255,0.1) 0%, transparent 40%), radial-gradient(circle at bottom right, rgba(255,172,232,0.1) 0%, transparent 40%); background-attachment: fixed; min-height: 100vh; color: #dde3e7; }
+        .glass-panel { background-color: rgba(22,29,31,0.6); backdrop-filter: blur(20px); border: 1px solid transparent; background-clip: padding-box; position: relative; }
+        .glass-panel::before { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; border-radius: inherit; padding: 1px; background: linear-gradient(to bottom right, rgba(165,231,255,0.3), rgba(165,231,255,0)); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
         .btn-primary { background: linear-gradient(135deg, #00d2ff, #47d6ff); color: #003543; transition: all 0.3s ease; }
-        .btn-primary:hover { box-shadow: 0 0 15px rgba(0, 210, 255, 0.5); transform: scale(1.02); }
+        .btn-primary:hover { box-shadow: 0 0 15px rgba(0,210,255,0.5); transform: scale(1.02); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
         .btn-secondary { background-color: transparent; border: 1px solid #ff24e4; color: #fface8; transition: all 0.3s ease; }
-        .btn-secondary:hover { background-color: rgba(255, 36, 228, 0.1); }
-
+        .btn-secondary:hover { background-color: rgba(255,36,228,0.1); }
         .input-glow { background-color: #1a2123; border: none; border-bottom: 2px solid #859399; color: #dde3e7; transition: all 0.3s ease; }
-        .input-glow:focus { outline: none; border-bottom-color: #a5e7ff; box-shadow: 0 4px 10px -4px rgba(165, 231, 255, 0.5); }
-
+        .input-glow:focus { outline: none; border-bottom-color: #a5e7ff; box-shadow: 0 4px 10px -4px rgba(165,231,255,0.5); }
         .game-item { transition: all 0.3s ease; border: 1px solid transparent; }
-        .game-item:hover, .game-item.active { border-color: #a5e7ff; box-shadow: 0 0 20px rgba(165, 231, 255, 0.2); background-color: rgba(22, 29, 31, 0.8); }
-        .progress-glow { box-shadow: 0 0 8px #00fd9b; }
+        .game-item.active { border-color: #a5e7ff; box-shadow: 0 0 20px rgba(165,231,255,0.2); background-color: rgba(22,29,31,0.8); }
         .modal-backdrop { background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); }
+        .step { display: none; }
+        .step.active { display: block; }
+        .step-dot { width: 10px; height: 10px; border-radius: 9999px; background: #3c494e; }
+        .step-dot.done { background: #00fd9b; }
+        .step-dot.current { background: #a5e7ff; box-shadow: 0 0 8px rgba(165,231,255,0.6); }
+        html.light body { background-color: #eef3f8; color: #16222a; }
     </style>
 <link rel="stylesheet" href="css/arena.css"/>
 </head>
-<body class="flex flex-col h-screen overflow-hidden text-body-md font-body-md">
-<!-- TopAppBar -->
-<header class="bg-surface/60 backdrop-blur-xl border-b border-primary/20 shadow-[0_0_20px_rgba(71,214,255,0.1)] flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 w-full z-50 shrink-0">
-<a href="index.html" class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary tracking-tighter">ULTRA ARENA</a>
+<body class="flex flex-col min-h-screen text-body-md font-body-md">
+<header class="bg-surface/60 backdrop-blur-xl border-b border-primary/20 shadow-[0_0_20px_rgba(71,214,255,0.1)] flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 w-full z-50 sticky top-0">
+<a href="index" class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary tracking-tighter">ULTRA ARENA</a>
 <div class="flex items-center gap-4">
-  <button id="theme-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Cambiar tema">
-    <span class="material-symbols-outlined">light_mode</span>
-  </button>
-  <div class="font-headline-md text-headline-md text-primary">CREAR CIRCUITO</div>
+  <button id="theme-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Cambiar tema"><span class="material-symbols-outlined">light_mode</span></button>
+  <div id="step-label" class="font-headline-md text-headline-md text-primary">CONFIGURACIÓN</div>
 </div>
 </header>
-<!-- Main Content Layout -->
-<div class="flex-1 flex overflow-hidden">
-<!-- SideNavBar -->
-<nav class="bg-surface-container/80 backdrop-blur-2xl shadow-2xl hidden md:flex flex-col p-6 w-64 h-full border-r border-secondary/20 z-40 shrink-0">
-<div class="mb-8">
-<div class="font-label-caps text-label-caps text-on-surface-variant mb-2">CONTROL PANEL</div>
-<div class="font-headline-md text-headline-md text-secondary">CREAR CIRCUITO</div>
-</div>
-<div class="space-y-4 flex-1">
-<a class="flex items-center space-x-3 text-secondary font-bold bg-secondary/10 rounded-lg p-3 hover:bg-surface-bright transition-all translate-x-1" href="#builder">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">view_list</span>
-<span class="font-label-caps text-label-caps">Circuito Actual</span>
-</a>
-<a class="flex items-center space-x-3 text-on-surface-variant p-3 rounded-lg hover:bg-surface-bright transition-all" href="#settings">
-<span class="material-symbols-outlined">settings</span>
-<span class="font-label-caps text-label-caps">Configuración General</span>
-</a>
-<a class="flex items-center space-x-3 text-on-surface-variant p-3 rounded-lg hover:bg-surface-bright transition-all" href="#teams">
-<span class="material-symbols-outlined">group</span>
-<span class="font-label-caps text-label-caps">Equipos</span>
-</a>
-</div>
-<button id="start-circuit" class="btn-primary w-full py-3 rounded-lg font-label-caps text-label-caps mt-auto">
-                INICIAR CIRCUITO
-            </button>
-</nav>
-<!-- Canvas Area -->
-<main class="flex-1 overflow-y-auto p-margin-mobile md:p-margin-desktop relative pb-28">
-<div class="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter">
-<!-- Builder Area -->
-<div class="lg:col-span-8 flex flex-col space-y-gutter">
-<div class="glass-panel rounded-xl p-6" id="builder">
-<div class="flex flex-col space-y-4">
-<h1 class="font-headline-md text-headline-md text-primary">CREAR CIRCUITO</h1>
-<div class="flex flex-col space-y-2">
-<label class="font-label-caps text-label-caps text-on-surface-variant" for="circuitName">Nombre del circuito</label>
-<input class="input-glow w-full py-2 px-1 text-body-lg font-body-lg bg-transparent" id="circuitName" placeholder="Ej: Torneo Verano" type="text" value="Gran Desafío Familiar"/>
-</div>
-</div>
-</div>
-<div class="flex flex-col space-y-4">
-<div class="flex justify-between items-center mb-2">
-<h2 class="font-label-caps text-label-caps text-on-surface">JUEGOS EN CIRCUITO (<span id="game-count">4</span>)</h2>
-<span class="font-label-caps text-label-caps text-tertiary" id="est-time">TIEMPO EST.: 40 MIN</span>
-</div>
-<div id="games-list" class="flex flex-col space-y-4"></div>
-<button id="add-game" class="btn-secondary w-full py-4 rounded-lg flex items-center justify-center gap-2 mt-4 font-label-caps text-label-caps">
-<span class="material-symbols-outlined">add_circle</span>
-                            AGREGAR JUEGO
-                        </button>
-</div>
-</div>
-<!-- Sidebar Settings -->
-<div class="lg:col-span-4 flex flex-col space-y-gutter">
-<div class="glass-panel rounded-xl p-6" id="settings">
-<h3 class="font-label-caps text-label-caps text-secondary mb-4 flex items-center gap-2">
-<span class="material-symbols-outlined">settings_suggest</span>
-                            PUNTUACIÓN GLOBAL
-                        </h3>
-<div class="space-y-4">
-<div class="flex justify-between items-center">
-<span class="font-body-md text-on-surface-variant">Modificador de Dificultad</span>
-<span class="font-label-caps text-tertiary" id="diff-label">x1.5</span>
-</div>
-<div class="relative w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
-<div id="diff-fill" class="absolute top-0 left-0 h-full w-1/2 bg-gradient-to-r from-primary to-tertiary"></div>
-</div>
-<input id="diff-range" class="w-full mt-2" type="range" min="1" max="3" step="0.5" value="1.5"/>
-<div class="pt-4 border-t border-outline-variant">
-<label class="flex items-center space-x-3 cursor-pointer">
-<input id="time-bonus" class="form-checkbox h-5 w-5 text-primary rounded bg-surface border-outline focus:ring-primary" type="checkbox" checked/>
-<span class="text-on-surface font-body-md">Puntos extra por tiempo récord</span>
-</label>
-</div>
-</div>
-</div>
-<div class="glass-panel rounded-xl p-6" id="teams">
-<h3 class="font-label-caps text-label-caps text-secondary mb-4 flex items-center gap-2">
-<span class="material-symbols-outlined">group</span>
-                            EQUIPOS
-                        </h3>
-<div class="space-y-4">
-<div class="flex items-center gap-3">
-<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">groups</span>
-<input class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent team-name" data-team="rojo" type="text" value="RED TEAM"/>
-</div>
-<div class="flex items-center gap-3">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">groups</span>
-<input class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent team-name" data-team="azul" type="text" value="BLUE TEAM"/>
-</div>
-<div class="flex items-center gap-3">
-<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">groups</span>
-<input class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent team-name" data-team="verde" type="text" value="GREEN TEAM"/>
-</div>
-<button id="reset-scores" class="w-full py-3 rounded-lg border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-bright transition-colors">REINICIAR MARCADOR</button>
-</div>
-</div>
-</div>
+
+<main class="flex-1 p-margin-mobile md:p-margin-desktop relative pb-28">
+<div class="max-w-4xl mx-auto">
+  <!-- Stepper -->
+  <div id="stepper" class="flex items-center justify-center gap-3 mb-8"></div>
+
+  <!-- PASO 1: MODO -->
+  <section id="step-1" class="step active glass-panel rounded-2xl p-8">
+    <h1 class="font-headline-md text-headline-md text-primary mb-6">¿CÓMO QUIERES JUGAR?</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <button data-mode="individual" class="mode-card glass-panel rounded-xl p-8 flex flex-col items-center gap-4 border border-outline-variant hover:border-primary transition-all">
+        <span class="material-symbols-outlined text-5xl text-primary" style="font-variation-settings:'FILL' 1;">person</span>
+        <span class="font-headline-md text-headline-md text-on-surface">JUEGO INDIVIDUAL</span>
+        <span class="font-body-md text-body-md text-on-surface-variant text-center">Juega cualquier juego por separado.</span>
+      </button>
+      <button data-mode="circuit" class="mode-card glass-panel rounded-xl p-8 flex flex-col items-center gap-4 border border-outline-variant hover:border-primary transition-all">
+        <span class="material-symbols-outlined text-5xl text-tertiary" style="font-variation-settings:'FILL' 1;">emoji_events</span>
+        <span class="font-headline-md text-headline-md text-on-surface">CIRCUITO</span>
+        <span class="font-body-md text-body-md text-on-surface-variant text-center">Una competencia de varios juegos con marcador global.</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- PASO 2: EQUIPOS -->
+  <section id="step-2" class="step glass-panel rounded-2xl p-8">
+    <h1 class="font-headline-md text-headline-md text-primary mb-2">EQUIPOS</h1>
+    <p class="font-body-md text-body-md text-on-surface-variant mb-6">De 2 a 8 equipos, cada uno con un color único.</p>
+    <div class="flex items-center gap-4 mb-6">
+      <span class="font-label-caps text-label-caps text-on-surface-variant">CANTIDAD</span>
+      <input id="team-count" type="range" min="2" max="8" value="3" class="w-40"/>
+      <span id="team-count-label" class="font-headline-md text-headline-md text-secondary">3</span>
+    </div>
+    <div id="teams-editor" class="flex flex-col gap-3"></div>
+  </section>
+
+  <!-- PASO 3: PARTICIPANTES -->
+  <section id="step-3" class="step glass-panel rounded-2xl p-8">
+    <h1 class="font-headline-md text-headline-md text-primary mb-2">PARTICIPANTES</h1>
+    <p class="font-body-md text-body-md text-on-surface-variant mb-6">Opcional. La Tómbola los usa. Asigna cada participante a un equipo.</p>
+    <div class="flex gap-3 mb-6">
+      <input id="part-input" class="input-glow flex-1 py-2 px-1 text-body-lg font-body-lg bg-transparent" placeholder="Nombre del participante"/>
+      <button id="part-add" class="btn-primary px-6 py-2 rounded-lg font-label-caps text-label-caps">AGREGAR</button>
+    </div>
+    <div id="participants-editor" class="flex flex-col gap-2"></div>
+    <p id="participants-empty" class="font-body-md text-body-md text-on-surface-variant text-center py-6">Sin participantes todavía.</p>
+  </section>
+
+  <!-- PASO 4: JUEGOS (solo circuito) -->
+  <section id="step-4" class="step glass-panel rounded-2xl p-8">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="font-headline-md text-headline-md text-primary">JUEGOS DEL CIRCUITO</h1>
+      <span id="games-time" class="font-label-caps text-label-caps text-tertiary">0 MIN</span>
+    </div>
+    <div id="games-list" class="flex flex-col gap-3 mb-4"></div>
+    <button id="add-game" class="btn-secondary w-full py-3 rounded-lg flex items-center justify-center gap-2 font-label-caps text-label-caps">AGREGAR JUEGO</button>
+  </section>
+
+  <!-- PASO 5: DINÁMICAS Y PALABRA -->
+  <section id="step-5" class="step glass-panel rounded-2xl p-8">
+    <h1 class="font-headline-md text-headline-md text-primary mb-6">DINÁMICAS</h1>
+    <div class="flex flex-col gap-6">
+      <div class="flex items-center justify-between border-b border-outline-variant pb-4">
+        <div>
+          <div class="font-headline-md text-headline-md text-on-surface">TÓMBOLA</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">Selección al azar de participantes.</div>
+        </div>
+        <input id="toggle-tombola" type="checkbox" checked class="w-6 h-6 accent-[#00d2ff]"/>
+      </div>
+      <div class="flex items-center justify-between border-b border-outline-variant pb-4">
+        <div>
+          <div class="font-headline-md text-headline-md text-on-surface">DESCUBRE LA PALABRA</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">Segunda misión permanente del circuito.</div>
+        </div>
+        <input id="toggle-word" type="checkbox" class="w-6 h-6 accent-[#00d2ff]"/>
+      </div>
+      <div id="word-config" class="hidden flex flex-col gap-4 pl-0 border-l-2 border-secondary/30">
+        <div>
+          <label class="font-label-caps text-label-caps text-on-surface-variant" for="word-text">PALABRA SECRETA</label>
+          <input id="word-text" class="input-glow w-full py-2 px-1 text-body-lg font-body-lg bg-transparent" placeholder="Ej: CARRERA" maxlength="16"/>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="font-label-caps text-label-caps text-on-surface-variant" for="reward-all">RECOMPENSA TODOS (+)</label>
+            <input id="reward-all" type="number" min="0" value="5" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent"/>
+          </div>
+          <div>
+            <label class="font-label-caps text-label-caps text-on-surface-variant" for="reward-winner">RECOMPENSA GANADOR (+)</label>
+            <input id="reward-winner" type="number" min="0" value="10" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent"/>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <label class="flex items-center gap-2 font-body-md text-on-surface"><input id="toggle-guess" type="checkbox" checked class="w-5 h-5 accent-[#00d2ff]"/> Intentar resolver la palabra</label>
+          <div class="flex items-center gap-2">
+            <span class="font-label-caps text-label-caps text-on-surface-variant">PENALIZACIÓN</span>
+            <input id="guess-penalty" type="number" min="0" value="5" class="input-glow w-20 py-1 px-1 text-body-md font-body-md bg-transparent"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PASO 6: RESUMEN -->
+  <section id="step-6" class="step glass-panel rounded-2xl p-8">
+    <h1 class="font-headline-md text-headline-md text-primary mb-6">RESUMEN</h1>
+    <div id="summary" class="flex flex-col gap-4"></div>
+  </section>
+
+  <!-- Navegación -->
+  <div class="flex justify-between items-center mt-8 gap-4">
+    <button id="prev-btn" class="btn-secondary px-8 py-3 rounded-lg font-label-caps text-label-caps">← ANTERIOR</button>
+    <div id="step-progress" class="font-label-caps text-label-caps text-on-surface-variant">PASO 1 / 6</div>
+    <button id="next-btn" class="btn-primary px-10 py-3 rounded-lg font-label-caps text-label-caps">SIGUIENTE →</button>
+    <button id="start-btn" class="hidden btn-primary px-10 py-3 rounded-lg font-label-caps text-label-caps">INICIAR 🏆</button>
+  </div>
 </div>
 </main>
-</div>
-<!-- BottomNavBar Mobile -->
-<nav class="bg-surface-container-highest/90 backdrop-blur-md border-t border-primary/30 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-24 px-4 pb-safe md:hidden rounded-t-xl shrink-0">
-<button data-mobile-start class="flex flex-col items-center justify-center text-primary px-6 py-2">
-<span class="material-symbols-outlined mb-1">play_circle</span>
-<span class="font-label-caps text-label-caps text-[10px]">INICIAR</span>
-</button>
-<button data-mobile-add class="flex flex-col items-center justify-center text-on-surface-variant px-6 py-2">
-<span class="material-symbols-outlined mb-1">add_circle</span>
-<span class="font-label-caps text-label-caps text-[10px]">AGREGAR</span>
-</button>
-<a href="index.html" class="flex flex-col items-center justify-center text-on-surface-variant px-6 py-2">
-<span class="material-symbols-outlined mb-1">home</span>
-<span class="font-label-caps text-label-caps text-[10px]">INICIO</span>
-</a>
-</nav>
 
 <!-- Modal agregar juego -->
 <div id="add-modal" class="modal-backdrop hidden fixed inset-0 z-[60] flex items-center justify-center p-4">
@@ -226,132 +201,260 @@
 </div>
 
 <script src="js/arena.js"></script>
+<script src="js/session.js"></script>
+<script src="js/components.js"></script>
 <script>
   const GAME_OPTIONS = [
-    { type: 'trivia', name: 'Trivia Clásica', icon: 'quiz', color: 'text-primary', chips: ['MÚLTIPLE OPCIÓN', '10 PUNTOS', '10 MIN'], points: 10, duration: 10 },
-    { type: 'timed', name: 'Trivia Contrarreloj', icon: 'timer', color: 'text-tertiary', chips: ['VELOCIDAD', '20 PUNTOS', '15 MIN'], points: 20, duration: 15 },
-    { type: 'memorice', name: 'Memorice', icon: 'grid_view', color: 'text-secondary', chips: ['VISUAL', '15 PUNTOS', '5 MIN'], points: 15, duration: 5 },
-    { type: 'tombola', name: 'Tómbola', icon: 'casino', color: 'text-primary', chips: ['SORTEO', '5 PUNTOS', '3 MIN'], points: 5, duration: 3 },
-    { type: 'word', name: 'Descubre la Palabra', icon: 'abc', color: 'text-secondary', chips: ['LETRAS', '10 PUNTOS', '10 MIN'], points: 10, duration: 10 }
+    { type: 'trivia', name: 'Trivia Clásica', icon: 'quiz', chips: ['MÚLTIPLE OPCIÓN', '10 PUNTOS', '10 MIN'], points: 10, duration: 10, settings: { timePerQuestion: 15 } },
+    { type: 'timed', name: 'Trivia Contrarreloj', icon: 'timer', chips: ['VELOCIDAD', '20 PUNTOS', '15 MIN'], points: 20, duration: 15, settings: { totalTime: 90, maxQuestions: 20, penalty: 5 } },
+    { type: 'memorice', name: 'Memorice', icon: 'grid_view', chips: ['VISUAL', '15 PUNTOS', '5 MIN'], points: 15, duration: 5, settings: { pairs: 8 } },
+    { type: 'tombola', name: 'Tómbola', icon: 'casino', chips: ['SORTEO', '5 PUNTOS', '3 MIN'], points: 5, duration: 3, settings: {} },
+    { type: 'word', name: 'Descubre la Palabra', icon: 'abc', chips: ['LETRAS', '10 PUNTOS', '10 MIN'], points: 10, duration: 10, settings: {} }
   ];
 
-  let games = [];
-  const nameInput = $('#circuitName');
-  const listEl = $('#games-list');
-  const countEl = $('#game-count');
-  const timeEl = $('#est-time');
-  const addBtn = $('#add-game');
-  const modal = $('#add-modal');
-  const optionsEl = $('#game-options');
-  const diffRange = $('#diff-range');
-  const diffLabel = $('#diff-label');
-  const diffFill = $('#diff-fill');
+  const STEPS = ['step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-6'];
+  let currentStep = 0;
+  let config = {
+    mode: 'circuit', name: 'Gran Desafío',
+    teams: [], participants: [], games: [],
+    tombolaActive: true, wordActive: false,
+    word: { text: '', rewardAll: 5, rewardWinner: 10, guessEnabled: true, guessPenalty: 5 }
+  };
 
-  function iconFor(g) {
-    const o = GAME_OPTIONS.find(x => x.type === g.type) || GAME_OPTIONS[0];
-    return `<span class="material-symbols-outlined text-2xl ${o.color}">${o.icon}</span>`;
+  const usedColors = new Set();
+  const colorKeys = Object.keys(COLORS);
+
+  // ---------- Stepper ----------
+  function renderStepper() {
+    const el = $('#stepper');
+    el.innerHTML = STEPS.map((s, i) => `<div class="flex items-center gap-3"><div class="step-dot ${i < currentStep ? 'done' : ''} ${i === currentStep ? 'current' : ''}"></div>${i < STEPS.length - 1 ? '<div class="w-8 h-px bg-surface-container-high"></div>' : ''}</div>`).join('');
+    $('#step-progress').textContent = 'PASO ' + (currentStep + 1) + ' / ' + STEPS.length;
   }
 
-  function gameHtml(g, i) {
-    const o = GAME_OPTIONS.find(x => x.type === g.type) || GAME_OPTIONS[0];
-    const chips = g.chips || o.chips;
-    return `
-    <div class="glass-panel game-item rounded-lg p-4 flex flex-col sm:flex-row items-center gap-4 cursor-pointer" data-type="${g.type}">
-      <div class="flex-shrink-0 w-12 h-12 ${g.type === 'trivia' || g.type === 'tombola' ? 'bg-primary/20' : 'bg-surface-bright'} rounded-full flex items-center justify-center">${iconFor(g)}</div>
-      <div class="flex-1 w-full text-center sm:text-left">
-        <h3 class="font-headline-md text-headline-md text-on-surface m-0">${escapeHtml(g.name || o.name)}</h3>
-        <div class="flex flex-wrap justify-center sm:justify-start gap-2 mt-1">
-          ${chips.map(c => `<span class="text-xs font-label-caps text-on-surface-variant bg-surface px-2 py-1 rounded">${escapeHtml(c)}</span>`).join('')}
+  function showStep(i) {
+    currentStep = Math.max(0, Math.min(STEPS.length - 1, i));
+    STEPS.forEach((id, idx) => {
+      const el = document.getElementById(id);
+      el.classList.toggle('active', idx === currentStep);
+      // Juegos solo en circuito
+      if (id === 'step-4' && config.mode !== 'circuit') el.classList.remove('active');
+    });
+    // En modo individual saltamos juegos: paso 4 -> salta
+    if (config.mode !== 'circuit' && currentStep === 3) { currentStep = 4; return showStep(4); }
+    $('#prev-btn').classList.toggle('invisible', currentStep === 0);
+    const isLast = currentStep === STEPS.length - 1;
+    $('#next-btn').classList.toggle('hidden', isLast);
+    $('#start-btn').classList.toggle('hidden', !isLast);
+    renderStepper();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ---------- Equipos ----------
+  function renderTeams() {
+    const count = +$('#team-count').value;
+    while (config.teams.length < count) config.teams.push({ id: 'team_' + (config.teams.length + 1), name: '', color: colorKeys[config.teams.length % colorKeys.length] });
+    config.teams.length = count;
+    usedColors.clear();
+    const el = $('#teams-editor');
+    el.innerHTML = config.teams.map((t, i) => {
+      const used = new Set(config.teams.filter(x => x !== t).map(x => x.color));
+      const opts = colorKeys.map(k => `<option value="${k}" ${t.color === k ? 'selected' : ''} ${used.has(k) ? 'disabled' : ''}>${COLORS[k].label}</option>`).join('');
+      return `<div class="flex items-center gap-3 glass-panel rounded-lg p-3">
+        <span class="w-6 h-6 rounded-full shrink-0" style="background:${COLORS[t.color] ? COLORS[t.color].hex : '#888'}"></span>
+        <input data-team-id="${t.id}" class="team-name input-glow flex-1 py-1 px-1 text-body-lg font-body-lg bg-transparent" placeholder="Nombre equipo ${i + 1}"/>
+        <select data-team-id="${t.id}" class="team-color input-glow bg-surface-container py-1 px-1 text-body-md font-body-md">${opts}</select>
+      </div>`;
+    }).join('');
+    config.teams.forEach(t => usedColors.add(t.color));
+    $('#team-count-label').textContent = count;
+    bindTeamsEvents();
+  }
+
+  function bindTeamsEvents() {
+    $$('.team-name').forEach(inp => inp.addEventListener('input', () => {
+      const t = config.teams.find(x => x.id === inp.dataset.teamId);
+      if (t) t.name = inp.value;
+    }));
+    $$('.team-color').forEach(sel => sel.addEventListener('change', () => {
+      const t = config.teams.find(x => x.id === sel.dataset.teamId);
+      if (!t) return;
+      const conflict = config.teams.find(x => x !== t && x.color === sel.value);
+      if (conflict) { conflict.color = t.color; }
+      t.color = sel.value;
+      renderTeams();
+    }));
+  }
+
+  // ---------- Participantes ----------
+  function renderParticipants() {
+    const el = $('#participants-editor');
+    $('#participants-empty').classList.toggle('hidden', config.participants.length > 0);
+    el.innerHTML = config.participants.map((p, i) => `
+      <div class="flex items-center gap-3 glass-panel rounded-lg p-3">
+        <span class="material-symbols-outlined text-on-surface-variant">person</span>
+        <span class="flex-1 font-body-md text-body-md text-on-surface">${escapeHtml(p.name)}</span>
+        <select data-participant="${p.id}" class="part-team input-glow bg-surface-container py-1 px-1 text-body-md font-body-md">
+          <option value="">SIN EQUIPO</option>
+          ${config.teams.map(t => `<option value="${t.id}" ${p.teamId === t.id ? 'selected' : ''}>${escapeHtml(t.name || COLORS[t.color].label)}</option>`).join('')}
+        </select>
+        <button data-participant="${p.id}" class="part-del p-1 text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined text-[20px]">close</span></button>
+      </div>`).join('');
+    $$('.part-team').forEach(sel => sel.addEventListener('change', () => {
+      const p = config.participants.find(x => x.id === sel.dataset.participant);
+      if (p) p.teamId = sel.value;
+    }));
+    $$('.part-del').forEach(btn => btn.addEventListener('click', () => {
+      config.participants = config.participants.filter(x => x.id !== btn.dataset.participant);
+      renderParticipants();
+    }));
+    // Tómbola usa los participantes
+    config.tombolaPool = config.participants.map(p => p.name);
+  }
+
+  // ---------- Juegos ----------
+  function renderGames() {
+    const el = $('#games-list');
+    el.innerHTML = config.games.map((g, i) => {
+      const o = GAME_OPTIONS.find(x => x.type === g.type) || GAME_OPTIONS[0];
+      return `<div class="glass-panel game-item active rounded-lg p-4 flex flex-col sm:flex-row items-center gap-4">
+        <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary shrink-0"><span class="material-symbols-outlined text-2xl">${o.icon}</span></div>
+        <div class="flex-1 w-full text-center sm:text-left">
+          <h3 class="font-headline-md text-headline-md text-on-surface m-0">${escapeHtml(g.name || o.name)}</h3>
+          <div class="flex flex-wrap justify-center sm:justify-start gap-2 mt-1">
+            <span class="text-xs font-label-caps text-primary bg-primary/10 px-2 py-1 rounded">${g.points} PUNTOS</span>
+            <span class="text-xs font-label-caps text-on-surface-variant bg-surface px-2 py-1 rounded">${g.duration} MIN</span>
+          </div>
         </div>
-      </div>
-      <div class="flex gap-2 w-full sm:w-auto justify-center">
-        <button class="g-up p-2 text-on-surface-variant hover:text-primary transition-colors" title="Subir" ${i === 0 ? 'disabled' : ''}>
-          <span class="material-symbols-outlined">arrow_upward</span>
-        </button>
-        <button class="g-down p-2 text-on-surface-variant hover:text-primary transition-colors" title="Bajar" ${i === games.length - 1 ? 'disabled' : ''}>
-          <span class="material-symbols-outlined">arrow_downward</span>
-        </button>
-        <button class="g-dup p-2 text-on-surface-variant hover:text-primary transition-colors" title="Duplicar">
-          <span class="material-symbols-outlined">content_copy</span>
-        </button>
-        <button class="g-del p-2 text-on-surface-variant hover:text-error transition-colors" title="Eliminar">
-          <span class="material-symbols-outlined">delete</span>
-        </button>
-      </div>
-    </div>`;
-  }
-
-  function render() {
-    listEl.innerHTML = games.map(gameHtml).join('');
-    countEl.textContent = games.length;
-    timeEl.textContent = 'TIEMPO EST.: ' + (games.reduce((s, g) => s + (g.duration || 0), 0) || 1) + ' MIN';
-
-    $$('.g-up', listEl).forEach((b, i) => b.addEventListener('click', () => move(i, -1)));
-    $$('.g-down', listEl).forEach((b, i) => b.addEventListener('click', () => move(i, 1)));
-    $$('.g-dup', listEl).forEach((b, i) => b.addEventListener('click', () => { games.splice(i, 0, { ...games[i] }); render(); }));
-    $$('.g-del', listEl).forEach((b, i) => b.addEventListener('click', () => { games.splice(i, 1); render(); }));
+        <div class="flex gap-2 w-full sm:w-auto justify-center">
+          <button class="g-up p-2 text-on-surface-variant hover:text-primary transition-colors" ${i === 0 ? 'disabled' : ''}><span class="material-symbols-outlined">arrow_upward</span></button>
+          <button class="g-down p-2 text-on-surface-variant hover:text-primary transition-colors" ${i === config.games.length - 1 ? 'disabled' : ''}><span class="material-symbols-outlined">arrow_downward</span></button>
+          <button class="g-dup p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">content_copy</span></button>
+          <button class="g-del p-2 text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined">delete</span></button>
+        </div>
+      </div>`;
+    }).join('');
+    $('#games-time').textContent = (config.games.reduce((s, g) => s + (g.duration || 0), 0) || 0) + ' MIN';
+    $$('.g-up', el).forEach((b, i) => b.addEventListener('click', () => move(i, -1)));
+    $$('.g-down', el).forEach((b, i) => b.addEventListener('click', () => move(i, 1)));
+    $$('.g-dup', el).forEach((b, i) => b.addEventListener('click', () => { config.games.splice(i, 0, { ...config.games[i], id: 'g_' + Date.now() }); renderGames(); }));
+    $$('.g-del', el).forEach((b, i) => b.addEventListener('click', () => { config.games.splice(i, 1); renderGames(); }));
   }
 
   function move(i, dir) {
     const j = i + dir;
-    if (j < 0 || j >= games.length) return;
-    [games[i], games[j]] = [games[j], games[i]];
-    render();
+    if (j < 0 || j >= config.games.length) return;
+    [config.games[i], config.games[j]] = [config.games[j], config.games[i]];
+    renderGames();
   }
 
-  function openModal() {
-    optionsEl.innerHTML = GAME_OPTIONS.map((o, i) => `
+  function openGameModal() {
+    $('#game-options').innerHTML = GAME_OPTIONS.map(o => `
       <button data-type="${o.type}" class="flex items-center gap-4 p-4 rounded-xl border border-outline-variant hover:border-primary hover:shadow-[0_0_15px_rgba(165,231,255,0.2)] transition-all text-left">
-        <div class="w-10 h-10 bg-surface-bright rounded-full flex items-center justify-center ${o.color}"><span class="material-symbols-outlined">${o.icon}</span></div>
+        <div class="w-10 h-10 bg-surface-bright rounded-full flex items-center justify-center text-primary"><span class="material-symbols-outlined">${o.icon}</span></div>
         <span class="font-body-lg font-bold text-on-surface flex-1">${o.name}</span>
         <span class="font-label-caps text-label-caps text-tertiary">${o.points} PTS</span>
       </button>`).join('');
-    $$('[data-type]', optionsEl).forEach(b => b.addEventListener('click', () => {
+    $$('[data-type]', $('#game-options')).forEach(b => b.addEventListener('click', () => {
       const o = GAME_OPTIONS.find(x => x.type === b.dataset.type);
-      games.push({ ...o });
-      modal.classList.add('hidden');
-      render();
+      config.games.push({ ...o, id: 'g_' + Date.now() + Math.random().toString(36).slice(2, 5) });
+      $('#add-modal').classList.add('hidden');
+      renderGames();
     }));
-    modal.classList.remove('hidden');
+    $('#add-modal').classList.remove('hidden');
   }
 
+  // ---------- Resumen ----------
+  function renderSummary() {
+    const el = $('#summary');
+    const teams = config.teams.map(t => `<li class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background:${COLORS[t.color].hex}"></span><span class="font-body-md text-body-md text-on-surface">${escapeHtml(t.name || COLORS[t.color].label)}</span></li>`).join('');
+    const games = config.mode === 'circuit' ? config.games.map((g, i) => `<li class="font-body-md text-body-md text-on-surface-variant">${i + 1}. ${escapeHtml(g.name)} — ${g.points} pts</li>`).join('') : '<li class="font-body-md text-body-md text-on-surface-variant">Se juega desde el centro de juegos.</li>';
+    const word = config.wordActive ? `<p class="font-body-md text-body-md text-on-surface-variant">Palabra: <span class="text-primary font-bold tracking-[0.2em]">${escapeHtml(config.word.text)}</span> · Todos +${config.word.rewardAll} · Ganador +${config.word.rewardWinner}</p>` : '';
+    el.innerHTML = `
+      <div class="flex flex-col gap-2">
+        <div class="font-label-caps text-label-caps text-primary uppercase">${config.mode === 'circuit' ? 'CIRCUITO' : 'JUEGO INDIVIDUAL'} · ${escapeHtml(config.name)}</div>
+        <ul class="flex flex-col gap-1">${teams}</ul>
+      </div>
+      <div class="border-t border-outline-variant pt-4">
+        <div class="font-label-caps text-label-caps text-secondary uppercase mb-2">JUEGOS</div>
+        <ul class="flex flex-col gap-1">${games}</ul>
+      </div>
+      <div class="border-t border-outline-variant pt-4 flex flex-col gap-2">
+        <div class="font-label-caps text-label-caps text-secondary uppercase">DINÁMICAS</div>
+        <p class="font-body-md text-body-md text-on-surface-variant">Tómbola: <span class="text-primary font-bold">${config.tombolaActive ? 'ACTIVA' : 'INACTIVA'}</span></p>
+        <p class="font-body-md text-body-md text-on-surface-variant">Descubre la palabra: <span class="text-primary font-bold">${config.wordActive ? 'ACTIVA' : 'INACTIVA'}</span></p>
+        ${word}
+      </div>`;
+  }
+
+  // ---------- Iniciar ----------
   function start() {
-    if (games.length === 0) { alert('Agrega al menos un juego al circuito.'); return; }
-    const circuit = {
-      name: nameInput.value.trim() || 'Gran Desafío',
-      difficulty: parseFloat(diffRange.value),
-      timeBonus: $('#time-bonus').checked,
-      teams: TEAMS.map(t => ({ id: t.id, label: $(`[data-team="${t.id}"]`).value.trim() || t.label, color: t.color })),
-      games
-    };
-    saveCircuit(circuit);
-    resetScores();
-    window.location.href = GAME_PAGES[games[0].type] + '?gi=0';
+    if (config.teams.some(t => !t.name.trim())) { alert('Todos los equipos necesitan un nombre.'); return; }
+    if (config.mode === 'circuit' && config.games.length === 0) { alert('Agrega al menos un juego al circuito.'); return; }
+    if (config.wordActive && !config.word.text.trim()) { alert('Ingresa la palabra secreta o desactiva la dinámica.'); return; }
+
+    clearSession();
+    createSession({
+      name: config.name,
+      mode: config.mode,
+      teams: config.teams.map(t => ({ ...t, score: 0 })),
+      participants: config.participants,
+      games: config.games,
+      tombola: { active: config.tombolaActive, pool: config.participants.map(p => p.name), history: [] },
+      word: config.wordActive ? { active: true, text: config.word.text, rewardAll: +config.word.rewardAll || 5, rewardWinner: +config.word.rewardWinner || 10, guessEnabled: config.word.guessEnabled, guessPenalty: +config.word.guessPenalty || 0 } : { active: false }
+    });
+    if (config.wordActive) setWord(config.word.text, { rewardAll: +config.word.rewardAll || 5, rewardWinner: +config.word.rewardWinner || 10, guessEnabled: config.word.guessEnabled, guessPenalty: +config.word.guessPenalty || 0 });
+
+    if (config.mode === 'circuit') {
+      window.location.href = GAME_PAGES[config.games[0].type] + '?gi=0';
+    } else {
+      window.location.href = 'index';
+    }
   }
 
-  // Datos iniciales de ejemplo (como en el diseño)
-  games = [
-    { ...GAME_OPTIONS[0] },
-    { ...GAME_OPTIONS[2] },
-    { ...GAME_OPTIONS[1] }
-  ];
-  render();
-
-  addBtn.addEventListener('click', openModal);
-  $('#close-modal').addEventListener('click', () => modal.classList.add('hidden'));
-  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.add('hidden'); });
-  $('#start-circuit').addEventListener('click', start);
-  $$('[data-mobile-start]').forEach(b => b.addEventListener('click', start));
-  $$('[data-mobile-add]').forEach(b => b.addEventListener('click', openModal));
-  $('#reset-scores').addEventListener('click', resetScores);
-
-  diffRange.addEventListener('input', () => {
-    diffLabel.textContent = 'x' + parseFloat(diffRange.value).toFixed(1);
-    diffFill.style.width = ((parseFloat(diffRange.value) - 1) / 2 * 100) + '%';
+  // ---------- Eventos ----------
+  $('#team-count').addEventListener('input', renderTeams);
+  $('#part-add').addEventListener('click', () => {
+    const name = $('#part-input').value.trim();
+    if (!name) return;
+    config.participants.push({ id: 'p_' + Date.now(), name, teamId: '' });
+    $('#part-input').value = '';
+    renderParticipants();
   });
-  $$('.team-name').forEach(i => i.addEventListener('input', () => {
-    const label = i.value.trim() || TEAMS.find(t => t.id === i.dataset.team).label;
-    // el marcador usa labels estáticos del diseño; se conserva el nombre por equipo
+  $('#part-input').addEventListener('keydown', e => { if (e.key === 'Enter') $('#part-add').click(); });
+  $('#add-game').addEventListener('click', openGameModal);
+  $('#close-modal').addEventListener('click', () => $('#add-modal').classList.add('hidden'));
+  $('#add-modal').addEventListener('click', e => { if (e.target === $('#add-modal')) $('#add-modal').classList.add('hidden'); });
+
+  $$('.mode-card').forEach(card => card.addEventListener('click', () => {
+    config.mode = card.dataset.mode;
+    $$('.mode-card').forEach(c => c.classList.remove('border-primary'));
+    card.classList.add('border-primary');
+    showStep(1);
   }));
+
+  $('#toggle-word').addEventListener('change', e => {
+    config.wordActive = e.target.checked;
+    $('#word-config').classList.toggle('hidden', !e.target.checked);
+  });
+  $('#toggle-tombola').addEventListener('change', e => { config.tombolaActive = e.target.checked; });
+  $('#word-text').addEventListener('input', e => { config.word.text = e.target.value; });
+  $('#reward-all').addEventListener('input', e => { config.word.rewardAll = +e.target.value || 0; });
+  $('#reward-winner').addEventListener('input', e => { config.word.rewardWinner = +e.target.value || 0; });
+  $('#toggle-guess').addEventListener('change', e => { config.word.guessEnabled = e.target.checked; });
+  $('#guess-penalty').addEventListener('input', e => { config.word.guessPenalty = +e.target.value || 0; });
+
+  $('#prev-btn').addEventListener('click', () => showStep(currentStep - 1));
+  $('#next-btn').addEventListener('click', () => {
+    if (currentStep === 0 && !config.mode) { alert('Selecciona un modo.'); return; }
+    showStep(currentStep + 1);
+  });
+  $('#start-btn').addEventListener('click', start);
+
+  config.teams = [3].flatMap(n => Array.from({ length: n }, (_, i) => ({ id: 'team_' + (i + 1), name: ['Tigres', 'Leones', 'Cóndores', 'Águilas', 'Panteras', 'Lobos', 'Halcones', 'Dragones'][i] || '', color: colorKeys[i], score: 0 })));
+  $('#team-count').value = 3;
+  renderTeams();
+  renderParticipants();
+  renderGames();
+  showStep(0);
 </script>
 </body></html>
