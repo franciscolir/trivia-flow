@@ -73,6 +73,11 @@
   <a href="index" class="btn-primary rounded-xl px-8 py-3 font-label-caps text-label-caps">VOLVER</a>
 </div>
 <div id="game" class="hidden flex-1 flex flex-col">
+<div id="round-info" class="hidden w-full flex flex-col items-center gap-1 mb-5">
+  <div class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest" id="round-label">RONDA 1 / 3</div>
+  <div class="font-headline-md text-headline-md text-secondary uppercase" id="round-team">EQUIPO: TIGRES</div>
+  <div class="font-label-caps text-label-caps text-on-surface-variant" id="round-score">ACIERTOS: 0</div>
+</div>
 <div class="w-full flex justify-center mb-6 relative z-10">
 <div class="glass-panel rounded-full px-8 py-2 border border-error/50 shadow-[0_0_20px_rgba(255,180,171,0.2)]">
 <span class="font-label-caps text-label-caps text-on-surface-variant mr-4 uppercase"><span id="timer-label">TIEMPO</span></span>
@@ -84,7 +89,16 @@
 <h2 id="game-label" class="font-label-caps text-label-caps text-primary mb-3 tracking-widest">TRIVIA</h2>
 <h3 id="turn-label" class="hidden font-headline-md text-headline-md text-secondary mb-3 uppercase"></h3>
 <h1 id="question-text" class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-10 drop-shadow-lg relative z-10">¿Pregunta?</h1>
+<div id="timed-question-note" class="hidden font-label-caps text-label-caps text-on-surface-variant mb-6">EL EQUIPO RESPONDE VERBALMENTE. EL CONDUCTOR REGISTRA.</div>
 <div id="answers" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 relative z-10"></div>
+</div>
+<!-- Controles de ronda (contrarreloj, conductor) -->
+<div id="round-controls" data-conductor class="hidden flex flex-col items-center gap-3 mb-6">
+  <div class="flex flex-wrap justify-center gap-4">
+    <button id="btn-correct" class="px-10 py-4 rounded-xl bg-tertiary/20 border-2 border-tertiary text-tertiary font-headline-md text-headline-md uppercase tracking-wider hover:bg-tertiary/30 transition-colors">✓ CORRECTA</button>
+    <button id="btn-incorrect" class="px-10 py-4 rounded-xl bg-error/10 border-2 border-error text-error font-headline-md text-headline-md uppercase tracking-wider hover:bg-error/20 transition-colors">✗ INCORRECTA</button>
+  </div>
+  <p class="font-label-caps text-label-caps text-on-surface-variant">Respuesta correcta: <span id="timed-answer" class="text-primary">—</span></p>
 </div>
 <div id="award-row" data-conductor class="hidden flex flex-col items-center gap-3 mb-6">
   <p class="font-label-caps text-label-caps text-on-surface-variant">EQUIPO QUE ACERTÓ</p>
@@ -113,8 +127,7 @@
 <script src="js/registry.js"></script>
 <script src="js/session.js"></script>
 <script src="js/components.js"></script>
-<script>
-  // ---------------- Sesión ----------------
+<script>  // ---------------- Sesión ----------------
   initSessionFromUrlOrLocal();
   const gi = getGameIndexFromUrl();
   const sess = getSession();
@@ -126,24 +139,35 @@
   const state = {
     questions: [], index: 0, correct: 0, answered: false,
     perQuestionTime: (cfg && cfg.settings && cfg.settings.timePerQuestion) || (cfg && cfg.type !== 'timed' ? 15 : 0),
-    totalTime: (cfg && cfg.settings && cfg.settings.totalTime) || 60,
-    maxQuestions: (cfg && cfg.settings && cfg.settings.maxQuestions) || 20,
+    questionCount: (cfg && cfg.settings && cfg.settings.questionCount) || 10,
     pointsPerQuestion: (cfg && cfg.points) || 100,
     timeLeft: 0
   };
 
+  // Configuración de rondas (contrarreloj)
+  const ROUND_TIME = (cfg && cfg.settings && cfg.settings.totalTime) || 60;
+  const MAX_Q = (cfg && cfg.settings && cfg.settings.maxQuestions) || 20;
+  const PTS = (cfg && cfg.points) || 20;
+  const roundTeams = isTimed
+    ? (isCircuit && sess.teams && sess.teams.length ? sess.teams.slice() : [{ id: 'solo', name: 'CONTRARRELOJ', color: 'primary' }])
+    : [];
+  let decks = [], roundIndex = -1, roundQIndex = 0, roundCorrect = 0, teamStats = {};
+
   const qTimer = new TimerManager();
-  const totalTimer = new TimerManager();
+  const roundTimer = new TimerManager();
   const turns = new TurnManager().setTeams(isCircuit && sess.teams ? sess.teams.slice() : []);
 
-  function stopTimers() { qTimer.stop(); totalTimer.stop(); }
+  function stopTimers() { qTimer.stop(); roundTimer.stop(); }
 
   const $q = {
     loading: $('#loading'), noData: $('#no-data'), game: $('#game'),
     timer: $('#timer'), timerLabel: $('#timer-label'), question: $('#question-text'), answers: $('#answers'),
     gameLabel: $('#game-label'), turnLabel: $('#turn-label'), awardRow: $('#award-row'), awardButtons: $('#award-buttons'),
     nextBtn: $('#next-game'), restart: $('#restart'), goHome: $('#go-home'),
-    sessionLabel: $('#session-label'), topProgress: $('#top-progress'), showAnswer: $('#show-answer'), guessWord: $('#guess-word')
+    sessionLabel: $('#session-label'), topProgress: $('#top-progress'), showAnswer: $('#show-answer'), guessWord: $('#guess-word'),
+    roundInfo: $('#round-info'), roundLabel: $('#round-label'), roundTeam: $('#round-team'), roundScore: $('#round-score'),
+    roundControls: $('#round-controls'), btnCorrect: $('#btn-correct'), btnIncorrect: $('#btn-incorrect'),
+    timedAnswer: $('#timed-answer'), timedNote: $('#timed-question-note')
   };
   const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
 
@@ -153,56 +177,153 @@
     $q.timer.classList.toggle('timer-pulse', state.timeLeft <= 10);
   }
 
+  // ---------------- Clásico: temporizador por pregunta ----------------
   function startQuestionTimer() {
-    stopTimers();
-    if (!state.perQuestionTime && !isTimed) { $q.timer.textContent = '∞'; return; }
-    if (isTimed) { $q.timerLabel.textContent = 'TIEMPO TOTAL'; startTotalTimer(); return; }
+    qTimer.stop();
+    if (!state.perQuestionTime) { $q.timer.textContent = '∞'; return; }
     state.timeLeft = state.perQuestionTime;
     $q.timerLabel.textContent = 'TIEMPO';
     renderTimer();
     qTimer.start(state.perQuestionTime,
       (sec) => { state.timeLeft = sec; playTick(); renderTimer(); },
-      () => { stopTimers(); reveal(null); });
-  }
-  function startTotalTimer() {
-    renderTimer();
-    totalTimer.start(state.totalTime,
-      (sec) => { state.timeLeft = sec; playTick(); renderTimer(); },
-      () => { stopTimers(); endGame(); });
+      () => { qTimer.stop(); reveal(null); });
   }
 
   function updateTurnLabel() {
-    if (!$q.turnLabel) return;
-    const t = turns.current();
-    $q.turnLabel.textContent = isCircuit && t ? ('TURNO: ' + t.name) : '';
-    if (t) $q.turnLabel.classList.remove('hidden');
-    else $q.turnLabel.classList.add('hidden');
-    // Tómbola del equipo en turno
+    const t = isTimed ? (roundTeams[roundIndex] || null) : turns.current();
+    if ($q.turnLabel) {
+      $q.turnLabel.textContent = t ? ('TURNO: ' + t.name) : '';
+      $q.turnLabel.classList.toggle('hidden', !t);
+    }
     const slot = $('#turn-tombola');
-    if (slot && isCircuit && t && sess && sess.tombola && sess.tombola.active) {
+    if (slot && !isTimed && isCircuit && t && sess && sess.tombola && sess.tombola.active) {
       renderTombola(slot, { session: sess, teamId: t.id });
     } else if (slot) {
       slot.innerHTML = '';
     }
   }
 
-  // ---------------- Preguntas ----------------
+  // ---------------- Rondas (contrarreloj) ----------------
+  function dealDecks(pool) {
+    const n = Math.max(1, roundTeams.length);
+    const per = Math.min(MAX_Q, Math.max(1, Math.floor(pool.length / n)));
+    const out = [];
+    let idx = 0;
+    for (let i = 0; i < n; i++) { out.push(pool.slice(idx, idx + per)); idx += per; }
+    return out;
+  }
+
+  function startRound(i) {
+    roundIndex = i; roundQIndex = 0; roundCorrect = 0;
+    const team = roundTeams[i];
+    if (team) teamStats[team.id] = 0;
+    $q.roundInfo.classList.remove('hidden');
+    $q.roundControls.classList.remove('hidden');
+    $q.timedNote.classList.remove('hidden');
+    renderTimedQuestion();
+    state.timeLeft = ROUND_TIME;
+    $q.timerLabel.textContent = 'TIEMPO DE RONDA';
+    renderTimer();
+    roundTimer.start(ROUND_TIME,
+      (sec) => { state.timeLeft = sec; playTick(); renderTimer(); },
+      () => endRound());
+  }
+
+  function renderTimedQuestion() {
+    const deck = decks[roundIndex] || [];
+    const q = deck[roundQIndex];
+    const team = roundTeams[roundIndex];
+    if (!q) { endRound(); return; }
+    $q.gameLabel.textContent = (cfg ? cfg.name : 'TRIVIA CONTRARRELOJ').toUpperCase();
+    $q.roundLabel.textContent = 'RONDA ' + (roundIndex + 1) + ' / ' + roundTeams.length;
+    $q.roundTeam.textContent = 'EQUIPO: ' + (team ? team.name : '');
+    $q.roundScore.textContent = 'ACIERTOS: ' + roundCorrect + ' · PREGUNTA ' + (roundQIndex + 1) + '/' + deck.length;
+    $q.question.textContent = q.text;
+    const ci = q.options.findIndex(o => o.correct);
+    $q.timedAnswer.textContent = q.options[ci] ? (letters[ci] + ' — ' + q.options[ci].text) : '';
+    $q.answers.innerHTML = '';
+    $q.awardRow.classList.add('hidden');
+    $q.nextBtn.classList.add('hidden');
+    updateTurnLabel();
+  }
+
+  function markCorrect() {
+    roundCorrect++;
+    if (isCircuit && roundTeams[roundIndex]) addScore(roundTeams[roundIndex].id, PTS, 'Contrarreloj', cfg ? cfg.id : null);
+    playCorrect();
+    nextRoundQuestion();
+  }
+  function markWrong() { playWrong(); nextRoundQuestion(); }
+  function nextRoundQuestion() {
+    const deck = decks[roundIndex] || [];
+    if (roundQIndex + 1 >= deck.length) endRound();
+    else { roundQIndex++; renderTimedQuestion(); }
+  }
+  function endRound() {
+    roundTimer.stop();
+    const team = roundTeams[roundIndex];
+    if (team && team.id !== 'solo') teamStats[team.id] = roundCorrect;
+    if (roundIndex + 1 < roundTeams.length) startRound(roundIndex + 1);
+    else finishRounds();
+  }
+  function finishRounds() {
+    playFinish();
+    const stats = {};
+    roundTeams.forEach(t => { stats[t.id] = teamStats[t.id] || 0; });
+    if (isCircuit) {
+      const ranked = roundTeams.filter(t => t.id !== 'solo').slice().sort((a, b) => (teamStats[b.id] || 0) - (teamStats[a.id] || 0));
+      const winner = ranked[0];
+      const result = buildResult({
+        gameId: cfg ? cfg.id : null,
+        winnerTeamId: winner ? winner.id : null,
+        rankings: getRanking(),
+        pointsAwarded: { winner: winner ? getTeamScore(winner.id) : 0 },
+        statistics: { perTeam: stats, roundTime: ROUND_TIME, maxQuestions: MAX_Q }
+      });
+      sess.lastResult = result;
+      logEvent('GAME_FINISHED', { gameId: cfg ? cfg.id : null, winnerTeamId: winner ? winner.id : null, result });
+      persistSession();
+      const afterWord = () => showGameResult({
+        title: 'FIN DE JUEGO', subtitle: winner ? winner.name : 'Sin puntos',
+        rankings: getRanking(), nextLabel: 'SIGUIENTE JUEGO →',
+        onNext: () => window.location.href = nextGameUrl(), onHome: () => window.location.href = 'index'
+      });
+      if (sess.word && sess.word.active && !isWordComplete()) openCellPicker({ winnerTeam: winner, onDone: afterWord });
+      else afterWord();
+    } else {
+      $q.roundControls.classList.add('hidden');
+      $q.timedNote.classList.add('hidden');
+      $q.roundInfo.classList.add('hidden');
+      $q.gameLabel.textContent = 'RESULTADO';
+      $q.question.textContent = 'Aciertos: ' + (teamStats['solo'] || 0) + ' / ' + ((decks[0] || []).length);
+      $q.answers.innerHTML = '<p class="col-span-2 font-body-lg text-body-lg text-on-surface-variant text-center py-8">' + ((teamStats['solo'] || 0) * PTS) + ' puntos</p>';
+      $q.restart.classList.remove('hidden');
+      $q.goHome.classList.remove('hidden');
+    }
+  }
+
+  // ---------------- Clásico: preguntas ----------------
   async function loadQuestions() {
     let trivias = [];
     try { trivias = await getTrivias(); } catch (e) { console.error(e); }
     const all = trivias.flatMap(t => (t.questions || []).map(q => ({ ...q })));
     if (!all.length) { $q.loading.classList.add('hidden'); $q.noData.classList.remove('hidden'); return; }
-    const target = state.maxQuestions || 10;
-    state.questions = shuffleArray(all).slice(0, Math.min(target, all.length));
-    state.index = 0; state.correct = 0;
+    const pool = shuffleArray(all);
     $q.loading.classList.add('hidden');
     $q.game.classList.remove('hidden');
-    renderQuestion();
+    if (isTimed) {
+      decks = dealDecks(pool);
+      startRound(0);
+    } else {
+      state.questions = pool.slice(0, Math.min(state.questionCount || 10, pool.length));
+      state.index = 0; state.correct = 0;
+      renderQuestion();
+    }
   }
 
   function renderQuestion() {
     const q = state.questions[state.index];
-    $q.gameLabel.textContent = (cfg ? cfg.name : (isTimed ? 'TRIVIA CONTRARRELOJ' : 'TRIVIA')).toUpperCase();
+    $q.gameLabel.textContent = (cfg ? cfg.name : 'TRIVIA').toUpperCase();
     $q.question.textContent = q.text;
     const correctIndex = q.options.findIndex(o => o.correct);
     $q.answers.innerHTML = q.options.map((opt, i) => `
@@ -224,7 +345,7 @@
   function select(i) {
     if (state.answered) return;
     state.answered = true;
-    stopTimers();
+    qTimer.stop();
     const ok = i === state.correctIndex;
     if (ok) { state.correct++; playCorrect(); } else playWrong();
     $$('.answer-option', $q.answers).forEach(btn => {
@@ -240,14 +361,13 @@
   function reveal(_) {
     if (state.answered) return;
     state.answered = true;
-    stopTimers();
+    qTimer.stop();
     playWrong();
     $$('.answer-option', $q.answers).forEach(btn => { btn.disabled = true; if (+btn.dataset.i === state.correctIndex) btn.classList.add('correct'); });
     setTimeout(finishQuestion, 1400);
   }
 
   function finishQuestion() {
-    if (isTimed && state.index + 1 >= state.maxQuestions) { endGame(); return; }
     state.index++;
     if (isCircuit) turns.next();
     if (state.index >= state.questions.length) endGame();
@@ -255,7 +375,7 @@
   }
 
   function endGame() {
-    stopTimers();
+    qTimer.stop();
     playFinish();
     if (isCircuit) {
       const winner = getRanking()[0];
@@ -264,7 +384,7 @@
         winnerTeamId: winner ? winner.id : null,
         rankings: getRanking(),
         pointsAwarded: { winner: winner ? winner.score : 0 },
-        statistics: { correct: state.correct, questions: state.questions.length, mode: isTimed ? 'timed' : 'classic' }
+        statistics: { correct: state.correct, questions: state.questions.length, mode: 'classic' }
       });
       sess.lastResult = result;
       logEvent('GAME_FINISHED', { gameId: cfg ? cfg.id : null, winnerTeamId: winner ? winner.id : null, result });
@@ -288,12 +408,19 @@
 
   // ---------------- Botones del conductor ----------------
   $q.showAnswer.addEventListener('click', () => { if (!state.answered) reveal(null); });
-  $('#pause-btn').addEventListener('click', () => { qTimer.pause(); totalTimer.pause(); });
-  $('#resume-btn').addEventListener('click', () => { qTimer.resume(); totalTimer.resume(); });
+  $('#pause-btn').addEventListener('click', () => { qTimer.pause(); roundTimer.pause(); });
+  $('#resume-btn').addEventListener('click', () => { qTimer.resume(); roundTimer.resume(); });
   $q.nextBtn.addEventListener('click', () => window.location.href = nextGameUrl());
-  $q.restart.addEventListener('click', () => { state.index = 0; state.correct = 0; state.questions = shuffleArray(state.questions); renderQuestion(); });
+  $q.restart.addEventListener('click', () => {
+    if (isTimed) { decks = dealDecks(shuffleArray(decks.flat())); startRound(0); }
+    else { state.index = 0; state.correct = 0; state.questions = shuffleArray(state.questions); renderQuestion(); }
+  });
 
-  // Asignación de puntos por equipo
+  // CORRECTA / INCORRECTA (rondas contrarreloj)
+  $q.btnCorrect.addEventListener('click', markCorrect);
+  $q.btnIncorrect.addEventListener('click', markWrong);
+
+  // Asignación de puntos por equipo (clásico)
   if (isCircuit && sess.teams) {
     $q.awardButtons.innerHTML = sess.teams.map(t => {
       const color = COLORS[t.color] || COLORS.rojo;
@@ -326,18 +453,20 @@
   else $q.topProgress.textContent = isTimed ? 'CONTRARRELOJ' : 'JUGAR INDIVIDUAL';
 
   if (sess && sess.word && sess.word.active) mountWordBar('#wordbar');
-  if (sess && sess.tombola && sess.tombola.active) {
+  if (sess && sess.tombola && sess.tombola.active && !isTimed) {
     renderTombola($('#tombola-slot'), { session: sess });
   } else {
-    $('#tombola-slot').innerHTML = '<a href="tombola?gi=' + gi + '" class="block glass-panel rounded-xl p-4 border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-bright transition-all">🎲 ABRIR TÓMBOLA</a>';
+    $('#tombola-slot').innerHTML = isTimed
+      ? '<div class="glass-panel rounded-xl p-4 border border-outline-variant text-on-surface-variant font-label-caps text-label-caps">En contrarreloj no se usa la Tómbola.</div>'
+      : '<a href="tombola?gi=' + gi + '" class="block glass-panel rounded-xl p-4 border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-bright transition-all">🎲 ABRIR TÓMBOLA</a>';
   }
   if (sess && sess.word && sess.word.active) {
     const w = $('#word-widget');
     w.innerHTML = '<a href="word?gi=' + gi + '" class="block glass-panel rounded-xl p-4 border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-bright transition-all">🔤 VER GRILLA DE PALABRA</a>';
   }
 
-renderScoreboardTeams('#scoreboard');
-updateTurnLabel();
-loadQuestions();
+  renderScoreboardTeams('#scoreboard');
+  updateTurnLabel();
+  loadQuestions();
 </script>
 </body></html>
