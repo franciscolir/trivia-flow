@@ -116,15 +116,39 @@ GameRegistry.registerGame({
 });
 
 // Reservados para próximas versiones (definiciones listas, sin página aún)
-['synonyms', 'sentence'].forEach(id => GameRegistry.registerGame({
-  id,
-  name: id === 'synonyms' ? 'Sinónimos / Antónimos' : 'Completar la Oración',
-  description: id === 'synonyms' ? 'Empareja palabras según sinónimos o antónimos.' : 'Completa la oración verbalmente.',
-  icon: id === 'synonyms' ? 'swap_horiz' : 'edit_note',
-  version: '0.1.0',
-  page: id === 'synonyms' ? 'synonyms' : 'sentence',
-  enabled: false,
-  supportsIndividual: false,
-  defaults: { points: 10, duration: 5, settings: {} },
-  configurationSchema: []
-}));
+GameRegistry.registerGame({
+  id: 'synonyms',
+  name: 'Sinónimos / Antónimos',
+  description: 'Empareja palabras según sinónimos o antónimos por rondas de equipo.',
+  icon: 'swap_horiz',
+  version: '1.0.0',
+  page: 'synonyms',
+  enabled: true,
+  supportsIndividual: true,
+  defaults: { points: 10, duration: 5, settings: { type: 'sinonimos', pairs: 4, roundTime: 60 } },
+  configurationSchema: [
+    { key: 'name', label: 'Nombre del juego', type: 'text', placeholder: 'Sinónimos / Antónimos' },
+    { key: 'points', label: 'Puntos por ronda ganada', type: 'number', min: 0 },
+    { key: 'settings.type', label: 'Tipo', type: 'select', options: ['sinonimos', 'antonimos'] },
+    { key: 'settings.pairs', label: 'Cantidad de parejas', type: 'number', min: 2, max: 8 },
+    { key: 'settings.roundTime', label: 'Tiempo por ronda (seg)', type: 'number', min: 10 }
+  ]
+});
+
+GameRegistry.registerGame({
+  id: 'sentence',
+  name: 'Completar la Oración',
+  description: 'El participante completa la oración verbalmente. El conductor valida.',
+  icon: 'edit_note',
+  version: '1.0.0',
+  page: 'sentence',
+  enabled: true,
+  supportsIndividual: true,
+  defaults: { points: 10, duration: 5, settings: { questionTime: 30, penalty: 0 } },
+  configurationSchema: [
+    { key: 'name', label: 'Nombre del juego', type: 'text', placeholder: 'Completar la Oración' },
+    { key: 'points', label: 'Puntos por acierto', type: 'number', min: 0 },
+    { key: 'settings.questionTime', label: 'Tiempo por pregunta (seg)', type: 'number', min: 5 },
+    { key: 'settings.penalty', label: 'Penalización por error', type: 'number', min: 0 }
+  ]
+});

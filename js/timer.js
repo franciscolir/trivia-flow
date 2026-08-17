@@ -44,6 +44,6 @@ class TimerManager {
     return this;
   }
 
-  remaining() { return Math.max(0, Math.ceil(this.remaining)); }
+  getRemaining() { return Math.max(0, Math.ceil(this.remaining)); }
   isRunning() { return !!this.timerId; }
 }

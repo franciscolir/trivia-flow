@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sinónimos / Antónimos - ULTRA ARENA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;family=Montserrat:wght@400;700;800;900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = { darkMode: "class", theme: { extend: {
+  colors: { "tertiary-fixed": "#56ffa8", "secondary-container": "#ff24e4", "secondary": "#fface8", "on-tertiary-fixed": "#002110", "surface-container-highest": "#2f3639", "on-tertiary-fixed-variant": "#00522f", "surface-tint": "#47d6ff", "tertiary-fixed-dim": "#00e38b", "primary": "#a5e7ff", "surface": "#0e1417", "on-error": "#690005", "outline-variant": "#3c494e", "surface-container-low": "#161d1f", "on-primary": "#003543", "on-primary-fixed-variant": "#004e60", "surface-dim": "#0e1417", "surface-container-high": "#242b2e", "error-container": "#93000a", "inverse-surface": "#dde3e7", "primary-fixed": "#b6ebff", "background": "#0e1417", "error": "#ffb4ab", "on-secondary-fixed": "#3a0033", "on-primary-container": "#00566a", "outline": "#859399", "tertiary-container": "#00dd87", "tertiary": "#00fd9b", "on-primary-fixed": "#001f28", "on-tertiary": "#00391f", "on-tertiary-container": "#005b35", "on-surface": "#dde3e7", "surface-bright": "#333a3d", "on-surface-variant": "#bbc9cf", "on-background": "#dde3e7", "on-secondary": "#5e0053", "surface-container-lowest": "#090f12", "on-error-container": "#ffdad6", "inverse-primary": "#00677f", "on-secondary-container": "#520049", "primary-container": "#00d2ff", "secondary-fixed-dim": "#fface8", "inverse-on-surface": "#2b3134", "surface-container": "#1a2123", "primary-fixed-dim": "#47d6ff", "on-secondary-fixed-variant": "#840076", "secondary-fixed": "#ffd7f0", "surface-variant": "#2f3639" },
+  borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+  spacing: { unit: "8px", "margin-desktop": "64px", gutter: "24px", "margin-mobile": "16px", "container-max": "1440px" },
+  fontFamily: { "label-caps": ["JetBrains Mono"], "display-lg-mobile": ["Montserrat"], "display-xl": ["Montserrat"], "body-lg": ["Inter"], "display-lg": ["Montserrat"], "body-md": ["Inter"], "headline-md": ["Montserrat"] },
+  fontSize: { "label-caps": ["14px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "700" }], "display-lg-mobile": ["32px", { lineHeight: "1.2", fontWeight: "800" }], "display-xl": ["80px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "900" }], "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }], "display-lg": ["48px", { lineHeight: "1.2", fontWeight: "800" }], "body-md": ["16px", { lineHeight: "1.5", fontWeight: "400" }], "headline-md": ["24px", { lineHeight: "1.4", fontWeight: "700" }] }
+} } }
+</script>
+<style>
+body { background-color: #0B0E14; background-image: radial-gradient(circle at 0% 0%, rgba(165,231,255,0.15) 0%, transparent 50%), radial-gradient(circle at 100% 100%, rgba(255,172,232,0.15) 0%, transparent 50%); background-attachment: fixed; }
+.glass-panel { background: rgba(14,20,23,0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid transparent; background-clip: padding-box; position: relative; }
+.glass-panel::before { content: ''; position: absolute; top:0; right:0; bottom:0; left:0; z-index:-1; margin:-1px; border-radius:inherit; background: linear-gradient(to bottom right, rgba(165,231,255,0.4), transparent); }
+.btn-primary { background: linear-gradient(90deg, #47d6ff, #00d2ff); color: #003543; transition: all 0.3s ease; }
+.btn-primary:hover { transform: scale(1.03); box-shadow: 0 0 15px rgba(0,210,255,0.6); }
+.match-card { transition: all 0.2s ease; }
+.match-card.selected { border-color: #a5e7ff; box-shadow: 0 0 15px rgba(165,231,255,0.3); }
+.match-card.matched { border-color: #00fd9b; background: rgba(0,253,155,0.1); pointer-events: none; }
+</style>
+<link rel="stylesheet" href="css/arena.css"/>
+</head>
+<body class="text-on-background font-body-md antialiased min-h-screen flex flex-col overflow-hidden">
+<header class="bg-surface/60 backdrop-blur-xl border-b border-primary/20 shadow-[0_0_20px_rgba(71,214,255,0.1)] flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 w-full z-50 fixed top-0">
+<a href="index" class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary tracking-tighter">ULTRA ARENA</a>
+<div class="flex items-center gap-4">
+  <button id="theme-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Cambiar tema"><span class="material-symbols-outlined">light_mode</span></button>
+  <div id="top-progress" class="text-primary font-bold border-b-2 border-primary pb-1 font-headline-md text-headline-md">SINÓNIMOS</div>
+</div>
+</header>
+<main class="flex-1 pt-24 pb-40 md:px-margin-desktop px-margin-mobile flex flex-col items-center relative overflow-y-auto">
+<div id="wordbar" class="mb-6 w-full max-w-4xl"></div>
+<div id="round-info" class="hidden flex flex-col items-center gap-1 mb-5">
+  <div id="round-label" class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">RONDA 1 / 3</div>
+  <div id="round-team" class="font-headline-md text-headline-md text-secondary uppercase">EQUIPO: TIGRES</div>
+  <div id="round-stats" class="font-label-caps text-label-caps text-on-surface-variant">ERRORES: 0 · TIEMPO: 00:00</div>
+</div>
+<div class="w-full flex justify-center mb-6 relative z-10">
+<div class="glass-panel rounded-full px-8 py-2 border border-error/50 shadow-[0_0_20px_rgba(255,180,171,0.2)]">
+<span class="font-label-caps text-label-caps text-on-surface-variant mr-4 uppercase">Tiempo de Ronda</span>
+<span id="timer" class="font-display-lg-mobile text-display-lg-mobile timer-pulse">00:60</span>
+</div>
+</div>
+<h2 id="game-label" class="font-label-caps text-label-caps text-primary mb-6 tracking-widest">SINÓNIMOS / ANTÓNIMOS</h2>
+<div id="board" class="hidden grid grid-cols-2 gap-6 w-full max-w-4xl">
+  <div class="flex flex-col gap-3">
+    <div class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1 text-center">Columna A</div>
+    <div id="col-left" class="flex flex-col gap-3"></div>
+  </div>
+  <div class="flex flex-col gap-3">
+    <div class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1 text-center">Columna B</div>
+    <div id="col-right" class="flex flex-col gap-3"></div>
+  </div>
+</div>
+<div id="no-pairs" class="hidden font-body-lg text-body-lg text-on-surface-variant py-8">No hay suficientes parejas en el banco.</div>
+<div data-conductor class="flex flex-wrap justify-center gap-4 mt-10">
+<button id="restart" class="px-8 py-4 rounded-xl border border-outline-variant text-on-surface font-label-caps transition-colors hover:bg-surface-bright">REINICIAR</button>
+<a id="go-home" class="hidden px-8 py-4 rounded-xl border border-outline-variant text-on-surface font-label-caps transition-colors hover:bg-surface-bright" href="index">INICIO</a>
+<button id="next-game" class="hidden btn-primary rounded-xl px-10 py-4 font-label-caps text-label-caps uppercase tracking-wider">SIGUIENTE</button>
+<button onclick="openPublicScreen()" class="px-8 py-4 rounded-xl border border-tertiary/40 text-tertiary font-label-caps transition-colors hover:bg-tertiary/10"><span class="material-symbols-outlined align-middle mr-2 text-[18px]">tv</span>PANTALLA PÚBLICA</button>
+</div>
+</main>
+<footer class="bg-surface-container-highest/90 backdrop-blur-md border-t border-primary/30 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] fixed bottom-0 left-0 w-full z-50 rounded-t-xl">
+<div id="scoreboard" class="flex justify-around items-center h-24 px-4 overflow-x-auto"></div>
+</footer>
+
+<script src="js/sounds.js"></script>
+<script src="js/arena.js"></script>
+<script src="js/turn.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/game.js"></script>
+<script src="js/registry.js"></script>
+<script src="js/session.js"></script>
+<script src="js/components.js"></script>
+<script>
+  const SYN = [['feliz', 'contento'], ['grande', 'enorme'], ['rápido', 'veloz'], ['hermoso', 'bello'], ['pequeño', 'diminuto'], ['triste', 'melancólico'], ['valiente', 'audaz'], ['inteligente', 'listo'], ['frío', 'gélido'], ['difícil', 'complicado'], ['alto', 'elevado'], ['alegre', 'risueño'], ['fuerte', 'robusto'], ['claro', 'luminoso'], ['silencio', 'calma'], ['rico', 'adinerado']];
+  const ANT = [['feliz', 'triste'], ['grande', 'pequeño'], ['rápido', 'lento'], ['hermoso', 'feo'], ['frío', 'caliente'], ['alto', 'bajo'], ['fuerte', 'débil'], ['día', 'noche'], ['luz', 'oscuridad'], ['abierto', 'cerrado'], ['arriba', 'abajo'], ['ganar', 'perder'], ['limpio', 'sucio'], ['valiente', 'cobarde'], ['abundante', 'escaso'], ['dulce', 'amargo']];
+
+  initSessionFromUrlOrLocal();
+  const gi = getGameIndexFromUrl();
+  const sess = getSession();
+  if (sess.games && sess.games.length) sess.currentGameIndex = gi;
+  const cfg = getCurrentGame();
+  const isCircuit = !!(sess && sess.mode === 'circuit' && sess.games && sess.games.length);
+  const settings = (cfg && cfg.settings) || {};
+  const BANK = (settings.type || 'sinonimos') === 'antonimos' ? ANT : SYN;
+  const PAIRS = Math.min(settings.pairs || 4, BANK.length);
+  const ROUND_TIME = settings.roundTime || 60;
+  const PTS = (cfg && cfg.points) || 10;
+  const roundTeams = isCircuit && sess.teams && sess.teams.length ? sess.teams.slice() : [{ id: 'solo', name: 'JUGADOR', color: 'primary' }];
+
+  let decks = [], roundIndex = -1, selLeft = null, roundErrors = 0, roundMatched = 0, roundStats = {};
+  const roundTimer = new TimerManager();
+
+  const $s = {
+    board: $('#board'), colLeft: $('#col-left'), colRight: $('#col-right'), noPairs: $('#no-pairs'),
+    timer: $('#timer'), roundInfo: $('#round-info'), roundLabel: $('#round-label'), roundTeam: $('#round-team'), roundStats: $('#round-stats'),
+    gameLabel: $('#game-label'), nextBtn: $('#next-game'), restart: $('#restart'), goHome: $('#go-home'), topProgress: $('#top-progress')
+  };
+
+  function fmtTime(s) { s = Math.max(0, Math.ceil(s)); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
+
+  function dealDecks() {
+    const n = Math.max(1, roundTeams.length);
+    const shuffled = shuffleArray(BANK);
+    const out = [];
+    let idx = 0;
+    for (let i = 0; i < n; i++) { out.push(shuffled.slice(idx, idx + PAIRS)); idx += PAIRS; }
+    return out;
+  }
+
+  function startRound(i) {
+    roundIndex = i; selLeft = null; roundErrors = 0; roundMatched = 0;
+    const team = roundTeams[i];
+    if (team) roundStats[team.id] = { errors: 0, time: null };
+    renderBoard();
+    $s.roundInfo.classList.remove('hidden');
+    $s.roundLabel.textContent = 'RONDA ' + (i + 1) + ' / ' + roundTeams.length;
+    $s.roundTeam.textContent = 'EQUIPO: ' + (team ? team.name : '');
+    updateStats();
+    roundTimer.start(ROUND_TIME,
+      (sec) => { $s.timer.textContent = fmtTime(sec); playTick(); if (sec <= 10) $s.timer.classList.add('timer-pulse'); },
+      () => endRound(true));
+  }
+
+  function renderBoard() {
+    const pairs = decks[roundIndex] || [];
+    if (!pairs.length) { $s.noPairs.classList.remove('hidden'); return; }
+    $s.board.classList.remove('hidden');
+    $s.colLeft.innerHTML = pairs.map((p, i) => `<button data-li="${i}" class="match-card glass-panel rounded-xl p-4 border border-outline-variant text-left font-headline-md text-headline-md text-on-surface">${escapeHtml(p[0])}</button>`).join('');
+    const right = shuffleArray(pairs.map(p => p[1]));
+    $s.colRight.innerHTML = right.map((r, i) => `<button data-ri="${i}" data-word="${escapeHtml(r)}" class="match-card glass-panel rounded-xl p-4 border border-outline-variant text-left font-headline-md text-headline-md text-on-surface">${escapeHtml(r)}</button>`).join('');
+    $$('.match-card', $s.colLeft).forEach(b => b.addEventListener('click', () => selectLeft(+b.dataset.li)));
+    $$('.match-card', $s.colRight).forEach(b => b.addEventListener('click', () => selectRight(b)));
+  }
+
+  function selectLeft(i) {
+    if (selLeft !== null) { $s.colLeft.querySelector(`[data-li="${selLeft}"]`).classList.remove('selected'); }
+    selLeft = i;
+    $s.colLeft.querySelector(`[data-li="${i}"]`).classList.add('selected');
+  }
+
+  function selectRight(btn) {
+    if (selLeft === null) return;
+    const pairs = decks[roundIndex] || [];
+    const leftWord = pairs[selLeft][0];
+    const rightWord = btn.dataset.word;
+    if (rightWord === pairs[selLeft][1]) {
+      // acierto
+      pairs.splice(selLeft, 1);
+      roundMatched++;
+      playCorrect();
+      $s.colLeft.querySelector(`[data-li="${selLeft}"]`)?.classList.remove('selected');
+      // marcar visualmente ambas
+      const liBtns = $s.colLeft.querySelectorAll('.match-card');
+      if (liBtns.length) liBtns[0]?.classList.add('matched');
+      // re-renderar
+      updateStats();
+      if (roundMatched >= PAIRS) { endRound(false); return; }
+      renderBoard();
+      updateStats();
+    } else {
+      roundErrors++;
+      playWrong();
+      updateStats();
+    }
+    selLeft = null;
+  }
+
+  function updateStats() {
+    const team = roundTeams[roundIndex];
+    $s.roundStats.textContent = 'ERRORES: ' + roundErrors + ' · PAREJAS: ' + roundMatched + '/' + PAIRS;
+  }
+
+  function endRound(timeout) {
+    roundTimer.stop();
+    const team = roundTeams[roundIndex];
+    if (team && team.id !== 'solo') {
+      roundStats[team.id] = { errors: roundErrors, time: ROUND_TIME - roundTimer.getRemaining(), completed: !timeout };
+    }
+    if (roundIndex + 1 < roundTeams.length) startRound(roundIndex + 1);
+    else finishGame();
+  }
+
+  function finishGame() {
+    playFinish();
+    if (isCircuit) {
+      const ranked = roundTeams.filter(t => t.id !== 'solo').slice().sort((a, b) => {
+        const A = roundStats[a.id] || {}, B = roundStats[b.id] || {};
+        if ((A.completed ? 0 : 1) !== (B.completed ? 0 : 1)) return (A.completed ? 0 : 1) - (B.completed ? 0 : 1);
+        if ((A.errors || 0) !== (B.errors || 0)) return (A.errors || 0) - (B.errors || 0);
+        return (A.time == null ? Infinity : A.time) - (B.time == null ? Infinity : B.time);
+      });
+      const winner = ranked[0];
+      const stats = {};
+      roundTeams.forEach(t => { stats[t.id] = roundStats[t.id] || null; });
+      const result = buildResult({
+        gameId: cfg ? cfg.id : null,
+        winnerTeamId: winner ? winner.id : null,
+        rankings: getRanking(),
+        pointsAwarded: { winner: winner ? getTeamScore(winner.id) : 0 },
+        statistics: { perTeam: stats, type: settings.type || 'sinonimos' }
+      });
+      sess.lastResult = result;
+      logEvent('GAME_FINISHED', { gameId: cfg ? cfg.id : null, winnerTeamId: winner ? winner.id : null, result });
+      persistSession();
+      if (winner) addScore(winner.id, PTS, 'Ronda de Sinónimos', cfg ? cfg.id : null);
+      const afterWord = () => showGameResult({
+        title: 'FIN DE JUEGO', subtitle: winner ? winner.name : 'Sin puntos',
+        rankings: getRanking(), nextLabel: 'SIGUIENTE JUEGO →',
+        onNext: () => window.location.href = nextGameUrl(), onHome: () => window.location.href = 'index'
+      });
+      if (sess.word && sess.word.active && !isWordComplete()) openCellPicker({ winnerTeam: winner, onDone: afterWord });
+      else afterWord();
+    } else {
+      $s.roundInfo.classList.add('hidden');
+      $s.board.classList.add('hidden');
+      $s.gameLabel.textContent = 'RESULTADO';
+      $s.goHome.classList.remove('hidden');
+      $s.noPairs.classList.remove('hidden');
+      $s.noPairs.textContent = 'Ronda completada con ' + roundErrors + ' errores.';
+    }
+  }
+
+  $s.restart.addEventListener('click', () => { decks = dealDecks(); startRound(0); });
+  $s.nextBtn.addEventListener('click', () => window.location.href = nextGameUrl());
+
+  if (isCircuit) $s.topProgress.textContent = 'JUEGO ' + (gi + 1) + ' / ' + sess.games.length;
+  else $s.topProgress.textContent = 'JUGAR INDIVIDUAL';
+  $s.gameLabel.textContent = (cfg ? cfg.name : 'SINÓNIMOS / ANTÓNIMOS').toUpperCase();
+  if (sess && sess.word && sess.word.active) mountWordBar('#wordbar');
+  renderScoreboardTeams('#scoreboard');
+  decks = dealDecks();
+  startRound(0);
+</script>
+</body></html>

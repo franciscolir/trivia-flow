@@ -381,9 +381,16 @@
     editingGameIndex = i;
     const fields = (def.configurationSchema || []).map(f => {
       const value = getByPath(g, f.key) != null ? getByPath(g, f.key) : '';
-      const input = f.type === 'number'
-        ? `<input data-cfg="${f.key}" type="number" min="${f.min != null ? f.min : ''}" max="${f.max != null ? f.max : ''}" value="${value}" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent"/>`
-        : `<input data-cfg="${f.key}" type="text" value="${escapeHtml(String(value))}" placeholder="${escapeHtml(f.placeholder || '')}" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent"/>`;
+      let input;
+      if (f.type === 'select') {
+        input = `<select data-cfg="${f.key}" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-surface-container">
+          ${(f.options || []).map(o => `<option value="${o}" ${String(value) === o ? 'selected' : ''}>${o.charAt(0).toUpperCase() + o.slice(1)}</option>`).join('')}
+        </select>`;
+      } else if (f.type === 'number') {
+        input = `<input data-cfg="${f.key}" type="number" min="${f.min != null ? f.min : ''}" max="${f.max != null ? f.max : ''}" value="${value}" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent"/>`;
+      } else {
+        input = `<input data-cfg="${f.key}" type="text" value="${escapeHtml(String(value))}" placeholder="${escapeHtml(f.placeholder || '')}" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent"/>`;
+      }
       return `<div class="flex flex-col gap-1">
         <label class="font-label-caps text-label-caps text-on-surface-variant">${escapeHtml(f.label)}</label>
         ${input}
