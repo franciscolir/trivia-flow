@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ganador del Circuito - ULTRA ARENA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;family=Inter:wght@400;500;600&amp;family=Montserrat:wght@700;800;900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#56ffa8", "secondary-container": "#ff24e4", "secondary": "#fface8",
+                    "on-tertiary-fixed": "#002110", "surface-container-highest": "#2f3639", "on-tertiary-fixed-variant": "#00522f",
+                    "surface-tint": "#47d6ff", "tertiary-fixed-dim": "#00e38b", "primary": "#a5e7ff", "surface": "#0e1417",
+                    "on-error": "#690005", "outline-variant": "#3c494e", "surface-container-low": "#161d1f", "on-primary": "#003543",
+                    "on-primary-fixed-variant": "#004e60", "surface-dim": "#0e1417", "surface-container-high": "#242b2e",
+                    "error-container": "#93000a", "inverse-surface": "#dde3e7", "primary-fixed": "#b6ebff", "background": "#0e1417",
+                    "error": "#ffb4ab", "on-secondary-fixed": "#3a0033", "on-primary-container": "#00566a", "outline": "#859399",
+                    "tertiary-container": "#00dd87", "tertiary": "#00fd9b", "on-primary-fixed": "#001f28", "on-tertiary": "#00391f",
+                    "on-tertiary-container": "#005b35", "on-surface": "#dde3e7", "surface-bright": "#333a3d", "on-surface-variant": "#bbc9cf",
+                    "on-background": "#dde3e7", "on-secondary": "#5e0053", "surface-container-lowest": "#090f12", "on-error-container": "#ffdad6",
+                    "inverse-primary": "#00677f", "on-secondary-container": "#520049", "primary-container": "#00d2ff", "secondary-fixed-dim": "#fface8",
+                    "inverse-on-surface": "#2b3134", "surface-container": "#1a2123", "primary-fixed-dim": "#47d6ff", "on-secondary-fixed-variant": "#840076",
+                    "secondary-fixed": "#ffd7f0", "surface-variant": "#2f3639"
+            },
+            "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+            "spacing": { "unit": "8px", "margin-desktop": "64px", "gutter": "24px", "margin-mobile": "16px", "container-max": "1440px" },
+            "fontFamily": { "label-caps": ["JetBrains Mono"], "display-lg-mobile": ["Montserrat"], "display-xl": ["Montserrat"], "body-lg": ["Inter"], "display-lg": ["Montserrat"], "body-md": ["Inter"], "headline-md": ["Montserrat"] },
+            "fontSize": {
+                    "label-caps": ["14px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                    "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                    "display-xl": ["80px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "900" }],
+                    "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                    "display-lg": ["48px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                    "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                    "headline-md": ["24px", { "lineHeight": "1.4", "fontWeight": "700" }]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0B0E14;
+            background-image: radial-gradient(circle at top left, rgba(0,210,255,0.15) 0%, transparent 40%),
+                              radial-gradient(circle at bottom right, rgba(255,36,228,0.15) 0%, transparent 40%);
+            min-height: 100vh;
+            color: #dde3e7;
+            overflow-x: hidden;
+        }
+        .glass-panel { background: rgba(14, 20, 23, 0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid transparent; background-clip: padding-box; position: relative; }
+        .glass-panel::before { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: -1; margin: -1px; border-radius: inherit; background: linear-gradient(to bottom right, rgba(165, 231, 255, 0.4), rgba(165, 231, 255, 0)); }
+        .glow-primary { box-shadow: 0 0 30px rgba(0, 210, 255, 0.3); }
+        .text-glow { text-shadow: 0 0 20px rgba(0, 210, 255, 0.5); }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.4), inset 0 0 20px rgba(255, 215, 0, 0.2); transform: scale(1); } 50% { box-shadow: 0 0 80px rgba(255, 215, 0, 0.8), inset 0 0 40px rgba(255, 215, 0, 0.4); transform: scale(1.02); } }
+        .trophy-container { animation: pulse-glow 3s infinite ease-in-out; background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%); border-radius: 50%; }
+        .confetti-particle { position: absolute; width: 10px; height: 10px; background-color: var(--color); opacity: 0; pointer-events: none; z-index: 10; }
+    </style>
+<link rel="stylesheet" href="css/arena.css"/>
+</head>
+<body class="flex flex-col items-center justify-center pt-20 pb-24 md:py-margin-desktop relative">
+<div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" id="confetti-container"></div>
+<div class="fixed inset-0 pointer-events-none z-0 flex justify-center overflow-hidden opacity-30">
+<div class="absolute top-full left-1/4 w-[100px] h-[200vh] bg-gradient-to-t from-primary to-transparent blur-3xl transform -rotate-45 origin-bottom-left"></div>
+<div class="absolute top-full right-1/4 w-[100px] h-[200vh] bg-gradient-to-t from-secondary to-transparent blur-3xl transform rotate-45 origin-bottom-right"></div>
+</div>
+<main class="w-full max-w-container-max px-margin-mobile md:px-margin-desktop z-10 flex flex-col items-center">
+<div class="absolute top-4 right-4">
+  <button id="theme-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Cambiar tema">
+    <span class="material-symbols-outlined">light_mode</span>
+  </button>
+</div>
+<div class="text-center mb-12">
+<h2 class="font-label-caps text-label-caps text-primary tracking-[0.2em] mb-4 uppercase">GANADOR DEL CIRCUITO</h2>
+<div class="trophy-container w-64 h-64 md:w-80 md:h-80 mx-auto flex items-center justify-center mb-8 relative">
+<div class="absolute inset-4 rounded-full border-2 border-yellow-400/30"></div>
+<span class="material-symbols-outlined text-[120px] md:text-[160px] text-yellow-400" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 0 20px rgba(255,215,0,0.5));">emoji_events</span>
+</div>
+<h1 class="font-display-xl text-display-lg-mobile md:text-display-xl text-white text-glow mb-2 uppercase">¡CAMPEÓN!</h1>
+<h3 id="winner-name" class="font-headline-md text-headline-md text-primary-fixed uppercase">EQUIPO</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter w-full max-w-4xl mb-16">
+<div class="glass-panel rounded-xl p-8 flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-4xl text-tertiary mb-4" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+<span id="stat-games" class="font-display-lg text-display-lg-mobile md:text-display-lg text-white mb-2">0</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Juegos en Circuito</span>
+</div>
+<div class="glass-panel rounded-xl p-8 flex flex-col items-center justify-center text-center glow-primary border border-primary/50 relative overflow-hidden">
+<div class="absolute inset-0 bg-primary/10"></div>
+<span class="material-symbols-outlined text-5xl text-primary mb-4 z-10" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+<span id="stat-points" class="font-display-xl text-display-xl text-primary mb-2 z-10 text-glow">0</span>
+<span class="font-label-caps text-label-caps text-primary-fixed uppercase z-10">Puntos Totales</span>
+</div>
+<div class="glass-panel rounded-xl p-8 flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-4xl text-secondary mb-4" style="font-variation-settings: 'FILL' 1;">card_giftcard</span>
+<span id="stat-rewards" class="font-display-lg text-display-lg-mobile md:text-display-lg text-white mb-2">0</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Recompensas</span>
+</div>
+</div>
+<div id="ranking" class="w-full max-w-2xl flex flex-col gap-3 mb-16"></div>
+<div class="flex flex-col sm:flex-row gap-6 w-full sm:w-auto">
+<button id="new-session" class="bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline-md text-headline-md px-12 py-4 rounded-lg shadow-[0_0_20px_rgba(0,210,255,0.4)] hover:shadow-[0_0_30px_rgba(0,210,255,0.6)] hover:scale-105 transition-all duration-300 uppercase tracking-wide">NUEVA SESIÓN</button>
+<button id="view-history" class="bg-transparent border-2 border-secondary text-secondary font-headline-md text-headline-md px-12 py-4 rounded-lg hover:bg-secondary/10 hover:shadow-[0_0_20px_rgba(255,36,228,0.2)] hover:scale-105 transition-all duration-300 uppercase tracking-wide">VER HISTORIAL</button>
+</div>
+</main>
+<script src="js/sounds.js"></script>
+<script src="js/arena.js"></script>
+<script>
+  const scores = getScores();
+  const circuit = getCircuit();
+  const teamLabels = TEAMS.map(t => {
+    const label = circuit && circuit.teams ? (circuit.teams.find(x => x.id === t.id)?.label || t.label) : t.label;
+    return { ...t, label };
+  });
+
+  const sorted = teamLabels.map(t => ({ ...t, score: scores[t.id] })).sort((a, b) => b.score - a.score);
+  const winner = sorted[0];
+
+  $('#winner-name').textContent = winner.label;
+  $('#stat-points').textContent = fmt(winner.score);
+  $('#stat-games').textContent = (circuit && circuit.games ? circuit.games.length : 0);
+  $('#stat-rewards').textContent = '0';
+
+  $('#ranking').innerHTML = sorted.map((t, i) => `
+    <div class="glass-panel rounded-xl p-5 flex items-center justify-between ${i === 0 ? 'border border-primary/50 glow-primary' : ''}">
+      <div class="flex items-center gap-4">
+        <span class="font-display-lg text-display-lg-mobile md:text-display-lg ${t.color}">${i + 1}</span>
+        <span class="font-headline-md text-headline-md text-on-surface uppercase">${escapeHtml(t.label)}</span>
+      </div>
+      <span class="font-display-lg text-display-lg-mobile md:text-display-lg ${t.color}">${fmt(t.score)}</span>
+    </div>`).join('');
+
+  $('#new-session').addEventListener('click', () => {
+    resetScores();
+    clearCircuit();
+    window.location.href = 'index.html';
+  });
+  $('#view-history').addEventListener('click', () => {
+    alert('Historial de eventos próximamente. Sesión actual:\n' + teamLabels.map(t => t.label + ': ' + fmt(scores[t.id])).join('\n'));
+  });
+
+  playFinish();
+
+  // Confeti
+  const container = document.getElementById('confetti-container');
+  const colors = ['#00d2ff', '#ff24e4', '#00fd9b', '#ffd700', '#ffffff'];
+  const particleCount = 100;
+  for (let i = 0; i < particleCount; i++) createParticle();
+
+  function createParticle() {
+    const p = document.createElement('div');
+    p.classList.add('confetti-particle');
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const size = 5 + Math.random() * 10;
+    p.style.setProperty('--color', color);
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = (Math.random() * window.innerWidth) + 'px';
+    p.style.top = (-20 - Math.random() * 100) + 'px';
+    if (Math.random() > 0.5) p.style.borderRadius = '50%';
+    container.appendChild(p);
+    const duration = 3000 + Math.random() * 4000;
+    const delay = Math.random() * 2000;
+    const endY = window.innerHeight + 20;
+    const endX = parseFloat(p.style.left) + (Math.random() * 200 - 100);
+    const rotation = Math.random() * 720 - 360;
+    p.animate([
+      { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+      { transform: 'translate(' + (endX - parseFloat(p.style.left)) + 'px, ' + endY + 'px) rotate(' + rotation + 'deg)', opacity: 0 }
+    ], { duration, delay, easing: 'cubic-bezier(.37,0,.63,1)', fill: 'forwards' }).onfinish = () => {
+      p.remove();
+      createParticle();
+    };
+  }
+</script>
+</body></html>

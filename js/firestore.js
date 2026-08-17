@@ -1,6 +1,10 @@
 // ============================================================
 //  js/firestore.js — Capa de datos (CRUD sobre Firestore)
+//  Requiere cargar previamente firebase-config.js
 // ============================================================
+
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 // Obtiene todas las trivias publicadas, ordenadas por fecha (desc).
 async function getTrivias() {

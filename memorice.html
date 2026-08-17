@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ULTRA ARENA - MEMORICE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;family=Montserrat:wght@400;700;800;900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#56ffa8", "secondary-container": "#ff24e4", "secondary": "#fface8",
+                        "on-tertiary-fixed": "#002110", "surface-container-highest": "#2f3639", "on-tertiary-fixed-variant": "#00522f",
+                        "surface-tint": "#47d6ff", "tertiary-fixed-dim": "#00e38b", "primary": "#a5e7ff", "surface": "#0e1417",
+                        "on-error": "#690005", "outline-variant": "#3c494e", "surface-container-low": "#161d1f", "on-primary": "#003543",
+                        "on-primary-fixed-variant": "#004e60", "surface-dim": "#0e1417", "surface-container-high": "#242b2e",
+                        "error-container": "#93000a", "inverse-surface": "#dde3e7", "primary-fixed": "#b6ebff", "background": "#0e1417",
+                        "error": "#ffb4ab", "on-secondary-fixed": "#3a0033", "on-primary-container": "#00566a", "outline": "#859399",
+                        "tertiary-container": "#00dd87", "tertiary": "#00fd9b", "on-primary-fixed": "#001f28", "on-tertiary": "#00391f",
+                        "on-tertiary-container": "#005b35", "on-surface": "#dde3e7", "surface-bright": "#333a3d", "on-surface-variant": "#bbc9cf",
+                        "on-background": "#dde3e7", "on-secondary": "#5e0053", "surface-container-lowest": "#090f12", "on-error-container": "#ffdad6",
+                        "inverse-primary": "#00677f", "on-secondary-container": "#520049", "primary-container": "#00d2ff", "secondary-fixed-dim": "#fface8",
+                        "inverse-on-surface": "#2b3134", "surface-container": "#1a2123", "primary-fixed-dim": "#47d6ff", "on-secondary-fixed-variant": "#840076",
+                        "secondary-fixed": "#ffd7f0", "surface-variant": "#2f3639"
+                    },
+                    "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                    "spacing": { "unit": "8px", "margin-desktop": "64px", "gutter": "24px", "margin-mobile": "16px", "container-max": "1440px" },
+                    "fontFamily": { "label-caps": ["JetBrains Mono"], "display-lg-mobile": ["Montserrat"], "display-xl": ["Montserrat"], "body-lg": ["Inter"], "display-lg": ["Montserrat"], "body-md": ["Inter"], "headline-md": ["Montserrat"] },
+                    "fontSize": {
+                        "label-caps": ["14px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "display-xl": ["80px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "900" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.4", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0B0E14;
+            background-image: radial-gradient(circle at 0% 0%, rgba(165, 231, 255, 0.15) 0%, transparent 50%),
+                              radial-gradient(circle at 100% 100%, rgba(255, 172, 232, 0.15) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+        .glass-panel { background: rgba(14, 20, 23, 0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid transparent; background-clip: padding-box; position: relative; }
+        .glass-panel::before { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: -1; margin: -1px; border-radius: inherit; background: linear-gradient(to bottom right, rgba(165, 231, 255, 0.4), transparent); }
+        .btn-primary { background: linear-gradient(90deg, #47d6ff, #00d2ff); color: #003543; transition: all 0.3s ease; }
+        .btn-primary:hover { transform: scale(1.03); box-shadow: 0 0 15px rgba(0, 210, 255, 0.6); }
+
+        .memory-card { perspective: 800px; cursor: pointer; }
+        .memory-inner { position: relative; width: 100%; height: 100%; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .memory-card.flipped .memory-inner { transform: rotateY(180deg); }
+        .memory-face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 0.75rem; }
+        .memory-back { background: linear-gradient(135deg, #1a2123, #242b2e); border: 1px solid rgba(165, 231, 255, 0.3); }
+        .memory-front { transform: rotateY(180deg); background: rgba(0, 210, 255, 0.12); border: 1px solid rgba(0, 210, 255, 0.4); }
+        .memory-card.matched .memory-front { border-color: #00fd9b; background: rgba(0, 253, 155, 0.12); }
+        .memory-card.matched { cursor: default; }
+        html.light .memory-back { background: linear-gradient(135deg, #dce4ea, #cdd7de); border-color: rgba(0, 107, 150, 0.3); }
+        html.light .memory-front { background: rgba(0, 210, 255, 0.15); border-color: rgba(0, 107, 150, 0.4); }
+        html.light .memory-card.matched .memory-front { border-color: #00764a; background: rgba(0, 118, 74, 0.12); }
+    </style>
+<link rel="stylesheet" href="css/arena.css"/>
+</head>
+<body class="text-on-background font-body-md antialiased min-h-screen flex flex-col overflow-hidden">
+<!-- TopAppBar -->
+<header class="bg-surface/60 backdrop-blur-xl border-b border-primary/20 shadow-[0_0_20px_rgba(71,214,255,0.1)] flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 w-full z-50 fixed top-0">
+<a href="index.html" class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary tracking-tighter">ULTRA ARENA</a>
+<div class="flex items-center gap-4">
+  <button id="theme-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Cambiar tema">
+    <span class="material-symbols-outlined">light_mode</span>
+  </button>
+  <div id="top-progress" class="text-primary font-bold border-b-2 border-primary pb-1 font-headline-md text-headline-md">JUEGO 3 / 5</div>
+</div>
+</header>
+<main class="flex-1 pt-24 pb-40 md:pr-margin-desktop px-margin-mobile flex flex-col items-center justify-center relative overflow-y-auto">
+<div class="w-full flex justify-center mb-8 relative z-10">
+<div class="glass-panel rounded-full px-8 py-2 border border-error/50 shadow-[0_0_20px_rgba(255,180,171,0.2)]">
+<span class="font-label-caps text-label-caps text-on-surface-variant mr-4 uppercase">Tiempo</span>
+<span id="timer" class="font-display-lg-mobile text-display-lg-mobile timer-pulse">00:00</span>
+</div>
+</div>
+<div class="flex items-center justify-center gap-8 mb-8">
+  <div class="text-center">
+    <div class="font-label-caps text-label-caps text-on-surface-variant">PAREJAS</div>
+    <div class="font-headline-md text-headline-md text-primary" id="pairs">0 / 8</div>
+  </div>
+  <div class="text-center">
+    <div class="font-label-caps text-label-caps text-on-surface-variant">INTENTOS</div>
+    <div class="font-headline-md text-headline-md text-secondary" id="moves">0</div>
+  </div>
+</div>
+<h2 id="game-label" class="font-label-caps text-label-caps text-primary mb-6 tracking-widest">MEMORICE</h2>
+<div id="board" class="grid grid-cols-4 gap-3 md:gap-4 w-full max-w-3xl aspect-square"></div>
+<div class="flex flex-wrap justify-center gap-4 mt-10">
+<button id="next-game" class="hidden btn-primary rounded-xl px-10 py-4 font-label-caps text-label-caps uppercase tracking-wider">SIGUIENTE</button>
+<button id="restart" class="px-8 py-4 rounded-xl border border-outline-variant text-on-surface font-label-caps transition-colors hover:bg-surface-bright">REINICIAR</button>
+<a id="go-home" class="hidden px-8 py-4 rounded-xl border border-outline-variant text-on-surface font-label-caps transition-colors hover:bg-surface-bright" href="index.html">INICIO</a>
+</div>
+</main>
+<!-- Scoreboard -->
+<footer class="bg-surface-container-highest/90 backdrop-blur-md border-t border-primary/30 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-24 px-4 pb-safe rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-6 py-2"><span class="material-symbols-outlined text-error mb-1" style="font-variation-settings: 'FILL' 1;">groups</span><span class="font-label-caps text-label-caps text-on-surface-variant">RED TEAM: <span class="text-error" data-score="rojo">0</span></span></div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-6 py-2"><span class="material-symbols-outlined text-primary mb-1" style="font-variation-settings: 'FILL' 1;">groups</span><span class="font-label-caps text-label-caps text-on-surface-variant">BLUE TEAM: <span class="text-primary" data-score="azul">0</span></span></div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-6 py-2"><span class="material-symbols-outlined text-tertiary mb-1" style="font-variation-settings: 'FILL' 1;">groups</span><span class="font-label-caps text-label-caps text-on-surface-variant">GREEN TEAM: <span class="text-tertiary" data-score="verde">0</span></span></div>
+</footer>
+
+<script src="js/sounds.js"></script>
+<script src="js/arena.js"></script>
+<script>
+  const EMOJIS = ['🚀', '🌟', '🎯', '🎲', '🦁', '🍕', '⚡', '🎵'];
+  const circuit = getCircuit();
+  const gi = getGameIndex();
+  const cfg = circuit && circuit.games && circuit.games[gi] ? circuit.games[gi] : null;
+  const pairsCount = cfg && cfg.settings && cfg.settings.pairs ? cfg.settings.pairs : 8;
+
+  const $b = {
+    board: $('#board'), timer: $('#timer'), pairs: $('#pairs'), moves: $('#moves'),
+    nextBtn: $('#next-game'), restart: $('#restart'), goHome: $('#go-home'), gameLabel: $('#game-label'), topProgress: $('#top-progress')
+  };
+
+  let cards = [], flipped = [], matched = 0, moves = 0, lock = false, timeLeft = 0, timerId = null;
+
+  function fmtTime(s) { s = Math.max(0, Math.ceil(s)); const m = Math.floor(s / 60), r = s % 60; return String(m).padStart(2, '0') + ':' + String(r).padStart(2, '0'); }
+
+  function buildCards() {
+    const emojis = EMOJIS.slice(0, pairsCount);
+    cards = shuffleArray([...emojis, ...emojis].map((emoji, i) => ({ id: i, pairId: emoji, emoji, state: 'hidden' })));
+  }
+
+  function render() {
+    $b.board.innerHTML = cards.map((c, i) => `
+      <button data-i="${i}" class="memory-card ${c.state === 'revealed' ? 'flipped' : ''} ${c.state === 'matched' ? 'flipped matched' : ''}" ${c.state === 'matched' ? 'disabled' : ''}>
+        <div class="memory-inner">
+          <div class="memory-face memory-back"><span class="material-symbols-outlined text-3xl text-primary">question_mark</span></div>
+          <div class="memory-face memory-front"><span class="text-4xl md:text-5xl">${c.state === 'matched' || c.state === 'revealed' ? c.emoji : ''}</span></div>
+        </div>
+      </button>`).join('');
+    $$('.memory-card', $b.board).forEach(btn => btn.addEventListener('click', () => flip(+btn.dataset.i)));
+  }
+
+  function flip(i) {
+    if (lock) return;
+    const c = cards[i];
+    if (c.state !== 'hidden' || flipped.includes(i)) return;
+    c.state = 'revealed';
+    flipped.push(i);
+    render();
+    if (flipped.length === 2) {
+      lock = true;
+      moves++;
+      $b.moves.textContent = moves;
+      const [a, b] = flipped;
+      if (cards[a].pairId === cards[b].pairId) {
+        cards[a].state = cards[b].state = 'matched';
+        matched++;
+        $b.pairs.textContent = matched + ' / ' + pairsCount;
+        playCorrect();
+        flipped = [];
+        lock = false;
+        render();
+        if (matched === pairsCount) finish();
+      } else {
+        playWrong();
+        setTimeout(() => {
+          cards[a].state = cards[b].state = 'hidden';
+          flipped = [];
+          lock = false;
+          render();
+        }, 900);
+      }
+    }
+  }
+
+  function startTimer() {
+    clearInterval(timerId);
+    const total = cfg && cfg.duration ? cfg.duration * 60 : 180;
+    timeLeft = total;
+    $b.timer.textContent = fmtTime(timeLeft);
+    timerId = setInterval(() => {
+      timeLeft--;
+      playTick();
+      $b.timer.textContent = fmtTime(timeLeft);
+      if (timeLeft <= 0) { clearInterval(timerId); finish(); }
+    }, 1000);
+  }
+
+  function finish() {
+    clearInterval(timerId);
+    playFinish();
+    const isCircuit = !!(circuit && Array.isArray(circuit.games) && circuit.games.length);
+    if (isCircuit) {
+      $b.gameLabel.textContent = 'JUEGO TERMINADO';
+      $b.nextBtn.classList.remove('hidden');
+      $b.nextBtn.textContent = 'SIGUIENTE JUEGO →';
+    } else {
+      $b.gameLabel.textContent = '¡COMPLETADO!';
+      $b.goHome.classList.remove('hidden');
+    }
+  }
+
+  function reset() {
+    matched = 0; moves = 0; flipped = []; lock = false;
+    buildCards();
+    $b.pairs.textContent = '0 / ' + pairsCount;
+    $b.moves.textContent = '0';
+    $b.nextBtn.classList.add('hidden');
+    $b.goHome.classList.add('hidden');
+    render();
+    startTimer();
+  }
+
+  if (circuit) {
+    $b.topProgress.textContent = 'JUEGO ' + (gi + 1) + ' / ' + circuit.games.length;
+    $b.gameLabel.textContent = (cfg && cfg.name ? cfg.name : 'MEMORICE').toUpperCase();
+  } else {
+    $b.topProgress.textContent = 'JUGAR INDIVIDUAL';
+    $b.gameLabel.textContent = 'MEMORICE';
+  }
+
+  $b.nextBtn.addEventListener('click', () => window.location.href = nextGameUrl());
+  $b.restart.addEventListener('click', reset);
+  reset();
+</script>
+</body></html>

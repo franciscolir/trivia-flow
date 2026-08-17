@@ -1,0 +1,106 @@
+/* ============================================================
+   css/arena.css — ULTRA ARENA: estilos compartidos y modo claro
+   Base: tema oscuro del diseño. El modo claro se activa con
+   <html class="light"> (los overrides usan mayor especificidad).
+   ============================================================ */
+
+/* ---------- Theme toggle icon ---------- */
+html:not(.dark) #theme-toggle .material-symbols-outlined { font-variation-settings: 'FILL' 0; }
+
+/* ---------- Modo claro: overrides de tokens ---------- */
+html.light body {
+  background-color: #eef3f8 !important;
+  background-image:
+    radial-gradient(circle at top left, rgba(0, 107, 150, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at bottom right, rgba(155, 0, 132, 0.12) 0%, transparent 40%) !important;
+  color: #16222a;
+}
+
+/* Fondos */
+html.light .bg-background { background-color: #eef3f8; }
+html.light .bg-surface { background-color: #eef3f8; }
+html.light .bg-surface-container-lowest { background-color: #ffffff; }
+html.light .bg-surface-container-low { background-color: #e6edf2; }
+html.light .bg-surface-container { background-color: #dce4ea; }
+html.light .bg-surface-container-high { background-color: #cdd7de; }
+html.light .bg-surface-container-highest { background-color: #c2cdd4; }
+html.light .bg-surface-bright { background-color: #f7fafc; }
+html.light .bg-surface-variant { background-color: #d8e0e6; }
+html.light .bg-primary-container { background-color: #cdeffb; }
+html.light .bg-secondary-container { background-color: #ffd6f5; }
+html.light .bg-tertiary-container { background-color: #b5f5d8; }
+html.light .bg-primary\/10 { background-color: rgba(0, 107, 150, 0.1); }
+html.light .bg-primary\/20 { background-color: rgba(0, 107, 150, 0.16); }
+html.light .bg-secondary\/10 { background-color: rgba(155, 0, 132, 0.08); }
+html.light .bg-error\/10 { background-color: rgba(186, 26, 26, 0.1); }
+html.light .bg-tertiary\/5 { background-color: rgba(0, 118, 74, 0.06); }
+html.light .bg-white { background-color: #ffffff; }
+
+/* Textos */
+html.light .text-on-surface { color: #16222a; }
+html.light .text-on-surface-variant { color: #46565e; }
+html.light .text-on-background { color: #16222a; }
+html.light .text-primary { color: #006b96; }
+html.light .text-primary-fixed { color: #006b96; }
+html.light .text-primary-container { color: #006b96; }
+html.light .text-on-primary-container { color: #003b4f; }
+html.light .text-secondary { color: #9b0084; }
+html.light .text-secondary-container { color: #9b0084; }
+html.light .text-on-secondary-container { color: #3a0033; }
+html.light .text-tertiary { color: #00764a; }
+html.light .text-tertiary-fixed { color: #00764a; }
+html.light .text-on-tertiary-container { color: #003d24; }
+html.light .text-error { color: #ba1a1a; }
+html.light .text-on-error { color: #ffffff; }
+html.light .text-outline { color: #5b6a72; }
+html.light .text-outline-variant { color: #c4ccd2; }
+html.light .text-surface-variant { color: #7a8a93; }
+html.light .text-white { color: #16222a; }
+html.light .text-yellow-400 { color: #e6a700; }
+
+/* Bordes */
+html.light .border-outline-variant { border-color: #c4ccd2; }
+html.light .border-primary\/20 { border-color: rgba(0, 107, 150, 0.25); }
+html.light .border-primary\/30 { border-color: rgba(0, 107, 150, 0.35); }
+html.light .border-primary\/50 { border-color: rgba(0, 107, 150, 0.55); }
+html.light .border-secondary\/20 { border-color: rgba(155, 0, 132, 0.25); }
+html.light .border-secondary\/50 { border-color: rgba(155, 0, 132, 0.5); }
+html.light .border-error\/50 { border-color: rgba(186, 26, 26, 0.5); }
+html.light .border-tertiary\/50 { border-color: rgba(0, 118, 74, 0.5); }
+
+/* Sombreados de tono claro */
+html.light .shadow-\[0_0_20px_rgba\(71\,214\,255\,0\.1\)\] { box-shadow: 0 0 20px rgba(0, 107, 150, 0.1); }
+html.light .glow-active { box-shadow: 0 0 20px rgba(0, 107, 150, 0.2); }
+html.light .glow-secondary { box-shadow: 0 0 20px rgba(155, 0, 132, 0.2); }
+html.light .glow-primary { box-shadow: 0 0 30px rgba(0, 107, 150, 0.25); }
+
+/* ---------- Modo claro: componentes personalizados ---------- */
+html.light .glass-panel {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: transparent;
+}
+html.light .glass-panel::before {
+  background: linear-gradient(135deg, rgba(0, 107, 150, 0.3) 0%, transparent 50%, rgba(155, 0, 132, 0.25) 100%);
+}
+html.light .btn-primary { background: linear-gradient(90deg, #47d6ff, #00d2ff); color: #003543; }
+html.light .btn-secondary { color: #9b0084; border-color: #9b0084; }
+html.light .glass-button-primary { background: linear-gradient(135deg, rgba(0, 210, 255, 0.8), rgba(71, 214, 255, 0.4)); color: #003543; }
+html.light .glass-button-secondary { color: #9b0084; border-color: #9b0084; }
+html.light .input-glow { background-color: #ffffff; border-bottom-color: #9db0bb; color: #16222a; }
+html.light .input-glow:focus { border-bottom-color: #006b96; box-shadow: 0 4px 10px -4px rgba(0, 107, 150, 0.5); }
+html.light .timer-pulse { color: #ba1a1a; }
+html.light .slot-machine-view::before { background: linear-gradient(to bottom, rgba(238, 243, 248, 1) 0%, rgba(238, 243, 248, 0) 100%); }
+html.light .slot-machine-view::after { background: linear-gradient(to top, rgba(238, 243, 248, 1) 0%, rgba(238, 243, 248, 0) 100%); }
+html.light .name-item.active { color: #006b96; text-shadow: 0 0 20px rgba(0, 107, 150, 0.4); }
+html.light .tombola-gradient { background: radial-gradient(circle at center, rgba(0, 107, 150, 0.1) 0%, #eef3f8 70%); }
+html.light .glow-text-primary { text-shadow: 0 0 20px rgba(0, 107, 150, 0.4); }
+html.light .text-glow { text-shadow: 0 0 20px rgba(0, 107, 150, 0.4); }
+
+/* ---------- Scrollbars ---------- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #3c494e; border-radius: 8px; }
+html.light ::-webkit-scrollbar-thumb { background: #b6c2c9; }
+
+::placeholder { color: rgba(187, 201, 207, 0.6); }
+html.light ::placeholder { color: rgba(70, 86, 94, 0.5); }
