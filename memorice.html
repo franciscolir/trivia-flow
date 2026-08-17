@@ -22,7 +22,7 @@
         .glass-panel::before { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: -1; margin: -1px; border-radius: inherit; background: linear-gradient(to bottom right, rgba(165,231,255,0.4), transparent); }
         .btn-primary { background: linear-gradient(90deg, #47d6ff, #00d2ff); color: #003543; transition: all 0.3s ease; }
         .btn-primary:hover { transform: scale(1.03); box-shadow: 0 0 15px rgba(0,210,255,0.6); }
-        .memory-card { perspective: 800px; cursor: pointer; }
+        .memory-card { perspective: 800px; cursor: pointer; aspect-ratio: 1; }
         .memory-inner { position: relative; width: 100%; height: 100%; transition: transform 0.5s cubic-bezier(0.4,0,0.2,1); transform-style: preserve-3d; }
         .memory-card.flipped .memory-inner { transform: rotateY(180deg); }
         .memory-face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 0.75rem; }

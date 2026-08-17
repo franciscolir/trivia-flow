@@ -184,6 +184,7 @@ function setWord(word, opts) {
 function revealWordLetter(letter) {
   if (!session || !session.word || session.word.completed) return;
   const w = session.word;
+  letter = String(letter || '').toUpperCase();
   w.text.split('').forEach((l, p) => { if (l === letter) w.revealed.push(p); });
   w.revealed = Array.from(new Set(w.revealed));
   logEvent('LETTER_REVEALED', { letter });

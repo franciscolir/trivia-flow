@@ -4,7 +4,11 @@
   "version": "1.0.0",
   "description": "ULTRA ARENA — plataforma de concursos",
   "scripts": {
-    "test": "node tests/arena-smoke.js",
+    "test": "npm run test:unit && npm run test:integration && npm run test:e2e",
+    "test:unit": "node --test \"tests/unit/*.test.js\"",
+    "test:integration": "node --test \"tests/integration/*.test.js\"",
+    "test:e2e": "node tests/e2e/circuit.e2e.js",
+    "smoke": "node tests/arena-smoke.js",
     "serve": "node tests/server.js"
   },
   "devDependencies": {
