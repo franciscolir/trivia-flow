@@ -70,6 +70,10 @@
 <div id="scoreboard" class="flex justify-around items-center h-24 px-4 overflow-x-auto"></div>
 </footer>
 
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/firestore.js"></script>
 <script src="js/sounds.js"></script>
 <script src="js/arena.js"></script>
 <script src="js/turn.js"></script>
@@ -87,6 +91,8 @@
   const cfg = getCurrentGame();
   const isCircuit = !!(sess && sess.mode === 'circuit' && sess.games && sess.games.length);
   const pairsCount = (cfg && cfg.settings && cfg.settings.pairs) || 8;
+  let emojiPool = EMOJIS;
+  let boardPairs = Math.min(pairsCount, emojiPool.length);
 
   const $b = {
     board: $('#board'), timer: $('#timer'), pairs: $('#pairs'), moves: $('#moves'),
@@ -101,7 +107,7 @@
 
   function fmtTime(s) { s = Math.max(0, Math.ceil(s)); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
   function buildCards() {
-    const emojis = EMOJIS.slice(0, pairsCount);
+    const emojis = emojiPool.slice(0, boardPairs);
     cards = shuffleArray([...emojis, ...emojis].map((emoji, i) => ({ id: i, pairId: emoji, emoji, state: 'hidden' })));
   }
   function render() {
@@ -134,13 +140,13 @@
       if (cards[a].pairId === cards[b].pairId) {
         cards[a].state = cards[b].state = 'matched';
         matched++;
-        $b.pairs.textContent = matched + ' / ' + pairsCount;
+        $b.pairs.textContent = matched + ' / ' + boardPairs;
         playCorrect();
         // Quien acierta la pareja continúa; suma puntos si es circuito
         if (isCircuit) { const t = turns.current(); if (t) addScore(t.id, ptsPerPair, 'Pareja de Memorice', cfg ? cfg.id : null); }
         flipped = []; lock = false;
         render();
-        if (matched === pairsCount) finish();
+        if (matched === boardPairs) finish();
       } else {
         playWrong();
         // Si falla: ocultar temporales y pasar turno
@@ -193,7 +199,7 @@
   function reset() {
     matched = 0; moves = 0; flipped = []; lock = false;
     buildCards();
-    $b.pairs.textContent = '0 / ' + pairsCount;
+    $b.pairs.textContent = '0 / ' + boardPairs;
     $b.moves.textContent = '0';
     $b.nextBtn.classList.add('hidden');
     $b.goHome.classList.add('hidden');
@@ -212,6 +218,12 @@
   $b.restart.addEventListener('click', () => { turns.reset(); updateTurn(); reset(); });
   renderScoreboardTeams('#scoreboard');
   updateTurn();
-  reset();
+  loadGameContent(cfg).then(items => {
+    if (items && items.length >= 2) {
+      emojiPool = items.map(i => i.image || i.label || '').filter(Boolean);
+      if (emojiPool.length >= 2) boardPairs = Math.min(pairsCount, emojiPool.length);
+    }
+    reset();
+  });
 </script>
 </body></html>

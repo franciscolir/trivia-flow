@@ -72,6 +72,10 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
 <div id="scoreboard" class="flex justify-around items-center h-24 px-4 overflow-x-auto"></div>
 </footer>
 
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/firestore.js"></script>
 <script src="js/sounds.js"></script>
 <script src="js/arena.js"></script>
 <script src="js/turn.js"></script>
@@ -105,6 +109,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
   const PENALTY = settings.penalty || 0;
   const PTS = (cfg && cfg.points) || 10;
   const roundTeams = isCircuit && sess.teams && sess.teams.length ? sess.teams.slice() : [{ id: 'solo', name: 'JUGADOR', color: 'primary' }];
+  let bankActive = BANK;
 
   let decks = [], roundIndex = -1, qIndex = 0, correct = 0, teamStats = {};
   const qTimer = new TimerManager();
@@ -120,7 +125,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
 
   function dealDecks() {
     const n = Math.max(1, roundTeams.length);
-    const shuffled = shuffleArray(BANK);
+    const shuffled = shuffleArray(bankActive);
     const per = Math.max(1, Math.floor(shuffled.length / n));
     const out = [];
     let idx = 0;
@@ -216,7 +221,13 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
   $s.gameLabel.textContent = (cfg ? cfg.name : 'COMPLETAR LA ORACIÓN').toUpperCase();
   if (sess && sess.word && sess.word.active) mountWordBar('#wordbar');
   renderScoreboardTeams('#scoreboard');
-  decks = dealDecks();
-  startRound(0);
+  loadGameContent(cfg).then(items => {
+    if (items && items.length >= 1) {
+      const mapped = items.map(i => ({ text: i.text, answer: i.missing })).filter(s => s.text && s.answer);
+      if (mapped.length >= 1) bankActive = mapped;
+    }
+    decks = dealDecks();
+    startRound(0);
+  });
 </script>
 </body></html>

@@ -57,6 +57,26 @@ function isPublic() {
   return new URLSearchParams(window.location.search).get('public') === '1';
 }
 
+// ---------- Contenido por juego (sets de Firestore) ----------
+function contentCollectionFor(type) {
+  return type === 'memorice' ? 'memorySets'
+    : type === 'synonyms' ? 'synonymSets'
+    : type === 'sentence' ? 'sentenceSets' : null;
+}
+
+// Retorna los items del set configurado (settings.contentId) o null si no aplica.
+async function loadGameContent(cfg) {
+  if (typeof db === 'undefined') return null;
+  const cid = cfg && cfg.settings && cfg.settings.contentId;
+  if (!cid) return null;
+  try {
+    const d = await db.collection(contentCollectionFor(cfg.type)).doc(cid).get();
+    if (!d.exists) return null;
+    const items = (d.data() && d.data().items) || [];
+    return Array.isArray(items) ? items : null;
+  } catch (e) { console.warn('loadGameContent', e); return null; }
+}
+
 const ArenaSync = (typeof BroadcastChannel !== 'undefined') ? new BroadcastChannel('arena-sync') : null;
 
 if (ArenaSync) {

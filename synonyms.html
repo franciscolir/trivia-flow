@@ -73,6 +73,10 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
 <div id="scoreboard" class="flex justify-around items-center h-24 px-4 overflow-x-auto"></div>
 </footer>
 
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/firestore.js"></script>
 <script src="js/sounds.js"></script>
 <script src="js/arena.js"></script>
 <script src="js/turn.js"></script>
@@ -92,8 +96,8 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
   const cfg = getCurrentGame();
   const isCircuit = !!(sess && sess.mode === 'circuit' && sess.games && sess.games.length);
   const settings = (cfg && cfg.settings) || {};
-  const BANK = (settings.type || 'sinonimos') === 'antonimos' ? ANT : SYN;
-  const PAIRS = Math.min(settings.pairs || 4, BANK.length);
+  let BANK = (settings.type || 'sinonimos') === 'antonimos' ? ANT : SYN;
+  let PAIRS = Math.min(settings.pairs || 4, BANK.length);
   const ROUND_TIME = settings.roundTime || 60;
   const PTS = (cfg && cfg.points) || 10;
   const roundTeams = isCircuit && sess.teams && sess.teams.length ? sess.teams.slice() : [{ id: 'solo', name: 'JUGADOR', color: 'primary' }];
@@ -238,7 +242,16 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
   $s.gameLabel.textContent = (cfg ? cfg.name : 'SINÓNIMOS / ANTÓNIMOS').toUpperCase();
   if (sess && sess.word && sess.word.active) mountWordBar('#wordbar');
   renderScoreboardTeams('#scoreboard');
-  decks = dealDecks();
-  startRound(0);
+  loadGameContent(cfg).then(items => {
+    if (items && items.length >= 1) {
+      const mapped = items.map(i => [i.a, i.b]).filter(p => p[0] && p[1]);
+      if (mapped.length >= 1) {
+        BANK = mapped;
+        PAIRS = Math.min(PAIRS, mapped.length);
+      }
+    }
+    decks = dealDecks();
+    startRound(0);
+  });
 </script>
 </body></html>

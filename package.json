@@ -1,0 +1,13 @@
+{
+  "name": "trivia-arena",
+  "private": true,
+  "version": "1.0.0",
+  "description": "ULTRA ARENA — plataforma de concursos",
+  "scripts": {
+    "test": "node tests/arena-smoke.js",
+    "serve": "node tests/server.js"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^23.0.0"
+  }
+}
