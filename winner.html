@@ -86,6 +86,18 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
 </div>
 </main>
 
+<!-- DESEMPATE -->
+<div id="tie-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm">
+  <div class="glass-panel rounded-2xl p-10 max-w-md w-full mx-4 text-center flex flex-col gap-6">
+    <span class="material-symbols-outlined text-5xl text-primary" style="font-variation-settings:'FILL' 1;">balance</span>
+    <h2 class="font-headline-md text-headline-md text-primary uppercase">DESEMPATE</h2>
+    <p id="tie-title" class="font-body-md text-body-md text-on-surface-variant"></p>
+    <div id="tie-display" class="font-display-lg text-display-lg text-on-surface uppercase tracking-widest min-h-[40px]"></div>
+    <button id="tie-spin" class="btn-primary rounded-xl px-8 py-3 font-headline-md text-headline-md hidden">GIRAR TÓMBOLA</button>
+    <div id="tie-options" class="flex flex-col gap-2"></div>
+  </div>
+</div>
+
 <script src="js/sounds.js"></script>
 <script src="js/arena.js"></script>
 <script src="js/turn.js"></script>
@@ -98,9 +110,9 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
   const sess = getSession();
   const isCircuit = !!(sess && sess.mode === 'circuit' && sess.games && sess.games.length);
 
-  function showResult() {
+  function showResult(winner) {
+    if (!winner) winner = getRanking()[0];
     const ranking = sess && sess.teams ? getRanking() : [];
-    const winner = ranking[0];
     $('#winner-name').textContent = winner ? winner.name : 'Sin equipos';
     $('#stat-points').textContent = fmt(winner ? winner.score : 0);
     $('#stat-games').textContent = sess && sess.games ? sess.games.length : 0;
@@ -115,6 +127,10 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
         <span class="font-display-lg text-display-lg-mobile md:text-display-lg ${color.text}">${fmt(t.score)}</span>
       </div>`;
     }).join('');
+    if (winner) {
+      $('#winner-name').textContent = winner.name;
+      $('#stat-points').textContent = fmt(winner.score);
+    }
     $('#gate').classList.add('hidden');
     $('#result').classList.remove('hidden');
     playFinish();
@@ -139,16 +155,82 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
         </div>`;
   }
 
+  // ---------- Desempate ----------
+  const tieModal = $('#tie-modal'), tieDisplay = $('#tie-display'), tieSpin = $('#tie-spin'), tieOptions = $('#tie-options'), tieTitle = $('#tie-title');
+
+  function resolveTie(tied) {
+    return new Promise(res => {
+      let pool = tied.slice();
+      if (sess.tiebreaker === 'gamesWon') {
+        const max = Math.max(...pool.map(t => gameWins(t.id)));
+        pool = pool.filter(t => gameWins(t.id) === max);
+        if (pool.length === 1) return res(pool[0]);
+        // aun empatados en victorias -> tómbola
+      }
+      const mode = sess.tiebreaker === 'extra' ? 'extra' : 'tombola';
+      tieTitle.textContent = mode === 'extra'
+        ? 'Posiciones igualadas. El conductor elige al equipo ganador:'
+        : 'Posiciones igualadas. Gira la tómbola para decidir:';
+      tieOptions.innerHTML = '';
+      tieDisplay.textContent = '';
+      tieSpin.classList.toggle('hidden', mode !== 'tombola');
+      if (mode === 'extra') {
+        tieOptions.innerHTML = pool.map(t => {
+          const color = COLORS[t.color] || COLORS.rojo;
+          return `<button data-id="${t.id}" class="tie-btn flex items-center justify-center gap-3 px-4 py-3 rounded-lg border border-outline-variant text-on-surface hover:border-primary hover:text-primary transition-colors">
+            <span class="w-3 h-3 rounded-full" style="background:${color.hex}"></span>
+            <span class="font-headline-md text-headline-md uppercase">${escapeHtml(t.name)}</span>
+          </button>`;
+        }).join('');
+        $$('.tie-btn', tieOptions).forEach(b => b.addEventListener('click', () => {
+          const chosen = sess.teams.find(t => t.id === b.dataset.id);
+          tieModal.classList.add('hidden');
+          res(chosen);
+        }));
+      } else {
+        let idx = 0, cycling = null;
+        const cycle = () => {
+          tieDisplay.textContent = pool[idx % pool.length].name;
+          idx++;
+        };
+        tieSpin.addEventListener('click', () => {
+          if (cycling) return;
+          tieSpin.disabled = true;
+          cycling = setInterval(cycle, 90);
+          setTimeout(() => {
+            clearInterval(cycling); cycling = null; tieSpin.disabled = false;
+            if (typeof playSpin === 'function') playSpin();
+            tieDisplay.textContent = '';
+            const chosen = pool[Math.floor(Math.random() * pool.length)];
+            tieDisplay.classList.add('text-tertiary');
+            tieDisplay.textContent = chosen.name + ' 🎉';
+            setTimeout(() => { tieModal.classList.add('hidden'); tieDisplay.classList.remove('text-tertiary'); res(chosen); }, 900);
+          }, 1800);
+        });
+      }
+      tieModal.classList.remove('hidden');
+    });
+  }
+
+  function finalizeDraw(completed, winner) {
+    if (sess.word && sess.word.active) {
+      sess.word.active = false;
+      persistSession();
+    }
+    showWordBanner(completed);
+    showResult(winner);
+  }
+
   if (isCircuit) {
     $('#finalize-btn').addEventListener('click', () => {
       // Capturar el resultado ANTES de desactivar la dinámica
       const completed = sess.word && sess.word.active ? isWordComplete() : null;
-      if (sess.word && sess.word.active) {
-        sess.word.active = false;
-        persistSession();
+      const tied = tiedTeams();
+      if (tied.length > 1) {
+        resolveTie(tied).then(chosen => finalizeDraw(completed, chosen));
+      } else {
+        finalizeDraw(completed, tied.length ? tied[0] : (getRanking()[0] || null));
       }
-      showWordBanner(completed);
-      showResult();
     });
   } else {
     $('#gate').classList.add('hidden');
@@ -157,6 +239,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
   }
 
   $('#new-session').addEventListener('click', () => { clearSession(); window.location.href = 'index'; });
+  offerRecovery();
   $('#view-history').addEventListener('click', () => {
     const events = sess && sess.events ? sess.events.slice(-12).reverse().map(e => '• ' + e.type + (e.teamId ? ' [' + (sess.teams.find(t => t.id === e.teamId)?.name || '') + ']' : '')).join('\n') : 'Sin eventos';
     alert('Historial de eventos:\n' + events);

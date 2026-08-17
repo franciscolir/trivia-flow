@@ -172,6 +172,39 @@
             <input id="guess-penalty" type="number" min="0" value="5" class="input-glow w-20 py-1 px-1 text-body-md font-body-md bg-transparent"/>
           </div>
         </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="font-label-caps text-label-caps text-on-surface-variant" for="word-cells">CANTIDAD DE CUADROS</label>
+            <input id="word-cells" type="number" min="4" max="25" value="16" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent"/>
+          </div>
+          <div>
+            <label class="font-label-caps text-label-caps text-on-surface-variant" for="word-max">MÁX. CUADROS ABIERTOS (0 = ilimitado)</label>
+            <input id="word-max" type="number" min="0" value="0" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent"/>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center justify-between border-b border-outline-variant pb-4">
+        <div>
+          <div class="font-headline-md text-headline-md text-on-surface">DESEMPATE</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">Cómo se resuelve un empate al final del circuito.</div>
+        </div>
+        <select id="tiebreaker" class="input-glow bg-surface-container py-2 px-2 text-body-md font-body-md">
+          <option value="gamesWon">Más juegos ganados</option>
+          <option value="tombola">Tómbola</option>
+          <option value="extra">Pregunta extra (conductor decide)</option>
+        </select>
+      </div>
+      <div class="flex items-center justify-between border-b border-outline-variant pb-4">
+        <div>
+          <div class="font-headline-md text-headline-md text-on-surface">RECOMPENSA DEL GANADOR</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">Qué recibe el ganador de cada juego.</div>
+        </div>
+        <select id="reward-mode" class="input-glow bg-surface-container py-2 px-2 text-body-md font-body-md">
+          <option value="cell">Descubrir casilla</option>
+          <option value="points">Solo puntos</option>
+          <option value="both">Puntos + casilla</option>
+          <option value="choice">Elegir entre dos</option>
+        </select>
       </div>
     </div>
   </section>
@@ -213,6 +246,10 @@
 </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/firestore.js"></script>
 <script src="js/arena.js"></script>
 <script src="js/turn.js"></script>
 <script src="js/timer.js"></script>
@@ -233,7 +270,8 @@
     mode: 'circuit', name: 'Gran Desafío',
     teams: [], participants: [], games: [],
     tombolaActive: true, wordActive: false,
-    word: { text: '', rewardAll: 5, rewardWinner: 10, guessEnabled: true, guessPenalty: 5 }
+    tiebreaker: 'gamesWon', rewardMode: 'cell',
+    word: { text: '', rewardAll: 5, rewardWinner: 10, guessEnabled: true, guessPenalty: 5, cells: 16, maxReveals: 0 }
   };
 
   const usedColors = new Set();
@@ -387,6 +425,10 @@
         input = `<select data-cfg="${f.key}" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-surface-container">
           ${(f.options || []).map(o => `<option value="${o}" ${String(value) === o ? 'selected' : ''}>${o.charAt(0).toUpperCase() + o.slice(1)}</option>`).join('')}
         </select>`;
+      } else if (f.type === 'content') {
+        input = `<select data-cfg="${f.key}" data-collection="${f.collection || ''}" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-surface-container">
+          <option value="">${escapeHtml(f.placeholder || 'Usar banco integrado')}</option>
+        </select>`;
       } else if (f.type === 'number') {
         input = `<input data-cfg="${f.key}" type="number" min="${f.min != null ? f.min : ''}" max="${f.max != null ? f.max : ''}" value="${value}" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent"/>`;
       } else {
@@ -400,6 +442,22 @@
     if (!fields) { alert('Este juego no tiene configuración adicional.'); return; }
     $('#config-title').textContent = 'CONFIGURAR — ' + (g.name || def.name).toUpperCase();
     $('#config-fields').innerHTML = fields;
+    // Cargar opciones de contenido desde Firestore (type: content)
+    $$('#config-fields select[data-collection]').forEach(sel => {
+      if (typeof db === 'undefined') return;
+      db.collection(sel.dataset.collection).limit(50).get()
+        .then(snap => {
+          const cur = getByPath(g, sel.dataset.cfg);
+          snap.docs.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d.id;
+            opt.textContent = (d.data().name || d.id);
+            if (d.id === cur) opt.selected = true;
+            sel.appendChild(opt);
+          });
+        })
+        .catch(e => console.warn('content opts', e));
+    });
     $('#config-modal').classList.remove('hidden');
   }
 
@@ -462,6 +520,8 @@
         <p class="font-body-md text-body-md text-on-surface-variant">Tómbola: <span class="text-primary font-bold">${config.tombolaActive ? 'ACTIVA' : 'INACTIVA'}</span></p>
         <p class="font-body-md text-body-md text-on-surface-variant">Descubre la palabra: <span class="text-primary font-bold">${config.wordActive ? 'ACTIVA' : 'INACTIVA'}</span></p>
         ${word}
+        <p class="font-body-md text-body-md text-on-surface-variant border-t border-outline-variant pt-3">Desempate: <span class="text-primary font-bold">${{ gamesWon: 'Más juegos ganados', tombola: 'Tómbola', extra: 'Pregunta extra' }[config.tiebreaker]}</span></p>
+        <p class="font-body-md text-body-md text-on-surface-variant">Recompensa del ganador: <span class="text-primary font-bold">${{ cell: 'Descubrir casilla', points: 'Solo puntos', both: 'Puntos + casilla', choice: 'Elegir entre dos' }[config.rewardMode]}</span></p>
       </div>`;
   }
 
@@ -479,9 +539,11 @@
       participants: config.participants,
       games: config.games,
       tombola: { active: config.tombolaActive, pool: config.participants.map(p => p.name), history: [] },
-      word: config.wordActive ? { active: true, text: config.word.text, rewardAll: +config.word.rewardAll || 5, rewardWinner: +config.word.rewardWinner || 10, guessEnabled: config.word.guessEnabled, guessPenalty: +config.word.guessPenalty || 0 } : { active: false }
+      word: config.wordActive ? { active: true, text: config.word.text, rewardAll: +config.word.rewardAll || 5, rewardWinner: +config.word.rewardWinner || 10, guessEnabled: config.word.guessEnabled, guessPenalty: +config.word.guessPenalty || 0, cells: +config.word.cells || 16, maxReveals: +config.word.maxReveals || 0 } : { active: false },
+      tiebreaker: config.tiebreaker,
+      rewardMode: config.rewardMode
     });
-    if (config.wordActive) setWord(config.word.text, { rewardAll: +config.word.rewardAll || 5, rewardWinner: +config.word.rewardWinner || 10, guessEnabled: config.word.guessEnabled, guessPenalty: +config.word.guessPenalty || 0 });
+    if (config.wordActive) setWord(config.word.text, { rewardAll: +config.word.rewardAll || 5, rewardWinner: +config.word.rewardWinner || 10, guessEnabled: config.word.guessEnabled, guessPenalty: +config.word.guessPenalty || 0, cells: +config.word.cells || 16, maxReveals: +config.word.maxReveals || 0 });
 
     if (config.mode === 'circuit') {
       window.location.href = getGamePage(config.games[0].type) + '?gi=0';
@@ -524,6 +586,14 @@
   $('#reward-winner').addEventListener('input', e => { config.word.rewardWinner = +e.target.value || 0; });
   $('#toggle-guess').addEventListener('change', e => { config.word.guessEnabled = e.target.checked; });
   $('#guess-penalty').addEventListener('input', e => { config.word.guessPenalty = +e.target.value || 0; });
+  $('#word-cells').addEventListener('input', e => { config.word.cells = +e.target.value || 16; });
+  $('#word-max').addEventListener('input', e => { config.word.maxReveals = +e.target.value || 0; });
+  $('#tiebreaker').addEventListener('change', e => { config.tiebreaker = e.target.value; });
+  $('#reward-mode').addEventListener('change', e => { config.rewardMode = e.target.value; });
+  if (config.word.cells) $('#word-cells').value = config.word.cells;
+  if (config.word.maxReveals) $('#word-max').value = config.word.maxReveals;
+  $('#tiebreaker').value = config.tiebreaker;
+  $('#reward-mode').value = config.rewardMode;
 
   $('#prev-btn').addEventListener('click', () => showStep(currentStep - 1));
   $('#next-btn').addEventListener('click', () => {

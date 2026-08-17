@@ -85,7 +85,8 @@ GameRegistry.registerGame({
   configurationSchema: [
     { key: 'name', label: 'Nombre del juego', type: 'text', placeholder: 'Memorice' },
     { key: 'points', label: 'Puntos por pareja', type: 'number', min: 0 },
-    { key: 'settings.pairs', label: 'Cantidad de parejas', type: 'number', min: 2, max: 12 }
+    { key: 'settings.pairs', label: 'Cantidad de parejas', type: 'number', min: 2, max: 12 },
+    { key: 'settings.contentId', label: 'Conjunto de imágenes (Memorice)', type: 'content', collection: 'memorySets', placeholder: 'Usar banco integrado' }
   ]
 });
 
@@ -131,7 +132,8 @@ GameRegistry.registerGame({
     { key: 'points', label: 'Puntos por ronda ganada', type: 'number', min: 0 },
     { key: 'settings.type', label: 'Tipo', type: 'select', options: ['sinonimos', 'antonimos'] },
     { key: 'settings.pairs', label: 'Cantidad de parejas', type: 'number', min: 2, max: 8 },
-    { key: 'settings.roundTime', label: 'Tiempo por ronda (seg)', type: 'number', min: 10 }
+    { key: 'settings.roundTime', label: 'Tiempo por ronda (seg)', type: 'number', min: 10 },
+    { key: 'settings.contentId', label: 'Lista de palabras (set)', type: 'content', collection: 'synonymSets', placeholder: 'Usar banco integrado' }
   ]
 });
 
@@ -149,6 +151,7 @@ GameRegistry.registerGame({
     { key: 'name', label: 'Nombre del juego', type: 'text', placeholder: 'Completar la Oración' },
     { key: 'points', label: 'Puntos por acierto', type: 'number', min: 0 },
     { key: 'settings.questionTime', label: 'Tiempo por pregunta (seg)', type: 'number', min: 5 },
-    { key: 'settings.penalty', label: 'Penalización por error', type: 'number', min: 0 }
+    { key: 'settings.penalty', label: 'Penalización por error', type: 'number', min: 0 },
+    { key: 'settings.contentId', label: 'Conjunto de oraciones (set)', type: 'content', collection: 'sentenceSets', placeholder: 'Usar banco integrado' }
   ]
 });

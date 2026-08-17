@@ -51,28 +51,51 @@ function renderTombola(container, opts) {
     : [];
   const fallback = (sess && sess.tombola && sess.tombola.pool) ? sess.tombola.pool.slice() : [];
   const pool = (team ? teamParticipants : fallback).slice();
+  let excludeMode = 'excluir'; // 'mantener' | 'excluir'
+  let collapsed = false;
 
   container.innerHTML = `
     <div class="glass-panel rounded-xl p-4 flex flex-col items-center gap-3 w-full">
-      <div class="flex items-center gap-2">
-        <span class="material-symbols-outlined text-secondary" style="font-variation-settings:'FILL' 1;">casino</span>
-        <span class="font-label-caps text-label-caps text-secondary">TÓMBOLA${team ? ' — ' + escapeHtml(team.name) : ''}</span>
+      <div class="flex items-center justify-between w-full">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary" style="font-variation-settings:'FILL' 1;">casino</span>
+          <span class="font-label-caps text-label-caps text-secondary">TÓMBOLA${team ? ' — ' + escapeHtml(team.name) : ''}</span>
+        </div>
+        ${opts.collapsible ? `<button class="tombola-collapse p-1 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">expand_more</span></button>` : ''}
       </div>
-      <div class="tombola-display h-12 w-full bg-surface rounded-lg flex items-center justify-center overflow-hidden relative font-headline-md text-headline-md text-primary-fixed" style="background-image:linear-gradient(to bottom, rgba(14,20,23,0.9), rgba(14,20,23,0.3), rgba(14,20,23,0.9));">${team && !pool.length ? 'SIN INTEGRANTES' : '—'}</div>
-      <div class="flex gap-2 w-full">
-        <button class="tombola-spin glass-button-primary flex-1 px-4 py-2 rounded-lg font-label-caps text-label-caps">GIRAR</button>
-        <button class="tombola-reset px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-bright transition-colors" title="Reiniciar">
-          <span class="material-symbols-outlined text-[18px] align-middle">restart_alt</span>
-        </button>
+      <div class="tombola-body w-full flex flex-col items-center gap-3">
+        <div class="tombola-display h-12 w-full bg-surface rounded-lg flex items-center justify-center overflow-hidden relative font-headline-md text-headline-md text-primary-fixed" style="background-image:linear-gradient(to bottom, rgba(14,20,23,0.9), rgba(14,20,23,0.3), rgba(14,20,23,0.9));">${team && !pool.length ? 'SIN INTEGRANTES' : '—'}</div>
+        <div class="flex gap-2 w-full">
+          <button class="tombola-spin glass-button-primary flex-1 px-4 py-2 rounded-lg font-label-caps text-label-caps">GIRAR</button>
+          <button class="tombola-reset px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-bright transition-colors" title="Reiniciar">
+            <span class="material-symbols-outlined text-[18px] align-middle">restart_alt</span>
+          </button>
+        </div>
+        <div class="flex items-center justify-between w-full">
+          <select class="tombola-mode input-glow bg-surface-container py-1 px-2 text-label-sm text-label-sm">
+            <option value="excluir">EXCLUIR</option>
+            <option value="mantener">MANTENER</option>
+          </select>
+          <span class="tombola-pool font-label-sm text-label-sm text-on-surface-variant text-right truncate">${pool.length} participantes</span>
+        </div>
       </div>
-      <div class="tombola-pool font-label-sm text-label-sm text-on-surface-variant text-center w-full truncate">${pool.length} participantes</div>
     </div>`;
 
   const display = $('.tombola-display', container);
   const spinBtn = $('.tombola-spin', container);
   const resetBtn = $('.tombola-reset', container);
   const poolEl = $('.tombola-pool', container);
+  const body = $('.tombola-body', container);
+  const modeSel = $('.tombola-mode', container);
+  const collapseBtn = $('.tombola-collapse', container);
   const origPool = pool.slice();
+
+  if (modeSel) modeSel.addEventListener('change', () => { excludeMode = modeSel.value; });
+  if (collapseBtn) collapseBtn.addEventListener('click', () => {
+    collapsed = !collapsed;
+    body.classList.toggle('hidden', collapsed);
+    collapseBtn.querySelector('.material-symbols-outlined').textContent = collapsed ? 'expand_less' : 'expand_more';
+  });
 
   let spinning = false, stopping = false, rollTimer = null;
 
@@ -121,7 +144,7 @@ function renderTombola(container, opts) {
     display.style.textShadow = '0 0 20px rgba(71,214,255,0.5)';
     if (typeof playFinish === 'function') playFinish();
     if (!team && sess && sess.tombola) sess.tombola.history.unshift(winner);
-    pool.splice(pool.indexOf(winner), 1);
+    if (excludeMode === 'excluir') pool.splice(pool.indexOf(winner), 1);
     updatePool();
     spinning = false;
     stopping = false;
@@ -204,20 +227,18 @@ function showGameResult(opts) {
   if (opts.onHome) $('#result-home').addEventListener('click', () => { closeOverlay(); opts.onHome(); });
 }
 
-// ---------- SELECCIÓN DE CASILLA (tras ganar) ----------
+// ---------- SELECCIÓN DE CASILLA (tras ganar o a demanda del conductor) ----------
 function openCellPicker(opts) {
   const sess = getSession();
   const w = sess.word;
-  const winnerTeam = opts.winnerTeam;
-
-  function renderGrid(overlay) {
-    const grid = overlay.querySelector('#cell-grid');
-    grid.innerHTML = w.cells.map((c, i) => `
-      <button data-i="${i}" ${c.discovered ? 'disabled' : ''} class="cell tile glass-panel border ${c.discovered ? (c.type === 'letter' ? 'border-primary/60' : c.type === 'empty' ? 'border-outline-variant' : 'border-secondary/50') : 'border-outline-variant hover:border-primary/60 hover:shadow-[0_0_15px_rgba(165,231,255,0.2)]'} rounded-xl flex flex-col items-center justify-center aspect-square transition-all ${c.discovered ? '' : 'cursor-pointer'}">
-        ${c.discovered ? cellContentHTML(c) : `<span class="font-display-lg text-display-lg-mobile md:text-display-lg text-surface-variant font-bold">${String(i + 1).padStart(2, '0')}</span>`}
-      </button>`).join('');
-    grid.querySelectorAll('button[data-i]').forEach(b => b.addEventListener('click', () => pick(overlay, +b.dataset.i)));
+  if (!w || !w.cells || !w.cells.length) { if (opts && opts.onDone) opts.onDone(); return; }
+  // Límite de casillas abiertas
+  if (w.maxReveals > 0 && (w.revealsUsed || 0) >= w.maxReveals) {
+    if (opts && opts.onDone) opts.onDone();
+    return;
   }
+  let winnerTeam = opts ? opts.winnerTeam : null;
+  const teams = sess.teams || [];
 
   function cellContentHTML(c) {
     if (c.type === 'letter') return `<span class="font-display-xl text-display-xl text-primary">${c.letter}</span>`;
@@ -228,10 +249,22 @@ function openCellPicker(opts) {
     return `<span class="material-symbols-outlined text-outline-variant text-3xl">block</span>`;
   }
 
+  function renderGrid(overlay) {
+    const grid = overlay.querySelector('#cell-grid');
+    const disabled = !winnerTeam;
+    grid.innerHTML = w.cells.map((c, i) => `
+      <button data-i="${i}" ${c.discovered || disabled ? 'disabled' : ''} class="cell tile glass-panel border ${c.discovered ? (c.type === 'letter' ? 'border-primary/60' : c.type === 'empty' ? 'border-outline-variant' : 'border-secondary/50') : 'border-outline-variant hover:border-primary/60 hover:shadow-[0_0_15px_rgba(165,231,255,0.2)]'} rounded-xl flex flex-col items-center justify-center aspect-square transition-all ${c.discovered ? '' : 'cursor-pointer'}">
+        ${c.discovered ? cellContentHTML(c) : `<span class="font-display-lg text-display-lg-mobile md:text-display-lg text-surface-variant font-bold">${String(i + 1).padStart(2, '0')}</span>`}
+      </button>`).join('');
+    grid.querySelectorAll('button[data-i]').forEach(b => b.addEventListener('click', () => pick(overlay, +b.dataset.i)));
+  }
+
   function pick(overlay, i) {
     const c = w.cells[i];
-    if (c.discovered) return;
+    if (c.discovered || !winnerTeam) return;
+    if (w.maxReveals > 0 && (w.revealsUsed || 0) >= w.maxReveals) { overlay.remove(); if (opts.onDone) opts.onDone(); return; }
     c.discovered = true;
+    w.revealsUsed = (w.revealsUsed || 0) + 1;
     if (c.type === 'letter') {
       revealWordLetter(c.letter);
       if (typeof playCorrect === 'function') playCorrect();
@@ -251,7 +284,8 @@ function openCellPicker(opts) {
     }
     renderGrid(overlay);
     updateWordBar();
-    logEvent('CELL_REVEALED', { cellIndex: i, type: c.type });
+    logEvent('CELL_REVEALED', { cellIndex: i, type: c.type, teamId: winnerTeam ? winnerTeam.id : null });
+    if (typeof persistSession === 'function') persistSession();
     if (isWordComplete()) {
       overlay.remove();
       showWordCompleted(winnerTeam, opts.onDone);
@@ -261,17 +295,102 @@ function openCellPicker(opts) {
     }
   }
 
+  const teamSelector = !winnerTeam && teams.length
+    ? `<div class="flex flex-wrap justify-center gap-2 mb-4">
+        ${teams.map(t => `<button data-team="${t.id}" class="px-4 py-2 rounded-lg border border-outline-variant font-label-caps text-label-caps hover:border-primary transition-colors ${COLORS[t.color] ? COLORS[t.color].text : ''}">${escapeHtml(t.name)}</button>`).join('')}
+      </div>`
+    : '';
+
   openOverlay(`
     <div class="glass-panel rounded-2xl p-8 text-center">
-      <h2 class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-1">GANADOR</h2>
-      <h3 class="font-display-lg text-display-lg-mobile md:text-display-lg text-secondary uppercase mb-1">${winnerTeam ? escapeHtml(winnerTeam.name) : ''}</h3>
-      <p class="font-body-lg text-body-lg text-on-surface-variant mb-6">ELIGE UNA CASILLA</p>
+      <h2 class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-1">${winnerTeam ? 'GANADOR' : 'DESCUBRIR CASILLA'}</h2>
+      <h3 class="font-display-lg text-display-lg-mobile md:text-display-lg text-secondary uppercase mb-1">${winnerTeam ? escapeHtml(winnerTeam.name) : 'ELIGE EL EQUIPO'}</h3>
+      <p class="font-body-lg text-body-lg text-on-surface-variant mb-4">${winnerTeam ? 'ELIGE UNA CASILLA' : 'Luego selecciona la casilla para este equipo.'}</p>
+      ${teamSelector}
       <div id="cell-grid" class="grid grid-cols-4 gap-3 w-full max-w-xl mx-auto mb-2"></div>
       <p class="wordbar-letters font-display-lg-mobile text-display-lg-mobile text-primary tracking-[0.25em] mt-4"></p>
     </div>`);
   const ov = document.getElementById('arena-overlay');
+  ov.querySelectorAll('#pick-team, [data-team]').forEach(() => {});
+  if (teamSelector) {
+    ov.querySelectorAll('[data-team]').forEach(b => b.addEventListener('click', () => {
+      winnerTeam = teams.find(t => t.id === b.dataset.team) || null;
+      ov.querySelectorAll('[data-team]').forEach(x => x.classList.remove('border-primary'));
+      b.classList.add('border-primary');
+      renderGrid(ov);
+    }));
+  }
   renderGrid(ov);
   updateWordBar();
+}
+
+// Apertura a demanda desde el panel del conductor (elige equipo y casilla)
+function openConductorCellPicker(onDone) {
+  openCellPicker({ winnerTeam: null, onDone: onDone || function () {} });
+}
+
+// ---------- RECOMPENSA DEL GANADOR ----------
+function resolveGameReward(winnerTeam, onDone) {
+  const sess = getSession();
+  const mode = (sess && sess.rewardMode) || 'cell';
+  const cellActive = !!(sess && sess.word && sess.word.active && !isWordComplete());
+  const doCell = () => {
+    if (cellActive) openCellPicker({ winnerTeam, onDone });
+    else onDone();
+  };
+  if (!cellActive || mode === 'points') { onDone(); return; }
+  if (mode === 'cell') { doCell(); return; }
+  if (mode === 'both') {
+    if (winnerTeam) addScore(winnerTeam.id, (sess.word.rewardWinner || 10), 'Ganó el juego', 'reward');
+    logEvent('REWARD_GRANTED', { teamId: winnerTeam ? winnerTeam.id : null, type: 'points' });
+    doCell();
+    return;
+  }
+  // choice: elige entre +puntos o descubrir casilla
+  openOverlay(`
+    <div class="glass-panel rounded-2xl p-8 text-center">
+      <span class="material-symbols-outlined text-6xl text-secondary" style="font-variation-settings:'FILL' 1;">card_giftcard</span>
+      <h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface uppercase mt-3 mb-1">Recompensa del ganador</h2>
+      <h3 class="font-label-caps text-label-caps text-secondary uppercase mb-6">${winnerTeam ? escapeHtml(winnerTeam.name) : ''}</h3>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button id="rew-points" class="btn-primary rounded-xl px-10 py-4 font-label-caps text-label-caps uppercase">+${sess.word.rewardWinner || 10} PUNTOS</button>
+        <button id="rew-cell" class="px-10 py-4 rounded-xl border border-secondary/50 text-secondary font-label-caps text-label-caps hover:bg-secondary/10 transition-colors">DESCUBRIR CASILLA</button>
+      </div>
+    </div>`);
+  $('#rew-points').addEventListener('click', () => {
+    if (winnerTeam) addScore(winnerTeam.id, (sess.word.rewardWinner || 10), 'Ganó el juego', 'reward');
+    logEvent('REWARD_GRANTED', { teamId: winnerTeam ? winnerTeam.id : null, type: 'points' });
+    closeOverlay();
+    onDone();
+  });
+  $('#rew-cell').addEventListener('click', () => { closeOverlay(); doCell(); });
+}
+
+// ---------- HISTORIAL DE EVENTOS ----------
+function showEventsModal() {
+  const sess = getSession();
+  const events = sess && sess.events ? sess.events.slice().reverse() : [];
+  const teams = (sess && sess.teams) || [];
+  const list = events.slice(0, 60).map(e => {
+    const team = e.teamId ? teams.find(t => t.id === e.teamId) : null;
+    const color = team && COLORS[team.color] ? COLORS[team.color].text : '';
+    return `<div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container/40">
+      <span class="font-label-sm text-label-sm text-on-surface-variant opacity-60 font-mono">${new Date(e.ts || Date.now()).toLocaleTimeString()}</span>
+      <span class="font-label-caps text-label-caps ${color || 'text-primary'}">${escapeHtml(e.type)}</span>
+      ${team ? `<span class="font-label-sm text-label-sm text-on-surface-variant">${escapeHtml(team.name)}</span>` : ''}
+      <span class="ml-auto font-label-sm text-label-sm text-on-surface-variant truncate max-w-[40%]">${escapeHtml(JSON.stringify(e.data || {}).slice(0, 40))}</span>
+    </div>`;
+  }).join('') || '<p class="font-body-md text-body-md text-on-surface-variant text-center py-6">Sin eventos todavía.</p>';
+  openOverlay(`
+    <div class="glass-panel rounded-2xl p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-label-caps text-label-caps text-secondary uppercase">HISTORIAL DE EVENTOS (${events.length})</h2>
+        <span class="material-symbols-outlined text-secondary">history</span>
+      </div>
+      <div class="flex flex-col gap-2 max-h-[60vh] overflow-y-auto">${list}</div>
+      <button id="ev-close" class="mt-4 w-full py-3 rounded-lg border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-bright transition-colors">CERRAR</button>
+    </div>`);
+  $('#ev-close').addEventListener('click', closeOverlay);
 }
 
 // ---------- PALABRA DESCUBIERTA ----------

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contenidos - ULTRA ARENA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;family=Montserrat:wght@400;700;800;900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = { darkMode: "class", theme: { extend: {
+  colors: { "tertiary-fixed": "#56ffa8", "secondary-container": "#ff24e4", "secondary": "#fface8", "on-tertiary-fixed": "#002110", "surface-container-highest": "#2f3639", "on-tertiary-fixed-variant": "#00522f", "surface-tint": "#47d6ff", "tertiary-fixed-dim": "#00e38b", "primary": "#a5e7ff", "surface": "#0e1417", "on-error": "#690005", "outline-variant": "#3c494e", "surface-container-low": "#161d1f", "on-primary": "#003543", "on-primary-fixed-variant": "#004e60", "surface-dim": "#0e1417", "surface-container-high": "#242b2e", "error-container": "#93000a", "inverse-surface": "#dde3e7", "primary-fixed": "#b6ebff", "background": "#0e1417", "error": "#ffb4ab", "on-secondary-fixed": "#3a0033", "on-primary-container": "#00566a", "outline": "#859399", "tertiary-container": "#00dd87", "tertiary": "#00fd9b", "on-primary-fixed": "#001f28", "on-tertiary": "#00391f", "on-tertiary-container": "#005b35", "on-surface": "#dde3e7", "surface-bright": "#333a3d", "on-surface-variant": "#bbc9cf", "on-background": "#dde3e7", "on-secondary": "#5e0053", "surface-container-lowest": "#090f12", "on-error-container": "#ffdad6", "inverse-primary": "#00677f", "on-secondary-container": "#520049", "primary-container": "#00d2ff", "secondary-fixed-dim": "#fface8", "inverse-on-surface": "#2b3134", "surface-container": "#1a2123", "primary-fixed-dim": "#47d6ff", "on-secondary-fixed-variant": "#840076", "secondary-fixed": "#ffd7f0", "surface-variant": "#2f3639" },
+  borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+  spacing: { unit: "8px", "margin-desktop": "64px", gutter: "24px", "margin-mobile": "16px", "container-max": "1440px" },
+  fontFamily: { "label-caps": ["JetBrains Mono"], "display-lg-mobile": ["Montserrat"], "display-xl": ["Montserrat"], "body-lg": ["Inter"], "display-lg": ["Montserrat"], "body-md": ["Inter"], "headline-md": ["Montserrat"] },
+  fontSize: { "label-caps": ["14px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "700" }], "display-lg-mobile": ["32px", { lineHeight: "1.2", fontWeight: "800" }], "display-xl": ["80px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "900" }], "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }], "display-lg": ["48px", { lineHeight: "1.2", fontWeight: "800" }], "body-md": ["16px", { lineHeight: "1.5", fontWeight: "400" }], "headline-md": ["24px", { lineHeight: "1.4", fontWeight: "700" }] }
+} } }
+</script>
+<style>
+body { background-color: #0B0E14; background-image: radial-gradient(circle at top left, rgba(165,231,255,0.1) 0%, transparent 40%), radial-gradient(circle at bottom right, rgba(255,172,232,0.1) 0%, transparent 40%); background-attachment: fixed; min-height: 100vh; color: #dde3e7; }
+.glass-panel { background: rgba(14,20,23,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid transparent; background-clip: padding-box; position: relative; }
+.glass-panel::before { content: ''; position: absolute; top:0; right:0; bottom:0; left:0; z-index:-1; margin:-1px; border-radius:inherit; background: linear-gradient(135deg, rgba(165,231,255,0.3) 0%, transparent 50%, rgba(255,172,232,0.3) 100%); }
+.btn-primary { background: linear-gradient(90deg, #47d6ff, #00d2ff); color: #003543; transition: all 0.3s ease; }
+.btn-primary:hover { transform: scale(1.03); box-shadow: 0 0 15px rgba(0,210,255,0.6); }
+.input-glow { background-color: #1a2123; border: none; border-bottom: 2px solid #859399; color: #dde3e7; transition: all 0.3s ease; }
+.input-glow:focus { outline: none; border-bottom-color: #a5e7ff; box-shadow: 0 4px 10px -4px rgba(165,231,255,0.5); }
+</style>
+<link rel="stylesheet" href="css/arena.css"/>
+</head>
+<body class="min-h-screen flex flex-col font-body-md">
+<header class="bg-surface/60 backdrop-blur-xl border-b border-primary/20 shadow-[0_0_20px_rgba(71,214,255,0.1)] flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 w-full z-50 sticky top-0">
+<a href="index" class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary tracking-tighter">ULTRA ARENA</a>
+<div class="flex items-center gap-4">
+  <button id="mute-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Silenciar sonido"><span class="material-symbols-outlined">volume_up</span></button>
+  <button id="theme-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Cambiar tema"><span class="material-symbols-outlined">light_mode</span></button>
+  <div class="font-headline-md text-headline-md text-primary">GESTIÓN DE CONTENIDOS</div>
+</div>
+</header>
+
+<main class="flex-1 p-margin-mobile md:p-margin-desktop pb-28">
+  <div class="max-w-6xl mx-auto">
+    <!-- Selector de tipo -->
+    <div class="flex flex-wrap gap-3 mb-8">
+      <button data-type="memorySets" class="type-btn btn-primary rounded-xl px-6 py-3 font-label-caps text-label-caps">MEMORICE</button>
+      <button data-type="synonymSets" class="type-btn rounded-xl px-6 py-3 font-label-caps text-label-caps border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary transition-colors">SINÓNIMOS / ANTÓNIMOS</button>
+      <button data-type="sentenceSets" class="type-btn rounded-xl px-6 py-3 font-label-caps text-label-caps border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary transition-colors">ORACIONES</button>
+      <a href="index" class="rounded-xl px-6 py-3 font-label-caps text-label-caps border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary transition-colors">← VOLVER</a>
+    </div>
+
+    <!-- LISTA -->
+    <div id="list-view">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h1 class="font-headline-md text-headline-md text-primary"><span id="list-title">SETS DE MEMORICE</span></h1>
+          <p id="list-hint" class="font-body-md text-body-md text-on-surface-variant">Un set por línea: imagen (o emoji) | nombre.</p>
+        </div>
+        <button id="new-set" class="btn-primary rounded-xl px-6 py-3 font-label-caps text-label-caps">+ NUEVO SET</button>
+      </div>
+      <div id="set-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      <p id="list-empty" class="hidden font-body-md text-body-md text-on-surface-variant text-center py-10">No hay sets todavía. Crea el primero.</p>
+    </div>
+
+    <!-- EDITOR -->
+    <div id="editor-view" class="hidden">
+      <button id="back-list" class="font-label-caps text-label-caps text-primary hover:text-tertiary transition-colors mb-4">← VOLVER A LA LISTA</button>
+      <div class="glass-panel rounded-2xl p-8 flex flex-col gap-6">
+        <h1 id="editor-title" class="font-headline-md text-headline-md text-primary">NUEVO SET</h1>
+        <div>
+          <label class="font-label-caps text-label-caps text-on-surface-variant" for="set-name">Nombre</label>
+          <input id="set-name" class="input-glow w-full py-2 px-1 text-body-lg font-body-lg bg-transparent" placeholder="Ej: Frutas"/>
+        </div>
+        <div>
+          <label class="font-label-caps text-label-caps text-on-surface-variant" for="set-items"><span id="items-label">CONTENIDO</span> — un elemento por línea</label>
+          <textarea id="set-items" class="input-glow w-full py-2 px-2 text-body-md font-body-md bg-transparent resize-none" rows="12"></textarea>
+          <p id="format-hint" class="font-body-md text-body-md text-on-surface-variant mt-2">Formato: <span id="format-sample">🚀|Cohete</span></p>
+        </div>
+        <div class="flex gap-4 pt-2">
+          <button id="save-set" class="btn-primary flex-1 py-4 rounded-xl font-label-caps text-label-caps uppercase tracking-wider">GUARDAR SET</button>
+          <button id="cancel-edit" class="px-8 py-4 rounded-xl border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-bright transition-colors">CANCELAR</button>
+        </div>
+        <p id="save-msg" class="hidden text-center text-tertiary font-body-md"></p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/firestore.js"></script>
+<script src="js/arena.js"></script>
+<script src="js/session.js"></script>
+<script>
+  const TYPES = {
+    memorySets:   { title: 'SETS DE MEMORICE', itemLabel: 'IMÁGENES / EMOJIS', format: 'imagen|nombre', sample: '🚀|Cohete', hint: 'Un set por línea: imagen (o emoji) | nombre. Usa solo la imagen si no necesitas nombre.' },
+    synonymSets:  { title: 'SETS DE SINÓNIMOS / ANTÓNIMOS', itemLabel: 'PAREJAS DE PALABRAS', format: 'palabra1|palabra2', sample: 'feliz|contento', hint: 'Un par por línea: palabra1|palabra2. El conductor elige si es sinónimos o antónimos.' },
+    sentenceSets: { title: 'SETS DE ORACIONES', itemLabel: 'ORACIONES', format: 'oración|palabra-que-falta', sample: 'El sol sale por el |este', hint: 'Una oración por línea: texto con un hueco indicado por | seguido de la palabra que falta.' }
+  };
+  let currentType = 'memorySets';
+  let sets = [];
+  let editing = null; // { id, name, items, type }
+
+  const $e = {
+    listView: $('#list-view'), editorView: $('#editor-view'), list: $('#set-list'), listEmpty: $('#list-empty'),
+    listTitle: $('#list-title'), listHint: $('#list-hint'), editorTitle: $('#editor-title'),
+    name: $('#set-name'), items: $('#set-items'), itemsLabel: $('#items-label'), formatHint: $('#format-hint'),
+    formatSample: $('#format-sample'), saveMsg: $('#save-msg')
+  };
+
+  function renderList() {
+    $e.listEmpty.classList.toggle('hidden', sets.length > 0);
+    $e.list.innerHTML = sets.map(s => `
+      <div class="glass-panel rounded-xl p-5 flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <span class="font-label-caps text-label-caps text-primary bg-primary/10 px-2 py-1 rounded">${(s.items || []).length} ítems</span>
+          <span class="font-label-caps text-label-caps text-on-surface-variant">${new Date(s.updatedAt || Date.now()).toLocaleDateString('es')}</span>
+        </div>
+        <h3 class="font-headline-md text-headline-md text-on-surface">${escapeHtml(s.name)}</h3>
+        <div class="flex gap-2 pt-2 border-t border-outline-variant">
+          <button data-id="${s.id}" class="s-edit flex-1 py-2 rounded-lg bg-primary/10 text-primary font-label-caps text-label-caps hover:bg-primary/20 transition-colors">EDITAR</button>
+          <button data-id="${s.id}" class="s-dup p-2 rounded-lg border border-outline-variant text-on-surface-variant hover:text-primary transition-colors" title="Duplicar"><span class="material-symbols-outlined text-[18px]">content_copy</span></button>
+          <button data-id="${s.id}" class="s-del p-2 rounded-lg border border-outline-variant text-on-surface-variant hover:text-error transition-colors" title="Eliminar"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+        </div>
+      </div>`).join('');
+    $$('.s-edit', $e.list).forEach(b => b.addEventListener('click', () => editSet(b.dataset.id)));
+    $$('.s-dup', $e.list).forEach(b => b.addEventListener('click', () => duplicate(b.dataset.id)));
+    $$('.s-del', $e.list).forEach(b => b.addEventListener('click', () => removeSet(b.dataset.id)));
+  }
+
+  async function load() {
+    try {
+      const snap = await db.collection(currentType).limit(200).get();
+      sets = snap.docs.map(d => ({ id: d.id, ...d.data(), type: currentType }));
+    } catch (e) { console.error(e); sets = []; }
+    sets.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+    renderList();
+  }
+
+  function openEditor() {
+    $e.listView.classList.add('hidden');
+    $e.editorView.classList.remove('hidden');
+    $e.name.value = editing.name;
+    $e.items.value = (editing.items || []).map(i => i.raw || '').join('\n');
+    $e.editorTitle.textContent = editing.id ? 'EDITAR SET' : 'NUEVO SET';
+    window.scrollTo({ top: 0 });
+  }
+
+  function editSet(id) {
+    const s = sets.find(x => x.id === id);
+    if (!s) return;
+    const items = (s.items || []).map(i => {
+      if (currentType === 'memorySets') return { raw: (i.image || '') + (i.label ? '|' + i.label : '') };
+      if (currentType === 'synonymSets') return { raw: (i.a || '') + '|' + (i.b || '') };
+      if (currentType === 'sentenceSets') return { raw: (i.text || '') + '|' + (i.missing || '') };
+      return { raw: '' };
+    });
+    editing = { id, name: s.name || '', items, type: currentType, createdAt: s.createdAt };
+    openEditor();
+  }
+
+  function newSet() {
+    editing = { id: null, name: '', items: [], type: currentType };
+    openEditor();
+  }
+
+  function parseItems() {
+    return $e.items.value.split('\n').map(l => l.trim()).filter(Boolean).map(l => {
+      const [a, b] = l.split('|');
+      if (currentType === 'memorySets') return { image: (a || '').trim(), label: (b || '').trim(), raw: l };
+      if (currentType === 'synonymSets') return { a: (a || '').trim(), b: (b || '').trim(), raw: l };
+      if (currentType === 'sentenceSets') return { text: (a || '').trim(), missing: (b || '').trim(), raw: l };
+      return { raw: l };
+    }).filter(i => currentType === 'memorySets' ? !!i.image : (currentType === 'synonymSets' ? (i.a && i.b) : (i.text && i.missing)));
+  }
+
+  async function save() {
+    const name = $e.name.value.trim();
+    if (!name) { alert('Escribe un nombre.'); return; }
+    const items = parseItems();
+    if (items.length === 0) { alert('Agrega al menos un elemento válido siguiendo el formato.'); return; }
+    const data = { name, items, updatedAt: Date.now() };
+    try {
+      if (editing.id) { await db.collection(currentType).doc(editing.id).set({ ...data, createdAt: editing.createdAt }); }
+      else { await db.collection(currentType).add(data); }
+      $e.saveMsg.classList.remove('hidden');
+      $e.saveMsg.textContent = '✓ Set guardado correctamente.';
+      setTimeout(() => $e.saveMsg.classList.add('hidden'), 2500);
+      editing = null;
+      backToList();
+    } catch (err) {
+      console.error(err);
+      alert('No se pudo guardar. Revisa la configuración de Firebase.');
+    }
+  }
+
+  async function duplicate(id) {
+    const s = sets.find(x => x.id === id);
+    if (!s) return;
+    await db.collection(currentType).add({ name: (s.name || '') + ' (copia)', items: s.items || [], updatedAt: Date.now() });
+    await load();
+  }
+
+  async function removeSet(id) {
+    if (!confirm('¿Eliminar este set?')) return;
+    await db.collection(currentType).doc(id).delete();
+    await load();
+  }
+
+  function backToList() { $e.editorView.classList.add('hidden'); $e.listView.classList.remove('hidden'); load(); }
+
+  function switchType(t) {
+    currentType = t;
+    const cfg = TYPES[t];
+    $e.listTitle.textContent = cfg.title;
+    $e.listHint.textContent = cfg.hint;
+    $e.itemsLabel.textContent = cfg.itemLabel;
+    $e.formatSample.textContent = cfg.sample;
+    $$('.type-btn').forEach(b => {
+      const active = b.dataset.type === t;
+      b.classList.toggle('btn-primary', active);
+      b.classList.toggle('border-outline-variant', !active);
+      b.classList.toggle('text-on-surface-variant', !active);
+      if (!active) { b.classList.add('border', 'text-on-surface-variant', 'hover:text-primary', 'hover:border-primary'); }
+    });
+    load();
+  }
+
+  $$('.type-btn').forEach(b => b.addEventListener('click', () => switchType(b.dataset.type)));
+  $('#new-set').addEventListener('click', newSet);
+  $('#back-list').addEventListener('click', backToList);
+  $('#cancel-edit').addEventListener('click', backToList);
+  $('#save-set').addEventListener('click', save);
+
+  switchType('memorySets');
+</script>
+</body></html>

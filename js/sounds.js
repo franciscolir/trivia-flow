@@ -92,6 +92,18 @@ function playTick() {
   osc.stop(t + 0.06);
 }
 
+// Tómbola: ráfaga de notas giratorias con descenso corto (ruleta)
+function playSpin() {
+  if (typeof isMuted === 'function' && isMuted()) return;
+  const ctx = ensureAudio();
+  if (!ctx) return;
+  const t = ctx.currentTime;
+  for (let i = 0; i < 8; i++) {
+    const row = i < 5 ? [1046.5, 1318.5, 1568, 880] : [880, 659.25, 523.25];
+    bell(row[i % row.length], i * 0.07, 0.16, 0.15);
+  }
+}
+
 // Fin de trivia: fanfarria triunfal (arpegio de do mayor)
 function playFinish() {
   bell(523.25, 0, 0.24, 0.9);     // C5

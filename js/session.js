@@ -38,7 +38,9 @@ function createSession(config) {
     participants: (config && config.participants) || [],
     games: (config && config.games) || [],
     currentGameIndex: 0,
-    word: (config && config.word) || { active: false, text: '', revealed: [], cells: [], rewardAll: 5, rewardWinner: 10, completed: false, guessEnabled: false, guessPenalty: 0 },
+    tiebreaker: (config && config.tiebreaker) || 'gamesWon',
+    rewardMode: (config && config.rewardMode) || 'cell',
+    word: (config && config.word) || { active: false, text: '', revealed: [], cells: [], rewardAll: 5, rewardWinner: 10, completed: false, guessEnabled: false, guessPenalty: 0, maxReveals: 0, revealsUsed: 0 },
     tombola: (config && config.tombola) || { active: false, pool: [], history: [] },
     scoreHistory: [],
     events: [],
@@ -172,7 +174,9 @@ function setWord(word, opts) {
     rewardWinner: (opts && opts.rewardWinner) || 10,
     completed: false,
     guessEnabled: !opts || opts.guessEnabled !== false,
-    guessPenalty: (opts && opts.guessPenalty) || 0
+    guessPenalty: (opts && opts.guessPenalty) || 0,
+    maxReveals: (opts && opts.maxReveals) || 0,
+    revealsUsed: 0
   });
   persistSession();
 }
@@ -255,11 +259,45 @@ function loadSession() {
 }
 
 function clearSession() {
+  const old = session;
   session = null;
   try { localStorage.removeItem(SESSION_KEY); } catch (e) { /* noop */ }
-  if (typeof db !== 'undefined') { /* se conserva en Firestore como historial */ }
+  // Borrar el documento de Firestore para que no se recupere como sesión activa
+  if (typeof db !== 'undefined' && old && old.id) {
+    try {
+      db.collection('sessions').doc(old.id).delete().catch(() => { /* noop */ });
+    } catch (e) { /* noop */ }
+  }
 }
 
+// Recupera la sesión activa más reciente desde Firestore (otro dispositivo / después de recargar)
+async function recoverSessionFromFirestore() {
+  if (session || typeof db === 'undefined') return session;
+  try {
+    const snap = await db.collection('sessions').orderBy('updatedAt', 'desc').limit(1).get();
+    if (!snap.empty) {
+      const d = snap.docs[0];
+      session = { id: d.id, ...d.data() };
+      try { localStorage.setItem(SESSION_KEY, JSON.stringify(session)); } catch (e) { /* noop */ }
+    }
+  } catch (e) { console.warn('recover', e); }
+  return session;
+}
+
+// ---------- Desempates / estadísticas ----------
+function gameWins(teamId) {
+  if (!session || !session.events) return 0;
+  return session.events.filter(e => e.type === 'GAME_FINISHED' && e.teamId === teamId).length;
+}
+
+function tiedTeams() {
+  if (!session || !session.teams || session.teams.length < 2) return [];
+  const sorted = getRanking();
+  const top = sorted[0].score;
+  return sorted.filter(t => t.score === top);
+}
+
+// ---------- Estado de sesión por URL ----------
 // Reinicia el marcador (sin borrar la sesión)
 function resetSessionScores() {
   if (!session) return;
@@ -272,12 +310,13 @@ function resetSessionScores() {
 // ---------- Estado de sesión por URL ----------
 function initSessionFromUrlOrLocal() {
   if (!session) loadSession();
-  if (!session) {
-    // Modo individual desde el hub
+  const hasGi = new URLSearchParams(window.location.search).get('gi') != null;
+  if (!session && hasGi) {
+    // Modo individual desde el hub (solo en páginas de juego)
     createSession({ name: 'Partida individual', mode: 'individual', teams: defaultTeams(3), games: [] });
   }
   const gi = getGameIndexFromUrl();
-  if (session.games && session.games.length) session.currentGameIndex = gi;
+  if (session && session.games && session.games.length) session.currentGameIndex = gi;
   return session;
 }
 

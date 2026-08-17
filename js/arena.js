@@ -89,6 +89,66 @@ function openPublicScreen() {
   window.open(u.href, '_blank');
 }
 
+// ---------- Recuperación de sesión desde Firestore ----------
+// Deferred hook: lo invocan hub / winner / páginas de juego cuando NO hay
+// sesión local pero existe un respaldo activo en Firestore.
+function recoverableSession() {
+  if (typeof db === 'undefined') return false;
+  try { return !!localStorage.getItem('arena_session'); } catch (e) { return false; }
+}
+
+async function maybeRecoverSession() {
+  if (recoverableSession()) return null;
+  if (typeof recoverSessionFromFirestore !== 'function' || typeof db === 'undefined') return null;
+  try {
+    const recovered = await recoverSessionFromFirestore();
+    if (recovered) {
+      if (typeof loadSession === 'function') loadSession();
+      if (typeof renderScoreboard === 'function') renderScoreboard();
+      if (typeof updateWordBar === 'function') updateWordBar();
+    }
+    return recovered;
+  } catch (e) { console.warn('maybeRecoverSession', e); return null; }
+}
+
+// Muestra una barra de confirmación si hay una sesión activa recuperable.
+function offerRecovery(builder) {
+  const run = () => {
+    if (recoverableSession()) return;
+    maybeRecoverSession().then(recovered => {
+      if (!recovered || !recovered.teams || recovered.mode === 'individual') return;
+      if (typeof builder === 'function') { builder(recovered); return; }
+      showRecoveryBar(recovered);
+    });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+}
+
+function showRecoveryBar(s) {
+  if (document.getElementById('recovery-bar')) return;
+  const bar = document.createElement('div');
+  bar.id = 'recovery-bar';
+  bar.className = 'recovery-bar fixed top-2 left-1/2 -translate-x-1/2 z-[90] flex items-center gap-3 px-4 py-2 rounded-full glass-panel border-primary/40';
+  bar.innerHTML = `<span class="font-body-md text-body-md text-on-surface">Sesión activa encontrada: <b class="text-primary">${escapeHtml(s.name || 'Circuito')}</b> · ${s.teams.length} equipos</span>
+    <button id="recovery-accept" class="btn-primary px-4 py-1 rounded-full font-label-caps text-label-caps">RECUPERAR</button>
+    <button id="recovery-dismiss" class="px-3 py-1 rounded-full border border-outline-variant text-on-surface-variant font-label-caps text-label-caps">IGNORAR</button>`;
+  document.body.appendChild(bar);
+  $('#recovery-accept', bar).addEventListener('click', () => {
+    bar.remove();
+    if (typeof recoverSessionFromFirestore === 'function') {
+      recoverSessionFromFirestore().then(() => {
+        if (s.games && s.games.length && window.location.pathname.indexOf('index') === -1) {
+          location.href = (typeof getGamePage === 'function' ? getGamePage(s.games[0].type) : 'index') + '?gi=0';
+        } else {
+          location.reload();
+        }
+      });
+    }
+  });
+  $('#recovery-dismiss', bar).addEventListener('click', () => bar.remove());
+}
+
 // ---------- Silencio (mute) global ----------
 let muted = false;
 try { muted = localStorage.getItem('arena_muted') === '1'; } catch (e) { /* noop */ }
