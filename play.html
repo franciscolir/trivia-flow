@@ -49,6 +49,10 @@
 <div id="tombola-slot"></div>
 <div id="conductor-actions" class="flex flex-col gap-3 mt-6">
   <button id="show-answer" class="w-full py-3 rounded-lg border border-primary/40 text-primary font-label-caps text-label-caps hover:bg-primary/10 transition-colors">MOSTRAR RESPUESTA</button>
+  <div class="flex gap-3">
+    <button id="pause-btn" class="flex-1 py-3 rounded-lg border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-bright transition-colors">PAUSAR</button>
+    <button id="resume-btn" class="flex-1 py-3 rounded-lg border border-tertiary/40 text-tertiary font-label-caps text-label-caps hover:bg-tertiary/10 transition-colors">REANUDAR</button>
+  </div>
   <button id="guess-word" class="hidden w-full py-3 rounded-lg border border-secondary/40 text-secondary font-label-caps text-label-caps hover:bg-secondary/10 transition-colors">INTENTAR RESOLVER PALABRA</button>
   <button id="finish-tournament" class="w-full py-3 rounded-lg border border-error/50 text-error font-label-caps text-label-caps hover:bg-error/10 transition-colors">FINALIZAR TORNEO</button>
 </div>
@@ -74,6 +78,7 @@
 <div class="glass-panel rounded-2xl p-8 md:p-10 mb-6 text-center max-w-4xl mx-auto w-full glow-active border-primary/50 relative overflow-hidden">
 <div class="absolute inset-0 opacity-20 pointer-events-none bg-gradient-to-br from-primary/10 to-secondary/10"></div>
 <h2 id="game-label" class="font-label-caps text-label-caps text-primary mb-3 tracking-widest">TRIVIA</h2>
+<h3 id="turn-label" class="hidden font-headline-md text-headline-md text-secondary mb-3 uppercase"></h3>
 <h1 id="question-text" class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-10 drop-shadow-lg relative z-10">¿Pregunta?</h1>
 <div id="answers" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 relative z-10"></div>
 </div>
@@ -98,6 +103,10 @@
 <script src="js/firestore.js"></script>
 <script src="js/sounds.js"></script>
 <script src="js/arena.js"></script>
+<script src="js/turn.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/game.js"></script>
+<script src="js/registry.js"></script>
 <script src="js/session.js"></script>
 <script src="js/components.js"></script>
 <script>
@@ -116,13 +125,19 @@
     totalTime: (cfg && cfg.settings && cfg.settings.totalTime) || 60,
     maxQuestions: (cfg && cfg.settings && cfg.settings.maxQuestions) || 20,
     pointsPerQuestion: (cfg && cfg.points) || 100,
-    totalTimer: null, questionTimer: null, timeLeft: 0
+    timeLeft: 0
   };
+
+  const qTimer = new TimerManager();
+  const totalTimer = new TimerManager();
+  const turns = new TurnManager().setTeams(isCircuit && sess.teams ? sess.teams.slice() : []);
+
+  function stopTimers() { qTimer.stop(); totalTimer.stop(); }
 
   const $q = {
     loading: $('#loading'), noData: $('#no-data'), game: $('#game'),
     timer: $('#timer'), timerLabel: $('#timer-label'), question: $('#question-text'), answers: $('#answers'),
-    gameLabel: $('#game-label'), awardRow: $('#award-row'), awardButtons: $('#award-buttons'),
+    gameLabel: $('#game-label'), turnLabel: $('#turn-label'), awardRow: $('#award-row'), awardButtons: $('#award-buttons'),
     nextBtn: $('#next-game'), restart: $('#restart'), goHome: $('#go-home'),
     sessionLabel: $('#session-label'), topProgress: $('#top-progress'), showAnswer: $('#show-answer'), guessWord: $('#guess-word')
   };
@@ -135,20 +150,30 @@
   }
 
   function startQuestionTimer() {
-    stopQuestionTimer();
+    stopTimers();
     if (!state.perQuestionTime && !isTimed) { $q.timer.textContent = '∞'; return; }
-    if (isTimed) { state.timeLeft = state.totalTime; $q.timerLabel.textContent = 'TIEMPO TOTAL'; startTotalTimer(); return; }
+    if (isTimed) { $q.timerLabel.textContent = 'TIEMPO TOTAL'; startTotalTimer(); return; }
     state.timeLeft = state.perQuestionTime;
     $q.timerLabel.textContent = 'TIEMPO';
     renderTimer();
-    state.questionTimer = setInterval(() => { state.timeLeft--; playTick(); renderTimer(); if (state.timeLeft <= 0) { stopQuestionTimer(); reveal(null); } }, 1000);
+    qTimer.start(state.perQuestionTime,
+      (sec) => { state.timeLeft = sec; playTick(); renderTimer(); },
+      () => { stopTimers(); reveal(null); });
   }
   function startTotalTimer() {
-    stopQuestionTimer();
     renderTimer();
-    state.totalTimer = setInterval(() => { state.timeLeft--; playTick(); renderTimer(); if (state.timeLeft <= 0) { stopQuestionTimer(); endGame(); } }, 1000);
+    totalTimer.start(state.totalTime,
+      (sec) => { state.timeLeft = sec; playTick(); renderTimer(); },
+      () => { stopTimers(); endGame(); });
   }
-  function stopQuestionTimer() { if (state.questionTimer) { clearInterval(state.questionTimer); state.questionTimer = null; } if (state.totalTimer) { clearInterval(state.totalTimer); state.totalTimer = null; } }
+
+  function updateTurnLabel() {
+    if (!$q.turnLabel) return;
+    const t = turns.current();
+    $q.turnLabel.textContent = isCircuit && t ? ('TURNO: ' + t.name) : '';
+    if (t) $q.turnLabel.classList.remove('hidden');
+    else $q.turnLabel.classList.add('hidden');
+  }
 
   // ---------------- Preguntas ----------------
   async function loadQuestions() {
@@ -181,13 +206,14 @@
     $q.nextBtn.classList.add('hidden');
     $q.restart.classList.add('hidden');
     $q.goHome.classList.add('hidden');
+    updateTurnLabel();
     startQuestionTimer();
   }
 
   function select(i) {
     if (state.answered) return;
     state.answered = true;
-    stopQuestionTimer();
+    stopTimers();
     const ok = i === state.correctIndex;
     if (ok) { state.correct++; playCorrect(); } else playWrong();
     $$('.answer-option', $q.answers).forEach(btn => {
@@ -203,7 +229,7 @@
   function reveal(_) {
     if (state.answered) return;
     state.answered = true;
-    stopQuestionTimer();
+    stopTimers();
     playWrong();
     $$('.answer-option', $q.answers).forEach(btn => { btn.disabled = true; if (+btn.dataset.i === state.correctIndex) btn.classList.add('correct'); });
     setTimeout(finishQuestion, 1400);
@@ -212,16 +238,26 @@
   function finishQuestion() {
     if (isTimed && state.index + 1 >= state.maxQuestions) { endGame(); return; }
     state.index++;
+    if (isCircuit) turns.next();
     if (state.index >= state.questions.length) endGame();
     else renderQuestion();
   }
 
   function endGame() {
-    stopQuestionTimer();
+    stopTimers();
     playFinish();
     if (isCircuit) {
       const winner = getRanking()[0];
-      logEvent('GAME_FINISHED', { gameId: cfg ? cfg.id : null, winnerTeamId: winner ? winner.id : null });
+      const result = buildResult({
+        gameId: cfg ? cfg.id : null,
+        winnerTeamId: winner ? winner.id : null,
+        rankings: getRanking(),
+        pointsAwarded: { winner: winner ? winner.score : 0 },
+        statistics: { correct: state.correct, questions: state.questions.length, mode: isTimed ? 'timed' : 'classic' }
+      });
+      sess.lastResult = result;
+      logEvent('GAME_FINISHED', { gameId: cfg ? cfg.id : null, winnerTeamId: winner ? winner.id : null, result });
+      persistSession();
       const afterWord = () => showGameResult({
         title: 'FIN DE JUEGO', subtitle: winner ? winner.name : 'Sin puntos',
         rankings: getRanking(), nextLabel: 'SIGUIENTE JUEGO →',
@@ -241,6 +277,8 @@
 
   // ---------------- Botones del conductor ----------------
   $q.showAnswer.addEventListener('click', () => { if (!state.answered) reveal(null); });
+  $('#pause-btn').addEventListener('click', () => { qTimer.pause(); totalTimer.pause(); });
+  $('#resume-btn').addEventListener('click', () => { qTimer.resume(); totalTimer.resume(); });
   $q.nextBtn.addEventListener('click', () => window.location.href = nextGameUrl());
   $q.restart.addEventListener('click', () => { state.index = 0; state.correct = 0; state.questions = shuffleArray(state.questions); renderQuestion(); });
 
@@ -287,7 +325,8 @@
     w.innerHTML = '<a href="word?gi=' + gi + '" class="block glass-panel rounded-xl p-4 border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-bright transition-all">🔤 VER GRILLA DE PALABRA</a>';
   }
 
-  renderScoreboardTeams('#scoreboard');
-  loadQuestions();
+renderScoreboardTeams('#scoreboard');
+updateTurnLabel();
+loadQuestions();
 </script>
 </body></html>

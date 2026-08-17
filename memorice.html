@@ -70,6 +70,10 @@
 
 <script src="js/sounds.js"></script>
 <script src="js/arena.js"></script>
+<script src="js/turn.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/game.js"></script>
+<script src="js/registry.js"></script>
 <script src="js/session.js"></script>
 <script src="js/components.js"></script>
 <script>
@@ -88,7 +92,10 @@
     topProgress: $('#top-progress'), playingTeam: $('#playing-team')
   };
 
-  let cards = [], flipped = [], matched = 0, moves = 0, lock = false, timeLeft = 0, timerId = null;
+  let cards = [], flipped = [], matched = 0, moves = 0, lock = false, timeLeft = 0;
+  const memTimer = new TimerManager();
+  const turns = new TurnManager().setTeams(isCircuit && sess.teams ? sess.teams.slice() : []);
+  const ptsPerPair = (cfg && cfg.points) || 15;
 
   function fmtTime(s) { s = Math.max(0, Math.ceil(s)); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
   function buildCards() {
@@ -104,6 +111,11 @@
         </div>
       </button>`).join('');
     $$('.memory-card', $b.board).forEach(btn => btn.addEventListener('click', () => flip(+btn.dataset.i)));
+  }
+  function updateTurn() {
+    const t = turns.current();
+    $b.playingTeam.textContent = isCircuit && t ? ('TURNO: ' + t.name) : '—';
+    $b.playingTeam.classList.toggle('text-tertiary', !!t);
   }
   function flip(i) {
     if (lock) return;
@@ -122,27 +134,48 @@
         matched++;
         $b.pairs.textContent = matched + ' / ' + pairsCount;
         playCorrect();
+        // Quien acierta la pareja continúa; suma puntos si es circuito
+        if (isCircuit) { const t = turns.current(); if (t) addScore(t.id, ptsPerPair, 'Pareja de Memorice', cfg ? cfg.id : null); }
         flipped = []; lock = false;
         render();
         if (matched === pairsCount) finish();
       } else {
         playWrong();
-        setTimeout(() => { cards[a].state = cards[b].state = 'hidden'; flipped = []; lock = false; render(); }, 900);
+        // Si falla: ocultar temporales y pasar turno
+        setTimeout(() => {
+          cards[a].state = cards[b].state = 'hidden';
+          flipped = []; lock = false;
+          render();
+          if (isCircuit) turns.next();
+          updateTurn();
+        }, 900);
       }
     }
   }
   function startTimer() {
-    clearInterval(timerId);
+    memTimer.stop();
     const total = (cfg && cfg.duration) ? cfg.duration * 60 : 180;
     timeLeft = total;
     $b.timer.textContent = fmtTime(timeLeft);
-    timerId = setInterval(() => { timeLeft--; playTick(); $b.timer.textContent = fmtTime(timeLeft); if (timeLeft <= 0) { clearInterval(timerId); finish(); } }, 1000);
+    memTimer.start(total,
+      (sec) => { timeLeft = sec; playTick(); $b.timer.textContent = fmtTime(timeLeft); },
+      () => { finish(); });
   }
   function finish() {
-    clearInterval(timerId);
+    memTimer.stop();
     playFinish();
     if (isCircuit) {
       const winner = getRanking()[0];
+      const result = buildResult({
+        gameId: cfg ? cfg.id : null,
+        winnerTeamId: winner ? winner.id : null,
+        rankings: getRanking(),
+        pointsAwarded: { winner: winner ? winner.score : 0 },
+        statistics: { pairs: pairsCount, moves }
+      });
+      sess.lastResult = result;
+      logEvent('GAME_FINISHED', { gameId: cfg ? cfg.id : null, winnerTeamId: winner ? winner.id : null, result });
+      persistSession();
       logEvent('GAME_FINISHED', { gameId: cfg ? cfg.id : null, winnerTeamId: winner ? winner.id : null });
       const afterWord = () => showGameResult({
         title: 'FIN DE JUEGO', subtitle: winner ? winner.name : 'Sin puntos',
@@ -167,18 +200,6 @@
     startTimer();
   }
 
-  // ---- Puntos por pareja (circuito: conductor asigna) ----
-  if (isCircuit) {
-    const pts = (cfg && cfg.points) || 15;
-    const teams = sess.teams || [];
-    // El conductor elige qué equipo jugó; al completar o al acertar parejas puede asignar.
-    $b.playingTeam.innerHTML = teams.map(t => `<button data-team="${t.id}" class="px-3 py-1 rounded-lg border border-outline-variant ${COLORS[t.color].text} font-label-caps text-label-caps hover:border-primary transition-colors">${escapeHtml(t.name)}</button>`).join('');
-    $$('#playing-team [data-team]').forEach(b => b.addEventListener('click', () => {
-      addScore(b.dataset.team, pts, 'Ganó Memorice', cfg ? cfg.id : null);
-      playFinish();
-    }));
-  }
-
   if (isCircuit) $b.topProgress.textContent = 'JUEGO ' + (gi + 1) + ' / ' + sess.games.length;
   else $b.topProgress.textContent = 'JUGAR INDIVIDUAL';
   $b.gameLabel.textContent = (cfg ? cfg.name : 'MEMORICE').toUpperCase();
@@ -187,8 +208,9 @@
   if (sess && sess.tombola && sess.tombola.active) renderTombola($('#tombola-slot'), { session: sess });
 
   $b.nextBtn.addEventListener('click', () => window.location.href = nextGameUrl());
-  $b.restart.addEventListener('click', reset);
+  $b.restart.addEventListener('click', () => { turns.reset(); updateTurn(); reset(); });
   renderScoreboardTeams('#scoreboard');
+  updateTurn();
   reset();
 </script>
 </body></html>

@@ -72,16 +72,17 @@ function getGameIndexFromUrl() {
   return gi == null ? 0 : Math.max(0, parseInt(gi, 10) || 0);
 }
 
-const GAME_PAGES = {
-  trivia: 'play', timed: 'play?mode=timed', memorice: 'memorice', tombola: 'tombola', word: 'word'
-};
+function getGamePage(type) {
+  if (typeof GameRegistry !== 'undefined') return GameRegistry.gamePage(type);
+  return 'play';
+}
 
 function nextGameUrl() {
   if (session && Array.isArray(session.games) && session.games.length) {
     const next = session.currentGameIndex + 1;
     if (next >= session.games.length) return 'winner';
     const g = session.games[next];
-    const base = GAME_PAGES[g.type] || GAME_PAGES.trivia;
+    const base = getGamePage(g.type);
     return base + (base.includes('?') ? '&' : '?') + 'gi=' + next;
   }
   return 'index';

@@ -200,20 +200,34 @@
 </div>
 </div>
 
+<!-- Modal configurar juego -->
+<div id="config-modal" class="modal-backdrop hidden fixed inset-0 z-[60] flex items-center justify-center p-4">
+<div class="glass-panel rounded-2xl w-full max-w-md p-6 max-h-[80vh] overflow-y-auto">
+<h3 id="config-title" class="font-headline-md text-headline-md text-primary mb-4">CONFIGURAR JUEGO</h3>
+<div id="config-fields" class="flex flex-col gap-3"></div>
+<div class="flex gap-3 mt-5">
+<button id="config-save" class="btn-primary flex-1 py-3 rounded-lg font-label-caps text-label-caps">GUARDAR</button>
+<button id="config-cancel" class="flex-1 py-3 rounded-lg border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-bright transition-colors">CANCELAR</button>
+</div>
+</div>
+</div>
+
 <script src="js/arena.js"></script>
+<script src="js/turn.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/game.js"></script>
+<script src="js/registry.js"></script>
 <script src="js/session.js"></script>
 <script src="js/components.js"></script>
 <script>
-  const GAME_OPTIONS = [
-    { type: 'trivia', name: 'Trivia Clásica', icon: 'quiz', chips: ['MÚLTIPLE OPCIÓN', '10 PUNTOS', '10 MIN'], points: 10, duration: 10, settings: { timePerQuestion: 15 } },
-    { type: 'timed', name: 'Trivia Contrarreloj', icon: 'timer', chips: ['VELOCIDAD', '20 PUNTOS', '15 MIN'], points: 20, duration: 15, settings: { totalTime: 90, maxQuestions: 20, penalty: 5 } },
-    { type: 'memorice', name: 'Memorice', icon: 'grid_view', chips: ['VISUAL', '15 PUNTOS', '5 MIN'], points: 15, duration: 5, settings: { pairs: 8 } },
-    { type: 'tombola', name: 'Tómbola', icon: 'casino', chips: ['SORTEO', '5 PUNTOS', '3 MIN'], points: 5, duration: 3, settings: {} },
-    { type: 'word', name: 'Descubre la Palabra', icon: 'abc', chips: ['LETRAS', '10 PUNTOS', '10 MIN'], points: 10, duration: 10, settings: {} }
-  ];
+  // Juegos disponibles consultados dinámicamente al GameRegistry
+  function enabledGames() {
+    return GameRegistry.getAvailableGames().filter(g => g.enabled !== false);
+  }
 
   const STEPS = ['step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-6'];
   let currentStep = 0;
+  let editingGameIndex = -1;
   let config = {
     mode: 'circuit', name: 'Gran Desafío',
     teams: [], participants: [], games: [],
@@ -312,11 +326,13 @@
   }
 
   // ---------- Juegos ----------
+  function gameDef(g) { return GameRegistry.getGame(g.type) || GameRegistry.getGame('trivia'); }
+
   function renderGames() {
     const el = $('#games-list');
     el.innerHTML = config.games.map((g, i) => {
-      const o = GAME_OPTIONS.find(x => x.type === g.type) || GAME_OPTIONS[0];
-      return `<div class="glass-panel game-item active rounded-lg p-4 flex flex-col sm:flex-row items-center gap-4">
+      const o = gameDef(g);
+      return `<div class="glass-panel game-item active rounded-lg p-4 flex flex-col sm:flex-row items-center gap-4 cursor-pointer" data-gi="${i}" title="Editar configuración">
         <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary shrink-0"><span class="material-symbols-outlined text-2xl">${o.icon}</span></div>
         <div class="flex-1 w-full text-center sm:text-left">
           <h3 class="font-headline-md text-headline-md text-on-surface m-0">${escapeHtml(g.name || o.name)}</h3>
@@ -334,10 +350,11 @@
       </div>`;
     }).join('');
     $('#games-time').textContent = (config.games.reduce((s, g) => s + (g.duration || 0), 0) || 0) + ' MIN';
-    $$('.g-up', el).forEach((b, i) => b.addEventListener('click', () => move(i, -1)));
-    $$('.g-down', el).forEach((b, i) => b.addEventListener('click', () => move(i, 1)));
-    $$('.g-dup', el).forEach((b, i) => b.addEventListener('click', () => { config.games.splice(i, 0, { ...config.games[i], id: 'g_' + Date.now() }); renderGames(); }));
-    $$('.g-del', el).forEach((b, i) => b.addEventListener('click', () => { config.games.splice(i, 1); renderGames(); }));
+    $$('.g-up', el).forEach((b, i) => b.addEventListener('click', (e) => { e.stopPropagation(); move(i, -1); }));
+    $$('.g-down', el).forEach((b, i) => b.addEventListener('click', (e) => { e.stopPropagation(); move(i, 1); }));
+    $$('.g-dup', el).forEach((b, i) => b.addEventListener('click', (e) => { e.stopPropagation(); config.games.splice(i, 0, { ...config.games[i], id: 'g_' + Date.now() }); renderGames(); }));
+    $$('.g-del', el).forEach((b, i) => b.addEventListener('click', (e) => { e.stopPropagation(); config.games.splice(i, 1); renderGames(); }));
+    $$('[data-gi]', el).forEach(item => item.addEventListener('click', () => openConfig(+item.dataset.gi)));
   }
 
   function move(i, dir) {
@@ -347,18 +364,72 @@
     renderGames();
   }
 
+  // Editor de configuración (schema del registro)
+  function getByPath(obj, path) {
+    return path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), obj);
+  }
+  function setByPath(obj, path, value) {
+    const keys = path.split('.');
+    let o = obj;
+    keys.slice(0, -1).forEach(k => { o[k] = o[k] || {}; o = o[k]; });
+    o[keys[keys.length - 1]] = value;
+  }
+
+  function openConfig(i) {
+    const g = config.games[i];
+    const def = gameDef(g);
+    editingGameIndex = i;
+    const fields = (def.configurationSchema || []).map(f => {
+      const value = getByPath(g, f.key) != null ? getByPath(g, f.key) : '';
+      const input = f.type === 'number'
+        ? `<input data-cfg="${f.key}" type="number" min="${f.min != null ? f.min : ''}" max="${f.max != null ? f.max : ''}" value="${value}" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent"/>`
+        : `<input data-cfg="${f.key}" type="text" value="${escapeHtml(String(value))}" placeholder="${escapeHtml(f.placeholder || '')}" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent"/>`;
+      return `<div class="flex flex-col gap-1">
+        <label class="font-label-caps text-label-caps text-on-surface-variant">${escapeHtml(f.label)}</label>
+        ${input}
+      </div>`;
+    }).join('');
+    if (!fields) { alert('Este juego no tiene configuración adicional.'); return; }
+    $('#config-title').textContent = 'CONFIGURAR — ' + (g.name || def.name).toUpperCase();
+    $('#config-fields').innerHTML = fields;
+    $('#config-modal').classList.remove('hidden');
+  }
+
+  function saveConfig() {
+    const g = config.games[editingGameIndex];
+    if (!g) return;
+    $$('#config-fields [data-cfg]').forEach(inp => {
+      const path = inp.dataset.cfg;
+      const val = inp.type === 'number' ? (inp.value === '' ? 0 : Number(inp.value)) : inp.value;
+      setByPath(g, path, val);
+    });
+    $('#config-modal').classList.add('hidden');
+    renderGames();
+  }
+
   function openGameModal() {
-    $('#game-options').innerHTML = GAME_OPTIONS.map(o => `
-      <button data-type="${o.type}" class="flex items-center gap-4 p-4 rounded-xl border border-outline-variant hover:border-primary hover:shadow-[0_0_15px_rgba(165,231,255,0.2)] transition-all text-left">
-        <div class="w-10 h-10 bg-surface-bright rounded-full flex items-center justify-center text-primary"><span class="material-symbols-outlined">${o.icon}</span></div>
-        <span class="font-body-lg font-bold text-on-surface flex-1">${o.name}</span>
-        <span class="font-label-caps text-label-caps text-tertiary">${o.points} PTS</span>
+    $('#game-options').innerHTML = enabledGames().map(def => `
+      <button data-type="${def.id}" class="flex items-center gap-4 p-4 rounded-xl border border-outline-variant hover:border-primary hover:shadow-[0_0_15px_rgba(165,231,255,0.2)] transition-all text-left">
+        <div class="w-10 h-10 bg-surface-bright rounded-full flex items-center justify-center text-primary"><span class="material-symbols-outlined">${def.icon}</span></div>
+        <div class="flex-1">
+          <div class="font-body-lg font-bold text-on-surface">${def.name}</div>
+          <div class="font-label-sm text-label-sm text-on-surface-variant">${def.description}</div>
+        </div>
+        <span class="font-label-caps text-label-caps text-tertiary">${def.defaults.points} PTS</span>
       </button>`).join('');
     $$('[data-type]', $('#game-options')).forEach(b => b.addEventListener('click', () => {
-      const o = GAME_OPTIONS.find(x => x.type === b.dataset.type);
-      config.games.push({ ...o, id: 'g_' + Date.now() + Math.random().toString(36).slice(2, 5) });
+      const def = GameRegistry.getGame(b.dataset.type);
+      config.games.push({
+        type: def.id,
+        id: 'g_' + Date.now() + Math.random().toString(36).slice(2, 5),
+        name: def.name,
+        points: def.defaults.points,
+        duration: def.defaults.duration,
+        settings: JSON.parse(JSON.stringify(def.defaults.settings || {}))
+      });
       $('#add-modal').classList.add('hidden');
       renderGames();
+      openConfig(config.games.length - 1);
     }));
     $('#add-modal').classList.remove('hidden');
   }
@@ -405,7 +476,7 @@
     if (config.wordActive) setWord(config.word.text, { rewardAll: +config.word.rewardAll || 5, rewardWinner: +config.word.rewardWinner || 10, guessEnabled: config.word.guessEnabled, guessPenalty: +config.word.guessPenalty || 0 });
 
     if (config.mode === 'circuit') {
-      window.location.href = GAME_PAGES[config.games[0].type] + '?gi=0';
+      window.location.href = getGamePage(config.games[0].type) + '?gi=0';
     } else {
       window.location.href = 'index';
     }
@@ -424,6 +495,9 @@
   $('#add-game').addEventListener('click', openGameModal);
   $('#close-modal').addEventListener('click', () => $('#add-modal').classList.add('hidden'));
   $('#add-modal').addEventListener('click', e => { if (e.target === $('#add-modal')) $('#add-modal').classList.add('hidden'); });
+  $('#config-save').addEventListener('click', saveConfig);
+  $('#config-cancel').addEventListener('click', () => $('#config-modal').classList.add('hidden'));
+  $('#config-modal').addEventListener('click', e => { if (e.target === $('#config-modal')) $('#config-modal').classList.add('hidden'); });
 
   $$('.mode-card').forEach(card => card.addEventListener('click', () => {
     config.mode = card.dataset.mode;
