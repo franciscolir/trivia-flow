@@ -51,7 +51,6 @@ function renderTombola(container, opts) {
     : [];
   const fallback = (sess && sess.tombola && sess.tombola.pool) ? sess.tombola.pool.slice() : [];
   const pool = (team ? teamParticipants : fallback).slice();
-  let spinning = false;
 
   container.innerHTML = `
     <div class="glass-panel rounded-xl p-4 flex flex-col items-center gap-3 w-full">
@@ -75,45 +74,70 @@ function renderTombola(container, opts) {
   const poolEl = $('.tombola-pool', container);
   const origPool = pool.slice();
 
+  let spinning = false, stopping = false, rollTimer = null;
+
   function updatePool() {
     poolEl.textContent = pool.length + ' participantes';
     if (typeof persistSession === 'function' && !team) persistSession();
   }
 
+  function rollStart() {
+    rollTimer = setInterval(() => {
+      display.textContent = randomSelect(pool);
+      display.style.color = '';
+      display.style.textShadow = '';
+    }, 80);
+  }
+
   function spin() {
-    if (spinning || !pool.length) { if (!pool.length) display.textContent = 'SIN NOMBRES'; return; }
-    spinning = true;
+    if (!pool.length) { display.textContent = 'SIN NOMBRES'; return; }
+    if (!spinning) {
+      // PRIMER clic: comienza a girar
+      spinning = true;
+      spinBtn.textContent = 'PARAR';
+      rollStart();
+      return;
+    }
+    // SEGUNDO clic: decelera y se detiene
+    if (stopping) return;
+    stopping = true;
+    clearInterval(rollTimer);
     spinBtn.disabled = true;
-    let t = 0;
-    const total = 2200;
-    const iv = setInterval(() => {
-      t += 90;
-      if (t >= total) {
-        clearInterval(iv);
-        const winner = randomSelect(pool);
-        display.textContent = winner;
-        display.style.color = '#a5e7ff';
-        display.style.textShadow = '0 0 20px rgba(71,214,255,0.5)';
-        if (typeof playFinish === 'function') playFinish();
-        if (!team) {
-          if (sess.tombola) sess.tombola.history.unshift(winner);
-          pool.splice(pool.indexOf(winner), 1);
-        } else {
-          pool.splice(pool.indexOf(winner), 1);
-        }
-        updatePool();
-        spinning = false;
-        spinBtn.disabled = false;
-        if (opts.onSelect) opts.onSelect(winner);
-        if (typeof logEvent === 'function') logEvent('RANDOM_SELECTION', { name: winner, teamId: team ? team.id : null });
-      } else {
-        setTimeout(() => { display.textContent = randomSelect(pool); }, t * 0.6);
-      }
-    }, 90);
+    const delays = [200, 320, 500, 760, 1100];
+    let i = 0;
+    const slow = () => {
+      display.textContent = randomSelect(pool);
+      i++;
+      if (i < delays.length) setTimeout(slow, delays[i]);
+      else finalize();
+    };
+    setTimeout(slow, delays[0]);
+  }
+
+  function finalize() {
+    const winner = randomSelect(pool);
+    display.textContent = winner;
+    display.style.color = '#a5e7ff';
+    display.style.textShadow = '0 0 20px rgba(71,214,255,0.5)';
+    if (typeof playFinish === 'function') playFinish();
+    if (!team && sess && sess.tombola) sess.tombola.history.unshift(winner);
+    pool.splice(pool.indexOf(winner), 1);
+    updatePool();
+    spinning = false;
+    stopping = false;
+    spinBtn.disabled = false;
+    spinBtn.textContent = 'GIRAR';
+    if (opts.onSelect) opts.onSelect(winner);
+    if (typeof logEvent === 'function') logEvent('RANDOM_SELECTION', { name: winner, teamId: team ? team.id : null });
   }
 
   spinBtn.addEventListener('click', spin);
   resetBtn.addEventListener('click', () => {
+    if (rollTimer) clearInterval(rollTimer);
+    spinning = false;
+    stopping = false;
+    spinBtn.disabled = false;
+    spinBtn.textContent = 'GIRAR';
     pool.length = 0;
     pool.push(...origPool);
     updatePool();

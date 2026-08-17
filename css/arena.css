@@ -105,6 +105,43 @@ html.light .text-glow { text-shadow: 0 0 20px rgba(0, 107, 150, 0.4); }
 .public-mode main { overflow: visible; }
 .public-mode .public-badge { display: flex; }
 
+/* ---------- Proyección: alto contraste (modo oscuro) ----------
+   Para que se vea nítido en proyector: textos más brillantes,
+   bordes más gruesos, mayor glow y fondos más sólidos. */
+html.dark body { color: #f2f7fb; }
+html.dark .text-on-surface { color: #ffffff; }
+html.dark .text-on-background { color: #f2f7fb; }
+html.dark .text-on-surface-variant { color: #d8e2e8; }
+html.dark .text-primary { color: #b9ecff; }
+html.dark .text-primary-fixed { color: #b9ecff; }
+html.dark .text-primary-container { color: #b9ecff; }
+html.dark .text-secondary { color: #ffc6ef; }
+html.dark .text-secondary-container { color: #ffc6ef; }
+html.dark .text-tertiary { color: #67ffb6; }
+html.dark .text-tertiary-fixed { color: #67ffb6; }
+html.dark .text-error { color: #ffc9c2; }
+html.dark .text-outline-variant { color: #46545b; }
+html.dark .text-surface-variant { color: #7d8f99; }
+html.dark .text-yellow-400 { color: #ffd94d; }
+
+html.dark .glass-panel { background: rgba(8, 12, 15, 0.74); }
+html.dark .glass-panel::before { background: linear-gradient(135deg, rgba(185, 236, 255, 0.55) 0%, transparent 50%, rgba(255, 198, 239, 0.5) 100%); }
+
+html.dark .btn-primary { box-shadow: 0 0 18px rgba(0, 210, 255, 0.65); }
+html.dark .game-card:hover { box-shadow: 0 0 28px rgba(185, 236, 255, 0.6); }
+
+html.dark .answer-option,
+html.dark .match-card,
+html.dark .memory-back,
+html.dark .memory-front,
+html.dark .tile { border-width: 2px; }
+
+html.dark .timer-pulse { color: #ffc9c2; text-shadow: 0 0 20px rgba(255, 201, 194, 0.9); }
+html.dark #question-text { text-shadow: 0 0 30px rgba(0, 210, 255, 0.25); }
+html.dark .memory-front span { filter: drop-shadow(0 0 6px rgba(185, 236, 255, 0.6)); }
+html.dark .tombola-display { font-size: 1.4rem; }
+html.dark footer { border-top-width: 2px; }
+
 /* ---------- Scrollbars ---------- */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }

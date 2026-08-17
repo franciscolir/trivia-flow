@@ -89,8 +89,31 @@ function openPublicScreen() {
   window.open(u.href, '_blank');
 }
 
+// ---------- Silencio (mute) global ----------
+let muted = false;
+try { muted = localStorage.getItem('arena_muted') === '1'; } catch (e) { /* noop */ }
+
+function isMuted() { return muted; }
+function setMuted(m) {
+  muted = !!m;
+  try { localStorage.setItem('arena_muted', muted ? '1' : '0'); } catch (e) { /* noop */ }
+  syncMuteBtn();
+}
+function toggleMuted() { setMuted(!muted); }
+
+function syncMuteBtn() {
+  const btn = document.getElementById('mute-toggle');
+  if (!btn) return;
+  const icon = btn.querySelector('.material-symbols-outlined');
+  if (icon) icon.textContent = muted ? 'volume_off' : 'volume_up';
+  btn.title = muted ? 'Activar sonido' : 'Silenciar sonido';
+}
+
 // ---------- Arranque ----------
 const themeToggle = $('#theme-toggle');
 if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+const muteBtn = document.getElementById('mute-toggle');
+if (muteBtn) muteBtn.addEventListener('click', toggleMuted);
 initTheme();
 applyPublicMode();
+syncMuteBtn();
