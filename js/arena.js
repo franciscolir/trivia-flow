@@ -75,6 +75,8 @@ function applyPublicMode() {
   document.documentElement.classList.add('public-mode');
   const tb = $('#theme-toggle');
   if (tb) tb.classList.add('hidden');
+  const mb = $('#mute-toggle');
+  if (mb) mb.classList.add('hidden');
   const badge = document.createElement('div');
   badge.className = 'public-badge hidden fixed top-2 left-2 z-[80] px-3 py-1 rounded-full bg-tertiary/20 border border-tertiary/50 text-tertiary font-label-caps text-label-caps';
   badge.textContent = '● PANTALLA PÚBLICA';

@@ -6,6 +6,30 @@
 
 let audioCtx = null;
 let master = null;
+let muted = false;
+try { muted = localStorage.getItem('arena_muted') === '1'; } catch (e) { /* noop */ }
+
+function isMuted() { return muted; }
+function setMuted(m) {
+  muted = !!m;
+  try { localStorage.setItem('arena_muted', muted ? '1' : '0'); } catch (e) { /* noop */ }
+  syncMuteBtn();
+}
+function toggleMuted() { setMuted(!muted); }
+
+function syncMuteBtn() {
+  const btn = document.getElementById('mute-toggle');
+  if (!btn) return;
+  const icon = btn.querySelector('.material-symbols-outlined');
+  if (icon) icon.textContent = muted ? 'volume_off' : 'volume_up';
+  btn.title = muted ? 'Activar sonido' : 'Silenciar sonido';
+}
+
+if (typeof document !== 'undefined') {
+  const muteBtn = document.getElementById('mute-toggle');
+  if (muteBtn) muteBtn.addEventListener('click', toggleMuted);
+  syncMuteBtn();
+}
 
 function ensureAudio() {
   if (!audioCtx) {
@@ -22,6 +46,7 @@ function ensureAudio() {
 
 // Campana: fundamental + parciales inharmónicos con caída larga
 function bell(freq, start, peak, decay, partials, weights) {
+  if (muted) return;
   const ctx = ensureAudio();
   if (!ctx) return;
   const t = ctx.currentTime + start;
@@ -49,6 +74,7 @@ function playCorrect() {
 
 // Error: zumbido grave y suave con deslizamiento hacia abajo
 function playWrong() {
+  if (muted) return;
   const ctx = ensureAudio();
   if (!ctx) return;
   const t = ctx.currentTime;
@@ -73,6 +99,7 @@ function playWrong() {
 
 // Tic-tac: golpe seco tipo "clic" de madera, breve y discreto
 function playTick() {
+  if (muted) return;
   const ctx = ensureAudio();
   if (!ctx) return;
   const t = ctx.currentTime;
