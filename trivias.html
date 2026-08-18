@@ -32,13 +32,14 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
 <header class="bg-surface/60 backdrop-blur-xl border-b border-primary/20 shadow-[0_0_20px_rgba(71,214,255,0.1)] flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 w-full z-50 sticky top-0">
 <a href="index" class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary tracking-tighter">ULTRA ARENA</a>
 <div class="flex items-center gap-4">
+  <button id="back-btn" onclick="mirrorGo('index')" class="p-2 rounded-full border border-outline-variant/60 text-on-surface-variant hover:bg-surface-container/50 hover:text-primary transition-all" title="Volver al inicio"><span class="material-symbols-outlined">arrow_back</span></button>
   <button id="mute-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Silenciar sonido"><span class="material-symbols-outlined">volume_up</span></button>
 <button id="theme-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Cambiar tema"><span class="material-symbols-outlined">light_mode</span></button>
   <div class="font-headline-md text-headline-md text-primary">GESTIÓN DE TRIVIAS</div>
 </div>
 </header>
 
-<main class="flex-1 p-margin-mobile md:p-margin-desktop pb-28">
+<main class="flex-1 p-margin-mobile md:p-6 pb-24">
   <div class="max-w-6xl mx-auto">
     <!-- LISTA -->
     <div id="list-view">

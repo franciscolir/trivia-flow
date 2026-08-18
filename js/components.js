@@ -49,7 +49,38 @@ function renderScoreboardTeams(containerId) {
       </div>
     </div>`;
   }).join('');
+  renderCircuitProgress();
   renderScoreboard();
+}
+
+// ---------- Progreso vertical del circuito (círculos junto al marcador) ----------
+function renderCircuitProgress() {
+  const el = document.getElementById('circuit-progress');
+  if (!el) return;
+  const s = getSession();
+  const games = (s && s.mode === 'circuit' && Array.isArray(s.games) && s.games.length) ? s.games : [];
+  if (!games.length) { el.classList.add('hidden'); el.innerHTML = ''; return; }
+  el.classList.remove('hidden');
+  const gi = Math.max(0, (s.currentGameIndex || 0));
+  el.innerHTML = `
+    <div class="flex items-center gap-2 px-1 py-3">
+      <span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings:'FILL' 1;">route</span>
+      <span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Circuito</span>
+    </div>
+    <div class="flex flex-col pb-4">
+      ${games.map((g, i) => {
+        const state = i < gi ? 'done' : (i === gi ? 'current' : 'next');
+        const label = (g && g.name) ? g.name : ((g && g.type) || ('Juego ' + (i + 1)));
+        const marker = state === 'done'
+          ? '<span class="material-symbols-outlined" style="font-size:13px">check</span>'
+          : String(i + 1);
+        return `
+        <div class="cprogress-item flex items-center gap-3 min-w-0 py-0.5" data-i="${i}" title="${escapeHtml(label)}">
+          <span class="cprogress-dot dot-${state} flex items-center justify-center w-6 h-6 rounded-full text-[12px] font-bold shrink-0">${marker}</span>
+          <span class="cprogress-label text-[11px] leading-tight truncate ${state === 'done' ? 'text-on-surface-variant' : state === 'current' ? 'text-primary font-bold' : 'text-on-surface-variant/60'}">${escapeHtml(label)}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
 }
 
 // ---------- TÓMBOLA INCRUSTABLE (compacta e interactiva) ----------

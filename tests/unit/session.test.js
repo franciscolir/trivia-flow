@@ -103,10 +103,14 @@ test('setWord configura el juego de palabra y respeta maxReveals', () => {
   assert.equal(w.guessEnabled, false);
 });
 
-test('revealWordLetter revela todas las apariciones; completeWord premia a todos', () => {
+test('revealWordLetter descubre de a una letra repetida por vez; completeWord premia a todos', () => {
   const ctx = sessionCtx();
   baseSession(ctx);
   ctx.setWord('aba', { rewardAll: 5 });
+  // 'a' se repite: cada llamada descubre UNA aparición
+  ctx.revealWordLetter('a');
+  assert.deepEqual(norm(ctx.getSession().word.revealed), [0]);
+  assert.equal(ctx.isWordComplete(), false);
   ctx.revealWordLetter('a');
   assert.deepEqual(norm(ctx.getSession().word.revealed), [0, 2]);
   assert.equal(ctx.isWordComplete(), false);

@@ -31,12 +31,13 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
 <header class="bg-surface/60 backdrop-blur-xl border-b border-primary/20 shadow-[0_0_20px_rgba(71,214,255,0.1)] flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 w-full z-50 fixed top-0">
 <a href="index" class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary tracking-tighter">ULTRA ARENA</a>
 <div class="flex items-center gap-4">
+  <button id="back-btn" onclick="mirrorGo('index')" class="p-2 rounded-full border border-outline-variant/60 text-on-surface-variant hover:bg-surface-container/50 hover:text-primary transition-all" title="Volver al inicio"><span class="material-symbols-outlined">arrow_back</span></button>
   <button id="mute-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Silenciar sonido"><span class="material-symbols-outlined">volume_up</span></button>
 <button id="theme-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Cambiar tema"><span class="material-symbols-outlined">light_mode</span></button>
   <div id="top-progress" class="text-primary font-bold border-b-2 border-primary pb-1 font-headline-md text-headline-md">ORACIÓN</div>
 </div>
 </header>
-<main class="has-scorebar flex-1 pt-24 pb-40 px-margin-mobile md:pl-72 md:pr-72 lg:pl-80 lg:pr-80 flex flex-col items-center relative overflow-y-auto">
+<main class="has-scorebar flex-1 pt-20 pb-32 md:pb-24 px-margin-mobile md:pl-8 md:pr-8 lg:pl-10 lg:pr-10 flex flex-col items-center relative overflow-y-auto">
 <div id="wordbar" class="mb-6 w-full max-w-4xl"></div>
 <div id="round-info" class="hidden flex flex-col items-center gap-1 mb-5">
   <div id="round-label" class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">RONDA 1 / 3</div>
@@ -50,7 +51,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
 </div>
 </div>
 <h2 id="game-label" class="font-label-caps text-label-caps text-primary mb-6 tracking-widest">COMPLETAR LA ORACIÓN</h2>
-<div class="glass-panel rounded-2xl p-10 md:p-14 text-center max-w-4xl mx-auto w-full glow-active border-primary/50 relative overflow-hidden mb-6">
+<div class="glass-panel rounded-2xl p-6 md:p-10 text-center max-w-4xl mx-auto w-full glow-active border-primary/50 relative overflow-hidden mb-5">
   <div class="absolute inset-0 opacity-20 pointer-events-none bg-gradient-to-br from-primary/10 to-secondary/10"></div>
   <div id="question-text" class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface relative z-10">...</div>
 </div>
@@ -70,7 +71,8 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
 </main>
 <aside id="scorebar" class="fixed z-40 flex flex-col right-0 top-20 bottom-0 w-48 sm:w-56 md:w-64 border-l border-primary/30 bg-surface-container-highest/85 backdrop-blur-md shadow-[-10px_0_30px_rgba(0,0,0,0.5)] max-md:top-auto max-md:left-0 max-md:right-0 max-md:bottom-0 max-md:w-full max-md:h-24 max-md:flex-row max-md:border-l-0 max-md:border-t max-md:rounded-t-xl max-md:shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
 <div class="shrink-0 px-4 py-2.5 border-b border-primary/20 font-label-caps text-label-caps text-secondary uppercase tracking-wider max-md:hidden">MARCADOR</div>
-<div id="scoreboard" class="flex flex-1 flex-col overflow-y-auto max-md:flex-row max-md:overflow-x-auto max-md:overflow-y-hidden"></div>
+<div id="circuit-progress" class="hidden border-b border-primary/20"></div>
+   <div id="scoreboard" class="flex flex-1 flex-col overflow-y-auto max-md:flex-row max-md:overflow-x-auto max-md:overflow-y-hidden"></div>
 </aside>
 
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>

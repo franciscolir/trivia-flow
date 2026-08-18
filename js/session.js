@@ -185,9 +185,11 @@ function revealWordLetter(letter) {
   if (!session || !session.word || session.word.completed) return;
   const w = session.word;
   letter = String(letter || '').toUpperCase();
-  w.text.split('').forEach((l, p) => { if (l === letter) w.revealed.push(p); });
-  w.revealed = Array.from(new Set(w.revealed));
-  logEvent('LETTER_REVEALED', { letter });
+  // Si la letra se repite, se descubre UNA aparición por vez (no todas).
+  const p = w.text.split('').findIndex((l, i) => l === letter && !w.revealed.includes(i));
+  if (p >= 0) w.revealed.push(p);
+  w.revealed = Array.from(new Set(w.revealed)).sort((a, b) => a - b);
+  logEvent('LETTER_REVEALED', { letter, pos: p });
   if (w.revealed.length >= w.text.length) completeWord();
   else persistSession();
   return w;

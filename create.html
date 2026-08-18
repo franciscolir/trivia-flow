@@ -70,13 +70,14 @@
 <header class="bg-surface/60 backdrop-blur-xl border-b border-primary/20 shadow-[0_0_20px_rgba(71,214,255,0.1)] flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 w-full z-50 sticky top-0">
 <a href="index" class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary tracking-tighter">ULTRA ARENA</a>
 <div class="flex items-center gap-4">
+  <button id="back-btn" onclick="mirrorGo('index')" class="p-2 rounded-full border border-outline-variant/60 text-on-surface-variant hover:bg-surface-container/50 hover:text-primary transition-all" title="Volver al inicio"><span class="material-symbols-outlined">arrow_back</span></button>
   <button id="mute-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Silenciar sonido"><span class="material-symbols-outlined">volume_up</span></button>
 <button id="theme-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Cambiar tema"><span class="material-symbols-outlined">light_mode</span></button>
   <div id="step-label" class="font-headline-md text-headline-md text-primary">CONFIGURACIÓN</div>
 </div>
 </header>
 
-<main class="flex-1 p-margin-mobile md:p-margin-desktop relative pb-28">
+<main class="flex-1 p-margin-mobile md:p-6 relative pb-24">
 <div class="max-w-4xl mx-auto">
   <!-- Stepper -->
   <div id="stepper" class="flex items-center justify-center gap-3 mb-8"></div>

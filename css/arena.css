@@ -117,14 +117,43 @@ html.light .text-glow { text-shadow: 0 0 20px rgba(0, 107, 150, 0.4); }
 
 /* ---------- Marcador lateral derecho ---------- */
 @media (min-width: 768px) {
-  main.has-scorebar { padding-right: 18rem !important; }
+  main.has-scorebar { padding-right: 17rem !important; }
 }
 @media (min-width: 1024px) {
-  main.has-scorebar { padding-right: 20rem !important; }
+  main.has-scorebar { padding-right: 18rem !important; }
 }
 #scorebar { border-top-width: 0; }
 #scorebar #scoreboard { scrollbar-width: thin; }
 html.light #scorebar { background: rgba(238, 243, 248, 0.92); }
+
+/* ---------- Progreso vertical del circuito (junto al marcador) ---------- */
+#circuit-progress { display: flex; flex-direction: column; }
+#circuit-progress.hidden { display: none !important; }
+#circuit-progress .cprogress-item > .cprogress-dot { position: relative; }
+#circuit-progress .cprogress-item:not(:last-child) > .cprogress-dot::after {
+  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  width: 2px; height: 12px; background: rgba(120, 200, 230, 0.4);
+}
+.cprogress-dot.dot-done { background: #00fd9b; color: #00391f; box-shadow: 0 0 10px rgba(0, 253, 155, 0.5); }
+.cprogress-dot.dot-current {
+  background: rgba(210, 244, 255, 0.14); color: #d2f4ff;
+  border: 2px solid #d2f4ff; animation: cprogressPulse 1.6s ease-in-out infinite;
+}
+.cprogress-dot.dot-next { background: rgba(40, 48, 52, 0.75); color: rgba(216, 226, 232, 0.5); border: 1px solid rgba(133, 147, 153, 0.5); }
+@keyframes cprogressPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(210, 244, 255, 0.5); } 50% { box-shadow: 0 0 0 7px rgba(210, 244, 255, 0); } }
+html.light .cprogress-dot.dot-done { background: #00b06a; color: #ffffff; }
+html.light .cprogress-dot.dot-current { border-color: #006b96; color: #006b96; background: rgba(0, 107, 150, 0.1); }
+html.light .cprogress-dot.dot-next { border-color: #c4ccd2; color: #7a8a93; background: #ffffff; }
+html.light #circuit-progress .cprogress-item:not(:last-child) > .cprogress-dot::after { background: rgba(0, 107, 150, 0.35); }
+@media (max-width: 767px) { #circuit-progress { display: none !important; } }
+
+/* ---------- Botón volver atrás ---------- */
+#back-btn { display: inline-flex; }
+.public-mode #back-btn { display: none !important; }
+
+/* ---------- Responsive: grilla de palabra ajustada a la altura útil ---------- */
+#grid { width: min(40rem, calc(100vh - 430px), 100%); max-width: none !important; }
+@media (max-width: 767px) { #grid { width: min(100%, calc(100vh - 430px)); } }
 
 /* ---------- Proyección: alto contraste (modo oscuro) ----------
    Para que se vea nítido en proyector: textos más brillantes,
