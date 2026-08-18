@@ -130,6 +130,7 @@
 <script src="js/session.js"></script>
 <script src="js/components.js"></script>
 <script>  // ---------------- Sesión ----------------
+  if (!isPublic()) {
   initSessionFromUrlOrLocal();
   const gi = getGameIndexFromUrl();
   const sess = getSession();
@@ -288,7 +289,7 @@
       const afterWord = () => showGameResult({
         title: 'FIN DE JUEGO', subtitle: winner ? winner.name : 'Sin puntos',
         rankings: getRanking(), nextLabel: 'SIGUIENTE JUEGO →',
-        onNext: () => window.location.href = nextGameUrl(), onHome: () => window.location.href = 'index'
+        onNext: () => mirrorGo(nextGameUrl()), onHome: () => mirrorGo('index')
       });
       resolveGameReward(winner, afterWord);
     } else {
@@ -393,7 +394,7 @@
       const afterWord = () => showGameResult({
         title: 'FIN DE JUEGO', subtitle: winner ? winner.name : 'Sin puntos',
         rankings: getRanking(), nextLabel: 'SIGUIENTE JUEGO →',
-        onNext: () => window.location.href = nextGameUrl(), onHome: () => window.location.href = 'index'
+        onNext: () => mirrorGo(nextGameUrl()), onHome: () => mirrorGo('index')
       });
       resolveGameReward(winner, afterWord);
     } else {
@@ -409,7 +410,7 @@
   $q.showAnswer.addEventListener('click', () => { if (!state.answered) reveal(null); });
   $('#pause-btn').addEventListener('click', () => { qTimer.pause(); roundTimer.pause(); });
   $('#resume-btn').addEventListener('click', () => { qTimer.resume(); roundTimer.resume(); });
-  $q.nextBtn.addEventListener('click', () => window.location.href = nextGameUrl());
+  $q.nextBtn.addEventListener('click', () => mirrorGo(nextGameUrl()));
   $q.restart.addEventListener('click', () => {
     if (isTimed) { decks = dealDecks(shuffleArray(decks.flat())); startRound(0); }
     else { state.index = 0; state.correct = 0; state.questions = shuffleArray(state.questions); renderQuestion(); }
@@ -444,7 +445,7 @@
     });
   }
 
-  $('#finish-tournament').addEventListener('click', () => { clearSession(); resetSessionScores(); window.location.href = 'index'; });
+  $('#finish-tournament').addEventListener('click', () => { clearSession(); resetSessionScores(); mirrorGo('index'); });
 
   // ---------------- Cabeceras y dinámicas ----------------
   $q.sessionLabel.textContent = sess ? (sess.name || 'Live Session') : 'Live Session';
@@ -467,5 +468,6 @@
   renderScoreboardTeams('#scoreboard');
   updateTurnLabel();
   loadQuestions();
+}
 </script>
 </body></html>

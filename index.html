@@ -137,6 +137,7 @@
 <script src="js/session.js"></script>
 <script src="js/components.js"></script>
 <script>
+  if (!isPublic()) {
   initSessionFromUrlOrLocal();
   const _sess = getSession();
   const _prog = document.getElementById('top-progress');
@@ -159,5 +160,6 @@
   }
   renderScoreboardTeams('#scoreboard');
   offerRecovery();
+}
 </script>
 </body></html>

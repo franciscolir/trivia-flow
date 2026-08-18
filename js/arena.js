@@ -81,13 +81,62 @@ const ArenaSync = (typeof BroadcastChannel !== 'undefined') ? new BroadcastChann
 
 if (ArenaSync) {
   ArenaSync.onmessage = e => {
-    if (e.data && e.data.type === 'session' && isPublic()) {
+    if (!e.data) return;
+    if (isPublic() && e.data.type === 'nav') {
+      const u = new URL(e.data.url, window.location.href);
+      u.searchParams.set('public', '1');
+      window.location.href = u.href;
+      return;
+    }
+    if (isPublic() && e.data.type === 'mirror') {
+      applyMirror(e.data.html);
+      return;
+    }
+    if (e.data.type === 'session' && isPublic()) {
       try { localStorage.setItem('arena_session', JSON.stringify(e.data.session)); } catch (err) { /* noop */ }
       if (typeof loadSession === 'function') loadSession();
       if (typeof updateWordBar === 'function') updateWordBar();
       if (typeof renderScoreboard === 'function') renderScoreboard();
     }
   };
+}
+
+// ---------- Espejo público (proyección) ----------
+// El conductor publica periódicamente el HTML de su body; la pantalla
+// pública lo reemplaza por el suyo, así refleja el progreso real del juego.
+function mirrorEligible() { return !!ArenaSync && !isPublic(); }
+function sendMirrorSnapshot() {
+  if (!mirrorEligible()) return;
+  try {
+    if (typeof getSession === 'function' && !getSession()) return;
+    if (!document.body) return;
+    ArenaSync.postMessage({ type: 'mirror', html: document.body.innerHTML });
+  } catch (err) { /* noop */ }
+}
+function startMirror() {
+  if (!mirrorEligible()) return;
+  sendMirrorSnapshot();
+  setInterval(sendMirrorSnapshot, 1200);
+}
+function applyMirror(html) {
+  if (!html || !document.body) return;
+  if (document.body.innerHTML === html) return;
+  document.body.innerHTML = html;
+  if (isPublic()) ensurePublicBadge();
+}
+function ensurePublicBadge() {
+  if (!document.body || document.querySelector('.public-badge')) return;
+  const badge = document.createElement('div');
+  badge.className = 'public-badge hidden fixed top-2 left-2 z-[80] px-3 py-1 rounded-full bg-tertiary/20 border border-tertiary/50 text-tertiary font-label-caps text-label-caps';
+  badge.textContent = '● PANTALLA PÚBLICA';
+  document.body.appendChild(badge);
+}
+// Navegación que también sigue a la pantalla pública.
+function mirrorGo(url) {
+  if (mirrorEligible()) {
+    try { ArenaSync.postMessage({ type: 'nav', url: String(url) }); } catch (err) { /* noop */ }
+  }
+  window.location.href = url;
 }
 
 function applyPublicMode() {
@@ -97,10 +146,7 @@ function applyPublicMode() {
   if (tb) tb.classList.add('hidden');
   const mb = $('#mute-toggle');
   if (mb) mb.classList.add('hidden');
-  const badge = document.createElement('div');
-  badge.className = 'public-badge hidden fixed top-2 left-2 z-[80] px-3 py-1 rounded-full bg-tertiary/20 border border-tertiary/50 text-tertiary font-label-caps text-label-caps';
-  badge.textContent = '● PANTALLA PÚBLICA';
-  document.body.appendChild(badge);
+  ensurePublicBadge();
 }
 
 function openPublicScreen() {
@@ -159,7 +205,7 @@ function showRecoveryBar(s) {
     if (typeof recoverSessionFromFirestore === 'function') {
       recoverSessionFromFirestore().then(() => {
         if (s.games && s.games.length && window.location.pathname.indexOf('index') === -1) {
-          location.href = (typeof getGamePage === 'function' ? getGamePage(s.games[0].type) : 'index') + '?gi=0';
+          mirrorGo((typeof getGamePage === 'function' ? getGamePage(s.games[0].type) : 'index') + '?gi=0');
         } else {
           location.reload();
         }
@@ -173,7 +219,7 @@ function showRecoveryBar(s) {
 let muted = false;
 try { muted = localStorage.getItem('arena_muted') === '1'; } catch (e) { /* noop */ }
 
-function isMuted() { return muted; }
+function isMuted() { return muted || isPublic(); }
 function setMuted(m) {
   muted = !!m;
   try { localStorage.setItem('arena_muted', muted ? '1' : '0'); } catch (e) { /* noop */ }
@@ -197,3 +243,4 @@ if (muteBtn) muteBtn.addEventListener('click', toggleMuted);
 initTheme();
 applyPublicMode();
 syncMuteBtn();
+startMirror();

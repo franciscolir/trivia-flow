@@ -139,6 +139,7 @@
 <script src="js/session.js"></script>
 <script src="js/components.js"></script>
 <script>
+  if (!isPublic()) {
   initSessionFromUrlOrLocal();
   const gi = getGameIndexFromUrl();
   const sess = getSession();
@@ -257,7 +258,7 @@
     $t.drum.style.transform = 'translateY(0)';
     $t.drum.querySelectorAll('.name-item').forEach(el => el.classList.remove('active'));
   });
-  $t.next.addEventListener('click', () => window.location.href = nextGameUrl());
+  $t.next.addEventListener('click', () => mirrorGo(nextGameUrl()));
 
   if (isCircuit) {
     $t.topProgress.classList.remove('hidden');
@@ -270,5 +271,6 @@
   renderParticipants();
   renderHistory();
   renderDrum();
+}
 </script>
 </body></html>

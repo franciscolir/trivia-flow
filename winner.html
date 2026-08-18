@@ -106,6 +106,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
 <script src="js/registry.js"></script>
 <script src="js/session.js"></script>
 <script>
+  if (!isPublic()) {
   loadSession();
   const sess = getSession();
   const isCircuit = !!(sess && sess.mode === 'circuit' && sess.games && sess.games.length);
@@ -238,7 +239,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
     showResult();
   }
 
-  $('#new-session').addEventListener('click', () => { clearSession(); window.location.href = 'index'; });
+  $('#new-session').addEventListener('click', () => { clearSession(); mirrorGo('index'); });
   offerRecovery();
   $('#view-history').addEventListener('click', () => {
     const events = sess && sess.events ? sess.events.slice(-12).reverse().map(e => '• ' + e.type + (e.teamId ? ' [' + (sess.teams.find(t => t.id === e.teamId)?.name || '') + ']' : '')).join('\n') : 'Sin eventos';
@@ -269,6 +270,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
         { transform: 'translate(' + (endX - parseFloat(p.style.left)) + 'px, ' + endY + 'px) rotate(' + rotation + 'deg)', opacity: 0 }
       ], { duration, delay, easing: 'cubic-bezier(.37,0,.63,1)', fill: 'forwards' }).onfinish = () => { p.remove(); createParticle(); };
     }
-  }
+}
+}
 </script>
 </body></html>

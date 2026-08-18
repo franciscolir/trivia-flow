@@ -98,6 +98,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
     { text: 'El equipo celebró porque ___', answer: 'ganó el campeonato' },
     { text: 'Si ahorras cada mes, en un año ___', answer: 'tendrás suficiente' }
   ];
+  if (!isPublic()) {
 
   initSessionFromUrlOrLocal();
   const gi = getGameIndexFromUrl();
@@ -199,7 +200,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
       const afterWord = () => showGameResult({
         title: 'FIN DE JUEGO', subtitle: winner ? winner.name : 'Sin puntos',
         rankings: getRanking(), nextLabel: 'SIGUIENTE JUEGO →',
-        onNext: () => window.location.href = nextGameUrl(), onHome: () => window.location.href = 'index'
+        onNext: () => mirrorGo(nextGameUrl()), onHome: () => mirrorGo('index')
       });
       resolveGameReward(winner, afterWord);
     } else {
@@ -215,7 +216,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
   $s.btnCorrect.addEventListener('click', () => mark(true));
   $s.btnIncorrect.addEventListener('click', () => mark(false));
   $s.restart.addEventListener('click', () => { decks = dealDecks(); startRound(0); });
-  $s.nextBtn.addEventListener('click', () => window.location.href = nextGameUrl());
+  $s.nextBtn.addEventListener('click', () => mirrorGo(nextGameUrl()));
 
   if (isCircuit) $s.topProgress.textContent = 'JUEGO ' + (gi + 1) + ' / ' + sess.games.length;
   else $s.topProgress.textContent = 'JUGAR INDIVIDUAL';
@@ -230,5 +231,6 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
     decks = dealDecks();
     startRound(0);
   });
+}
 </script>
 </body></html>

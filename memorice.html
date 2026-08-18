@@ -84,6 +84,7 @@
 <script src="js/session.js"></script>
 <script src="js/components.js"></script>
 <script>
+  if (!isPublic()) {
   const EMOJIS = ['🚀', '🌟', '🎯', '🎲', '🦁', '🍕', '⚡', '🎵', '🌙', '🎸', '🐉', '🏆'];
   initSessionFromUrlOrLocal();
   const gi = getGameIndexFromUrl();
@@ -189,7 +190,7 @@
       const afterWord = () => showGameResult({
         title: 'FIN DE JUEGO', subtitle: winner ? winner.name : 'Sin puntos',
         rankings: getRanking(), nextLabel: 'SIGUIENTE JUEGO →',
-        onNext: () => window.location.href = nextGameUrl(), onHome: () => window.location.href = 'index'
+        onNext: () => mirrorGo(nextGameUrl()), onHome: () => mirrorGo('index')
       });
       resolveGameReward(winner, afterWord);
     } else {
@@ -215,7 +216,7 @@
   if (sess && sess.word && sess.word.active) mountWordBar('#wordbar');
   if (sess && sess.tombola && sess.tombola.active) renderTombola($('#tombola-slot'), { session: sess });
 
-  $b.nextBtn.addEventListener('click', () => window.location.href = nextGameUrl());
+  $b.nextBtn.addEventListener('click', () => mirrorGo(nextGameUrl()));
   $b.restart.addEventListener('click', () => { turns.reset(); updateTurn(); reset(); });
   renderScoreboardTeams('#scoreboard');
   updateTurn();
@@ -226,5 +227,6 @@
     }
     reset();
   });
+}
 </script>
 </body></html>

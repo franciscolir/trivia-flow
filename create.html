@@ -546,9 +546,9 @@
     if (config.wordActive) setWord(config.word.text, { rewardAll: +config.word.rewardAll || 5, rewardWinner: +config.word.rewardWinner || 10, guessEnabled: config.word.guessEnabled, guessPenalty: +config.word.guessPenalty || 0, cells: +config.word.cells || 16, maxReveals: +config.word.maxReveals || 0 });
 
     if (config.mode === 'circuit') {
-      window.location.href = getGamePage(config.games[0].type) + '?gi=0';
+      mirrorGo(getGamePage(config.games[0].type) + '?gi=0');
     } else {
-      window.location.href = 'index';
+      mirrorGo('index');
     }
   }
 

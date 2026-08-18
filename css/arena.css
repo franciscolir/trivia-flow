@@ -104,6 +104,16 @@ html.light .text-glow { text-shadow: 0 0 20px rgba(0, 107, 150, 0.4); }
 .public-mode .btn-primary { pointer-events: none !important; }
 .public-mode main { overflow: visible; }
 .public-mode .public-badge { display: flex; }
+/* El body es un clon del conductor: desactivamos toda interacción. */
+.public-mode button,
+.public-mode a,
+.public-mode input,
+.public-mode select,
+.public-mode textarea { pointer-events: none !important; cursor: default !important; }
+.public-mode #theme-toggle,
+.public-mode #mute-toggle,
+.public-mode #scorebar,
+.public-mode #recovery-bar { display: none !important; }
 
 /* ---------- Marcador lateral derecho ---------- */
 @media (min-width: 768px) {
