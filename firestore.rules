@@ -1,28 +1,31 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Acceso restringido: solo clientes de la app autenticados (auth anónimo
+    // o Google desde el panel de seed). Sin sesión no se lee ni escribe nada.
+    function signedIn() {
+      return request.auth != null;
+    }
+
     // Trivias: lectura y gestión desde el panel del conductor.
-    // Entorno de juego local (herramienta de concursos), escritura pública.
     match /trivias/{triviaId} {
-      allow read, write: if true;
+      allow read, write: if signedIn();
     }
 
     // Sesiones: la pantalla pública las lee y el conductor las escribe.
-    // Datos de competencia (no confidenciales) en un entorno de juego.
     match /sessions/{sessionId} {
-      allow read, write: if true;
+      allow read, write: if signedIn();
     }
 
-    // Conjuntos de contenido (memorice, sinónimos/oraciones): management
-    // desde el panel del conductor y lectura al configurar juegos.
+    // Conjuntos de contenido (memorice, sinónimos/oraciones).
     match /memorySets/{docId} {
-      allow read, write: if true;
+      allow read, write: if signedIn();
     }
     match /synonymSets/{docId} {
-      allow read, write: if true;
+      allow read, write: if signedIn();
     }
     match /sentenceSets/{docId} {
-      allow read, write: if true;
+      allow read, write: if signedIn();
     }
   }
 }

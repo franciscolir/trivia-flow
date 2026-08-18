@@ -85,6 +85,9 @@ if (ArenaSync) {
     if (isPublic() && e.data.type === 'nav') {
       const u = new URL(e.data.url, window.location.href);
       u.searchParams.set('public', '1');
+      const name = (u.pathname || '/').replace(/\/+$/, '').split('/').pop() || '';
+      const isHub = name === '' || name === 'index' || name === 'index.html';
+      if (isWaitingScreen() && isHub) return; // en la espera: ignorar la vuelta al hub
       window.location.href = u.href;
       return;
     }
@@ -93,7 +96,14 @@ if (ArenaSync) {
       return;
     }
     if (e.data.type === 'session' && isPublic()) {
+      if (e.data.session == null) {
+        // El conductor cerró la sesión: la pantalla pública pasa a la espera.
+        try { localStorage.removeItem('arena_session'); } catch (err) { /* noop */ }
+        if (!isWaitingScreen()) goToWait();
+        return;
+      }
       try { localStorage.setItem('arena_session', JSON.stringify(e.data.session)); } catch (err) { /* noop */ }
+      if (isWaitingScreen()) { redirectFromWait(e.data.session); return; }
       if (typeof loadSession === 'function') loadSession();
       if (typeof updateWordBar === 'function') updateWordBar();
       if (typeof renderScoreboard === 'function') renderScoreboard();
@@ -104,7 +114,7 @@ if (ArenaSync) {
 // ---------- Espejo público (proyección) ----------
 // El conductor publica periódicamente el HTML de su body; la pantalla
 // pública lo reemplaza por el suyo, así refleja el progreso real del juego.
-function mirrorEligible() { return !!ArenaSync && !isPublic(); }
+function mirrorEligible() { return !!ArenaSync && !isPublic() && !isWaitingScreen(); }
 function sendMirrorSnapshot() {
   if (!mirrorEligible()) return;
   try {
@@ -122,7 +132,7 @@ function applyMirror(html) {
   if (!html || !document.body) return;
   if (document.body.innerHTML === html) return;
   document.body.innerHTML = html;
-  if (isPublic()) ensurePublicBadge();
+  if (isPublic()) { ensurePublicBadge(); ensureCompanion(); }
 }
 function ensurePublicBadge() {
   if (!document.body || document.querySelector('.public-badge')) return;
@@ -147,12 +157,100 @@ function applyPublicMode() {
   const mb = $('#mute-toggle');
   if (mb) mb.classList.add('hidden');
   ensurePublicBadge();
+  ensureCompanion();
 }
 
 function openPublicScreen() {
   const u = new URL(window.location.href);
   u.searchParams.set('public', '1');
   window.open(u.href, '_blank');
+}
+
+// ---------- Sala de espera (salvapantallas) ----------
+function isWaitingScreen() {
+  return /(^|\/)espera(\.html)?$/.test(window.location.pathname || '');
+}
+
+// Abre la pantalla pública en la sala de espera (espera.html). Se usa desde
+// el hub / vista del conductor para encender la pantalla cuando aún no hay
+// juego en curso o para dejarla descansando.
+function openWaitingScreen() {
+  const u = new URL('espera.html', window.location.href);
+  u.searchParams.set('public', '1');
+  if (typeof window.open === 'function') window.open(u.href, '_blank');
+}
+
+// El capibara guardián acompaña las pantallas públicas de los juegos.
+function companionEligible() {
+  if (!isPublic() || isWaitingScreen()) return false;
+  let name = (window.location.pathname || '/').split('/').pop() || '';
+  name = name.replace(/\.html$/, '');
+  return !!name && name !== 'index';
+}
+
+function capybaraMarkup() {
+  return '<div class="capy">' +
+    '<span class="capy-zzz"><i>z</i><i>Z</i><i>z</i></span>' +
+    '<span class="capy-ear left"></span><span class="capy-ear right"></span>' +
+    '<span class="capy-head">' +
+      '<span class="capy-eye left"></span><span class="capy-eye right"></span>' +
+      '<span class="capy-nose"></span><span class="capy-mouth"></span>' +
+    '</span>' +
+    '<span class="capy-body"><span class="capy-belly"></span></span>' +
+    '<span class="capy-paw l1"></span><span class="capy-paw l2"></span>' +
+    '<span class="capy-paw r1"></span><span class="capy-paw r2"></span>' +
+  '</div>';
+}
+
+function ensureCompanion() {
+  if (!companionEligible() || !document.body) return;
+  if (document.getElementById('capy-companion')) return;
+  const el = document.createElement('div');
+  el.id = 'capy-companion';
+  el.className = 'capy-companion';
+  el.innerHTML = capybaraMarkup();
+  document.body.appendChild(el);
+}
+
+// Navega la pantalla pública a la sala de espera.
+function goToWait() {
+  try {
+    const u = new URL('espera.html', window.location.href);
+    u.searchParams.set('public', '1');
+    window.location.href = u.href;
+  } catch (e) { /* noop */ }
+}
+
+// La pantalla pública ociosa (sin sesión activa) pasa sola a la sala de
+// espera para que no quede una página muerta al terminar un juego.
+// Hay un margen inicial para darle tiempo a que llegue la sesión
+// (BroadcastChannel) antes de decidir que no hay juego.
+function startPublicIdleRedirect() {
+  if (!isPublic() || isWaitingScreen()) return;
+  if (typeof navigator === 'undefined') return; // entorno de pruebas
+  const hasSession = () => {
+    try { return !!localStorage.getItem('arena_session'); } catch (e) { return false; }
+  };
+  const tick = () => {
+    if (hasSession()) { setTimeout(tick, 4000); return; }
+    goToWait();
+  };
+  try { setTimeout(tick, 6000); } catch (e) { /* noop */ }
+}
+
+// Si la sala de espera recibe una sesión activa (arrancó un juego), salta a
+// la página de ese juego siguiendo al conductor.
+function redirectFromWait(s) {
+  if (!isPublic() || !isWaitingScreen() || !s) return;
+  const games = Array.isArray(s.games) ? s.games : null;
+  if (!games || !games.length) return;
+  const gi = Math.min(s.currentGameIndex || 0, games.length - 1);
+  const g = games[gi];
+  if (!g || !g.type) return;
+  let page = (typeof GameRegistry !== 'undefined' && GameRegistry.gamePage) ? GameRegistry.gamePage(g.type) : 'play';
+  const sep = page.indexOf('?') >= 0 ? '&' : '?';
+  const target = new URL(page + sep + 'gi=' + gi + '&public=1', window.location.href);
+  window.location.href = target.href;
 }
 
 // ---------- Recuperación de sesión desde Firestore ----------
@@ -244,3 +342,4 @@ initTheme();
 applyPublicMode();
 syncMuteBtn();
 startMirror();
+startPublicIdleRedirect();

@@ -76,3 +76,93 @@ test('isPublic detecta el modo público por la URL', () => {
   const ctx2 = arena();
   assert.equal(ctx2.isPublic(), false);
 });
+
+test('isWaitingScreen detecta la sala de espera por pathname', () => {
+  const ctx = loadScript('js/arena.js', {
+    window: { location: { pathname: '/espera' } },
+    location: { pathname: '/espera' }
+  });
+  assert.equal(ctx.isWaitingScreen(), true);
+  const ctx2 = loadScript('js/arena.js', {
+    window: { location: { pathname: '/espera.html' } },
+    location: { pathname: '/espera.html' }
+  });
+  assert.equal(ctx2.isWaitingScreen(), true);
+  const hub = loadScript('js/arena.js', {
+    window: { location: { pathname: '/' } },
+    location: { pathname: '/' }
+  });
+  assert.equal(hub.isWaitingScreen(), false);
+  const play = loadScript('js/arena.js', {
+    window: { location: { pathname: '/play' } },
+    location: { pathname: '/play' }
+  });
+  assert.equal(play.isWaitingScreen(), false);
+});
+
+test('companionEligible: solo en pantalla pública de juegos', () => {
+  // Pública en página de juego -> sí
+  const play = loadScript('js/arena.js', {
+    window: { location: { search: '?public=1', pathname: '/play' } },
+    location: { search: '?public=1', pathname: '/play' }
+  });
+  assert.equal(play.companionEligible(), true);
+  // Conductor (sin public) -> no
+  const cond = loadScript('js/arena.js', {
+    window: { location: { pathname: '/play' } },
+    location: { pathname: '/play' }
+  });
+  assert.equal(cond.companionEligible(), false);
+  // Pública en hub -> no
+  const hub = loadScript('js/arena.js', {
+    window: { location: { search: '?public=1', pathname: '/' } },
+    location: { search: '?public=1', pathname: '/' }
+  });
+  assert.equal(hub.companionEligible(), false);
+  // Pública en espera -> no
+  const esp = loadScript('js/arena.js', {
+    window: { location: { search: '?public=1', pathname: '/espera' } },
+    location: { search: '?public=1', pathname: '/espera' }
+  });
+  assert.equal(esp.companionEligible(), false);
+});
+
+test('capybaraMarkup genera la estructura del capibara', () => {
+  const ctx = arena();
+  const html = ctx.capybaraMarkup();
+  assert.ok(html.includes('capy-head'));
+  assert.ok(html.includes('capy-eye'));
+  assert.ok(html.includes('capy-body'));
+  assert.ok(html.includes('capy-paw'));
+  assert.ok(html.includes('capy-zzz'));
+});
+
+test('redirectFromWait: en espera pública salta al juego de la sesión', () => {
+  const href = 'http://localhost/espera.html';
+  const session = { currentGameIndex: 1, games: [{ type: 'trivia' }, { type: 'memorice' }] };
+  const loc = { search: '?public=1', pathname: '/espera.html', href };
+  const ctx = loadScript('js/arena.js', { window: { location: loc }, location: loc });
+  ctx.GameRegistry = { gamePage: t => (t === 'memorice' ? 'memorice' : 'play') };
+  ctx.redirectFromWait(session);
+  assert.equal(loc.href, 'http://localhost/memorice?gi=1&public=1');
+});
+
+test('redirectFromWait: sin sesión o sin juegos no navega', () => {
+  const href = 'http://localhost/espera.html';
+  const loc = { search: '?public=1', pathname: '/espera.html', href };
+  const ctx = loadScript('js/arena.js', { window: { location: loc }, location: loc });
+  ctx.redirectFromWait(null);
+  assert.equal(loc.href, href);
+  ctx.redirectFromWait({ games: [] });
+  assert.equal(loc.href, href);
+});
+
+test('startPublicIdleRedirect: sin navegador real no arma intervalos', () => {
+  const ctx = loadScript('js/arena.js', {
+    window: { location: { search: '?public=1', pathname: '/play' } },
+    location: { search: '?public=1', pathname: '/play' }
+  });
+  // En el sandbox no existe `navigator`, por lo que no debe colgar el proceso
+  ctx.startPublicIdleRedirect();
+  assert.ok(true);
+});

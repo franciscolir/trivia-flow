@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html class="dark" lang="es"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Configuración - ULTRA ARENA</title>
+<title>ConfiguraciÃ³n - ULTRA ARENA</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;family=Montserrat:wght@400;700;800;900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
@@ -73,7 +73,7 @@
   <button id="back-btn" onclick="mirrorGo('index')" class="p-2 rounded-full border border-outline-variant/60 text-on-surface-variant hover:bg-surface-container/50 hover:text-primary transition-all" title="Volver al inicio"><span class="material-symbols-outlined">arrow_back</span></button>
   <button id="mute-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Silenciar sonido"><span class="material-symbols-outlined">volume_up</span></button>
 <button id="theme-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Cambiar tema"><span class="material-symbols-outlined">light_mode</span></button>
-  <div id="step-label" class="font-headline-md text-headline-md text-primary">CONFIGURACIÓN</div>
+  <div id="step-label" class="font-headline-md text-headline-md text-primary">CONFIGURACIÃ“N</div>
 </div>
 </header>
 
@@ -84,7 +84,7 @@
 
   <!-- PASO 1: MODO -->
   <section id="step-1" class="step active glass-panel rounded-2xl p-8">
-    <h1 class="font-headline-md text-headline-md text-primary mb-6">¿CÓMO QUIERES JUGAR?</h1>
+    <h1 class="font-headline-md text-headline-md text-primary mb-6">Â¿CÃ“MO QUIERES JUGAR?</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <button data-mode="individual" class="mode-card glass-panel rounded-xl p-8 flex flex-col items-center gap-4 border border-outline-variant hover:border-primary transition-all">
         <span class="material-symbols-outlined text-5xl text-primary" style="font-variation-settings:'FILL' 1;">person</span>
@@ -102,7 +102,7 @@
   <!-- PASO 2: EQUIPOS -->
   <section id="step-2" class="step glass-panel rounded-2xl p-8">
     <h1 class="font-headline-md text-headline-md text-primary mb-2">EQUIPOS</h1>
-    <p class="font-body-md text-body-md text-on-surface-variant mb-6">De 2 a 8 equipos, cada uno con un color único.</p>
+    <p class="font-body-md text-body-md text-on-surface-variant mb-6">De 2 a 8 equipos, cada uno con un color Ãºnico.</p>
     <div class="flex items-center gap-4 mb-6">
       <span class="font-label-caps text-label-caps text-on-surface-variant">CANTIDAD</span>
       <input id="team-count" type="range" min="2" max="8" value="3" class="w-40"/>
@@ -114,13 +114,13 @@
   <!-- PASO 3: PARTICIPANTES -->
   <section id="step-3" class="step glass-panel rounded-2xl p-8">
     <h1 class="font-headline-md text-headline-md text-primary mb-2">PARTICIPANTES</h1>
-    <p class="font-body-md text-body-md text-on-surface-variant mb-6">Opcional. La Tómbola los usa. Asigna cada participante a un equipo.</p>
+    <p class="font-body-md text-body-md text-on-surface-variant mb-6">Opcional. La TÃ³mbola los usa. Asigna cada participante a un equipo.</p>
     <div class="flex gap-3 mb-6">
       <input id="part-input" class="input-glow flex-1 py-2 px-1 text-body-lg font-body-lg bg-transparent" placeholder="Nombre del participante"/>
       <button id="part-add" class="btn-primary px-6 py-2 rounded-lg font-label-caps text-label-caps">AGREGAR</button>
     </div>
     <div id="participants-editor" class="flex flex-col gap-2"></div>
-    <p id="participants-empty" class="font-body-md text-body-md text-on-surface-variant text-center py-6">Sin participantes todavía.</p>
+    <p id="participants-empty" class="font-body-md text-body-md text-on-surface-variant text-center py-6">Sin participantes todavÃ­a.</p>
   </section>
 
   <!-- PASO 4: JUEGOS (solo circuito) -->
@@ -133,21 +133,21 @@
     <button id="add-game" class="btn-secondary w-full py-3 rounded-lg flex items-center justify-center gap-2 font-label-caps text-label-caps">AGREGAR JUEGO</button>
   </section>
 
-  <!-- PASO 5: DINÁMICAS Y PALABRA -->
+  <!-- PASO 5: DINÃMICAS Y PALABRA -->
   <section id="step-5" class="step glass-panel rounded-2xl p-8">
-    <h1 class="font-headline-md text-headline-md text-primary mb-6">DINÁMICAS</h1>
+    <h1 class="font-headline-md text-headline-md text-primary mb-6">DINÃMICAS</h1>
     <div class="flex flex-col gap-6">
       <div class="flex items-center justify-between border-b border-outline-variant pb-4">
         <div>
-          <div class="font-headline-md text-headline-md text-on-surface">TÓMBOLA</div>
-          <div class="font-body-md text-body-md text-on-surface-variant">Selección al azar de participantes.</div>
+          <div class="font-headline-md text-headline-md text-on-surface">TÃ“MBOLA</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">SelecciÃ³n al azar de participantes.</div>
         </div>
         <input id="toggle-tombola" type="checkbox" checked class="w-6 h-6 accent-[#00d2ff]"/>
       </div>
       <div class="flex items-center justify-between border-b border-outline-variant pb-4">
         <div>
           <div class="font-headline-md text-headline-md text-on-surface">DESCUBRE LA PALABRA</div>
-          <div class="font-body-md text-body-md text-on-surface-variant">Segunda misión permanente del circuito.</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">Segunda misiÃ³n permanente del circuito.</div>
         </div>
         <input id="toggle-word" type="checkbox" class="w-6 h-6 accent-[#00d2ff]"/>
       </div>
@@ -169,7 +169,7 @@
         <div class="flex items-center gap-4">
           <label class="flex items-center gap-2 font-body-md text-on-surface"><input id="toggle-guess" type="checkbox" checked class="w-5 h-5 accent-[#00d2ff]"/> Intentar resolver la palabra</label>
           <div class="flex items-center gap-2">
-            <span class="font-label-caps text-label-caps text-on-surface-variant">PENALIZACIÓN</span>
+            <span class="font-label-caps text-label-caps text-on-surface-variant">PENALIZACIÃ“N</span>
             <input id="guess-penalty" type="number" min="0" value="5" class="input-glow w-20 py-1 px-1 text-body-md font-body-md bg-transparent"/>
           </div>
         </div>
@@ -179,7 +179,7 @@
             <input id="word-cells" type="number" min="4" max="25" value="16" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent"/>
           </div>
           <div>
-            <label class="font-label-caps text-label-caps text-on-surface-variant" for="word-max">MÁX. CUADROS ABIERTOS (0 = ilimitado)</label>
+            <label class="font-label-caps text-label-caps text-on-surface-variant" for="word-max">MÃX. CUADROS ABIERTOS (0 = ilimitado)</label>
             <input id="word-max" type="number" min="0" value="0" class="input-glow w-full py-2 px-1 text-body-md font-body-md bg-transparent"/>
           </div>
         </div>
@@ -187,18 +187,18 @@
       <div class="flex items-center justify-between border-b border-outline-variant pb-4">
         <div>
           <div class="font-headline-md text-headline-md text-on-surface">DESEMPATE</div>
-          <div class="font-body-md text-body-md text-on-surface-variant">Cómo se resuelve un empate al final del circuito.</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">CÃ³mo se resuelve un empate al final del circuito.</div>
         </div>
         <select id="tiebreaker" class="input-glow bg-surface-container py-2 px-2 text-body-md font-body-md">
-          <option value="gamesWon">Más juegos ganados</option>
-          <option value="tombola">Tómbola</option>
+          <option value="gamesWon">MÃ¡s juegos ganados</option>
+          <option value="tombola">TÃ³mbola</option>
           <option value="extra">Pregunta extra (conductor decide)</option>
         </select>
       </div>
       <div class="flex items-center justify-between border-b border-outline-variant pb-4">
         <div>
           <div class="font-headline-md text-headline-md text-on-surface">RECOMPENSA DEL GANADOR</div>
-          <div class="font-body-md text-body-md text-on-surface-variant">Qué recibe el ganador de cada juego.</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">QuÃ© recibe el ganador de cada juego.</div>
         </div>
         <select id="reward-mode" class="input-glow bg-surface-container py-2 px-2 text-body-md font-body-md">
           <option value="cell">Descubrir casilla</option>
@@ -216,12 +216,12 @@
     <div id="summary" class="flex flex-col gap-4"></div>
   </section>
 
-  <!-- Navegación -->
+  <!-- NavegaciÃ³n -->
   <div class="flex justify-between items-center mt-8 gap-4">
-    <button id="prev-btn" class="btn-secondary px-8 py-3 rounded-lg font-label-caps text-label-caps">← ANTERIOR</button>
+    <button id="prev-btn" class="btn-secondary px-8 py-3 rounded-lg font-label-caps text-label-caps">â† ANTERIOR</button>
     <div id="step-progress" class="font-label-caps text-label-caps text-on-surface-variant">PASO 1 / 6</div>
-    <button id="next-btn" class="btn-primary px-10 py-3 rounded-lg font-label-caps text-label-caps">SIGUIENTE →</button>
-    <button id="start-btn" class="hidden btn-primary px-10 py-3 rounded-lg font-label-caps text-label-caps">INICIAR 🏆</button>
+    <button id="next-btn" class="btn-primary px-10 py-3 rounded-lg font-label-caps text-label-caps">SIGUIENTE â†’</button>
+    <button id="start-btn" class="hidden btn-primary px-10 py-3 rounded-lg font-label-caps text-label-caps">INICIAR ðŸ†</button>
   </div>
 </div>
 </main>
@@ -248,6 +248,7 @@
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script src="js/firebase-config.js"></script>
 <script src="js/firestore.js"></script>
@@ -259,7 +260,7 @@
 <script src="js/session.js"></script>
 <script src="js/components.js"></script>
 <script>
-  // Juegos disponibles consultados dinámicamente al GameRegistry
+  // Juegos disponibles consultados dinÃ¡micamente al GameRegistry
   function enabledGames() {
     return GameRegistry.getAvailableGames().filter(g => g.enabled !== false);
   }
@@ -268,7 +269,7 @@
   let currentStep = 0;
   let editingGameIndex = -1;
   let config = {
-    mode: 'circuit', name: 'Gran Desafío',
+    mode: 'circuit', name: 'Gran DesafÃ­o',
     teams: [], participants: [], games: [],
     tombolaActive: true, wordActive: false,
     tiebreaker: 'gamesWon', rewardMode: 'cell',
@@ -361,7 +362,7 @@
       config.participants = config.participants.filter(x => x.id !== btn.dataset.participant);
       renderParticipants();
     }));
-    // Tómbola usa los participantes
+    // TÃ³mbola usa los participantes
     config.tombolaPool = config.participants.map(p => p.name);
   }
 
@@ -372,7 +373,7 @@
     const el = $('#games-list');
     el.innerHTML = config.games.map((g, i) => {
       const o = gameDef(g);
-      return `<div class="glass-panel game-item active rounded-lg p-4 flex flex-col sm:flex-row items-center gap-4 cursor-pointer" data-gi="${i}" title="Editar configuración">
+      return `<div class="glass-panel game-item active rounded-lg p-4 flex flex-col sm:flex-row items-center gap-4 cursor-pointer" data-gi="${i}" title="Editar configuraciÃ³n">
         <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary shrink-0"><span class="material-symbols-outlined text-2xl">${o.icon}</span></div>
         <div class="flex-1 w-full text-center sm:text-left">
           <h3 class="font-headline-md text-headline-md text-on-surface m-0">${escapeHtml(g.name || o.name)}</h3>
@@ -404,7 +405,7 @@
     renderGames();
   }
 
-  // Editor de configuración (schema del registro)
+  // Editor de configuraciÃ³n (schema del registro)
   function getByPath(obj, path) {
     return path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), obj);
   }
@@ -440,8 +441,8 @@
         ${input}
       </div>`;
     }).join('');
-    if (!fields) { alert('Este juego no tiene configuración adicional.'); return; }
-    $('#config-title').textContent = 'CONFIGURAR — ' + (g.name || def.name).toUpperCase();
+    if (!fields) { alert('Este juego no tiene configuraciÃ³n adicional.'); return; }
+    $('#config-title').textContent = 'CONFIGURAR â€” ' + (g.name || def.name).toUpperCase();
     $('#config-fields').innerHTML = fields;
     // Cargar opciones de contenido desde Firestore (type: content)
     $$('#config-fields select[data-collection]').forEach(sel => {
@@ -505,11 +506,11 @@
   function renderSummary() {
     const el = $('#summary');
     const teams = config.teams.map(t => `<li class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background:${COLORS[t.color].hex}"></span><span class="font-body-md text-body-md text-on-surface">${escapeHtml(t.name || COLORS[t.color].label)}</span></li>`).join('');
-    const games = config.mode === 'circuit' ? config.games.map((g, i) => `<li class="font-body-md text-body-md text-on-surface-variant">${i + 1}. ${escapeHtml(g.name)} — ${g.points} pts</li>`).join('') : '<li class="font-body-md text-body-md text-on-surface-variant">Se juega desde el centro de juegos.</li>';
-    const word = config.wordActive ? `<p class="font-body-md text-body-md text-on-surface-variant">Palabra: <span class="text-primary font-bold tracking-[0.2em]">${escapeHtml(config.word.text)}</span> · Todos +${config.word.rewardAll} · Ganador +${config.word.rewardWinner}</p>` : '';
+    const games = config.mode === 'circuit' ? config.games.map((g, i) => `<li class="font-body-md text-body-md text-on-surface-variant">${i + 1}. ${escapeHtml(g.name)} â€” ${g.points} pts</li>`).join('') : '<li class="font-body-md text-body-md text-on-surface-variant">Se juega desde el centro de juegos.</li>';
+    const word = config.wordActive ? `<p class="font-body-md text-body-md text-on-surface-variant">Palabra: <span class="text-primary font-bold tracking-[0.2em]">${escapeHtml(config.word.text)}</span> Â· Todos +${config.word.rewardAll} Â· Ganador +${config.word.rewardWinner}</p>` : '';
     el.innerHTML = `
       <div class="flex flex-col gap-2">
-        <div class="font-label-caps text-label-caps text-primary uppercase">${config.mode === 'circuit' ? 'CIRCUITO' : 'JUEGO INDIVIDUAL'} · ${escapeHtml(config.name)}</div>
+        <div class="font-label-caps text-label-caps text-primary uppercase">${config.mode === 'circuit' ? 'CIRCUITO' : 'JUEGO INDIVIDUAL'} Â· ${escapeHtml(config.name)}</div>
         <ul class="flex flex-col gap-1">${teams}</ul>
       </div>
       <div class="border-t border-outline-variant pt-4">
@@ -517,11 +518,11 @@
         <ul class="flex flex-col gap-1">${games}</ul>
       </div>
       <div class="border-t border-outline-variant pt-4 flex flex-col gap-2">
-        <div class="font-label-caps text-label-caps text-secondary uppercase">DINÁMICAS</div>
-        <p class="font-body-md text-body-md text-on-surface-variant">Tómbola: <span class="text-primary font-bold">${config.tombolaActive ? 'ACTIVA' : 'INACTIVA'}</span></p>
+        <div class="font-label-caps text-label-caps text-secondary uppercase">DINÃMICAS</div>
+        <p class="font-body-md text-body-md text-on-surface-variant">TÃ³mbola: <span class="text-primary font-bold">${config.tombolaActive ? 'ACTIVA' : 'INACTIVA'}</span></p>
         <p class="font-body-md text-body-md text-on-surface-variant">Descubre la palabra: <span class="text-primary font-bold">${config.wordActive ? 'ACTIVA' : 'INACTIVA'}</span></p>
         ${word}
-        <p class="font-body-md text-body-md text-on-surface-variant border-t border-outline-variant pt-3">Desempate: <span class="text-primary font-bold">${{ gamesWon: 'Más juegos ganados', tombola: 'Tómbola', extra: 'Pregunta extra' }[config.tiebreaker]}</span></p>
+        <p class="font-body-md text-body-md text-on-surface-variant border-t border-outline-variant pt-3">Desempate: <span class="text-primary font-bold">${{ gamesWon: 'MÃ¡s juegos ganados', tombola: 'TÃ³mbola', extra: 'Pregunta extra' }[config.tiebreaker]}</span></p>
         <p class="font-body-md text-body-md text-on-surface-variant">Recompensa del ganador: <span class="text-primary font-bold">${{ cell: 'Descubrir casilla', points: 'Solo puntos', both: 'Puntos + casilla', choice: 'Elegir entre dos' }[config.rewardMode]}</span></p>
       </div>`;
   }
@@ -530,7 +531,7 @@
   function start() {
     if (config.teams.some(t => !t.name.trim())) { alert('Todos los equipos necesitan un nombre.'); return; }
     if (config.mode === 'circuit' && config.games.length === 0) { alert('Agrega al menos un juego al circuito.'); return; }
-    if (config.wordActive && !config.word.text.trim()) { alert('Ingresa la palabra secreta o desactiva la dinámica.'); return; }
+    if (config.wordActive && !config.word.text.trim()) { alert('Ingresa la palabra secreta o desactiva la dinÃ¡mica.'); return; }
 
     clearSession();
     createSession({
@@ -603,7 +604,7 @@
   });
   $('#start-btn').addEventListener('click', start);
 
-  config.teams = [3].flatMap(n => Array.from({ length: n }, (_, i) => ({ id: 'team_' + (i + 1), name: ['Tigres', 'Leones', 'Cóndores', 'Águilas', 'Panteras', 'Lobos', 'Halcones', 'Dragones'][i] || '', color: colorKeys[i], score: 0 })));
+  config.teams = [3].flatMap(n => Array.from({ length: n }, (_, i) => ({ id: 'team_' + (i + 1), name: ['Tigres', 'Leones', 'CÃ³ndores', 'Ãguilas', 'Panteras', 'Lobos', 'Halcones', 'Dragones'][i] || '', color: colorKeys[i], score: 0 })));
   $('#team-count').value = 3;
   renderTeams();
   renderParticipants();

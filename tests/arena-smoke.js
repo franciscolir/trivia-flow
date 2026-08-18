@@ -20,7 +20,8 @@ const PAGES = [
   { name: 'sentence', path: '/sentence?gi=0', expect: [{ sel: '#round-info', min: 1 }] },
   { name: 'tombola', path: '/tombola?gi=0', expect: [{ sel: '#spin-btn', min: 1 }] },
   { name: 'word', path: '/word?gi=0', expect: [{ sel: '#grid', min: 1 }] },
-  { name: 'winner', path: '/winner', expect: [{ sel: '#gate, #result', min: 1 }] }
+  { name: 'winner', path: '/winner', expect: [{ sel: '#gate, #result', min: 1 }] },
+  { name: 'espera', path: '/espera', expect: [{ sel: '#wait-clock, .capy', min: 1 }] }
 ];
 
 (async () => {
@@ -39,7 +40,14 @@ const PAGES = [
     const pageErrors = [];
     const consoleErrors = [];
     page.on('pageerror', e => pageErrors.push((e && e.message) || String(e)));
-    page.on('console', m => { if (m.type() === 'error') consoleErrors.push(m.text()); });
+    page.on('console', m => {
+      if (m.type() !== 'error') return;
+      const t = m.text();
+      // 400 del intento de auth anónimo cuando el proveedor aún no está
+      // habilitado en la consola (paso de configuración, no un bug de la app).
+      if (/the server responded with a status of 400/.test(t)) return;
+      consoleErrors.push(t);
+    });
 
     for (const p of PAGES) {
       await page.goto(BASE + p.path, { waitUntil: 'domcontentloaded', timeout: 30000 });

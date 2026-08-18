@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EN ESPERA — ULTRA ARENA</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&amp;family=Montserrat:wght@800;900&amp;family=Inter:wght@400&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/arena.css"/>
+</head>
+<body class="wait-scene">
+<div id="wait-particles" class="wait-particles" aria-hidden="true"></div>
+
+<div class="wait-brand">ULTRA <em>ARENA</em></div>
+
+<div class="wait-stage">
+  <div id="capy-stage" class="capy-stage sleeping">
+    <div class="capy">
+      <span class="capy-zzz"><i>z</i><i>Z</i><i>z</i></span>
+      <span class="capy-ear left"></span><span class="capy-ear right"></span>
+      <span class="capy-head">
+        <span class="capy-eye left"></span><span class="capy-eye right"></span>
+        <span class="capy-nose"></span><span class="capy-mouth"></span>
+      </span>
+      <span class="capy-body"><span class="capy-belly"></span></span>
+      <span class="capy-paw l1"></span><span class="capy-paw l2"></span>
+      <span class="capy-paw r1"></span><span class="capy-paw r2"></span>
+    </div>
+    <div class="capy-shadow"></div>
+  </div>
+</div>
+
+<div class="wait-status"><span class="wait-dot"></span> EN ESPERA — PREPARANDO EL JUEGO</div>
+<div id="wait-clock" class="wait-clock">--:--:--</div>
+<div id="wait-msg" class="wait-hint">El capibara guardián descansa hasta que comience el desafío…</div>
+
+<button id="back-btn" onclick="mirrorGo('index')" class="wait-back" title="Volver al inicio">VOLVER</button>
+
+<script src="js/arena.js"></script>
+<script src="js/registry.js"></script>
+<script>
+  (function () {
+    var clock = document.getElementById('wait-clock');
+    var stage = document.getElementById('capy-stage');
+    var msg = document.getElementById('wait-msg');
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+
+    // Reloj del salvapantallas
+    function tick() {
+      var d = new Date();
+      if (clock) clock.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    }
+    tick();
+    setInterval(tick, 1000);
+
+    // El capibara alterna entre dormir y aburrirse mientras se espera
+    var texts = {
+      sleeping: 'El capibara guardián descansa hasta que comience el desafío…',
+      bored: 'El capibara está aburrido. ¡Empieza un juego!'
+    };
+    var pose = 'sleeping';
+    function switchPose() {
+      pose = pose === 'sleeping' ? 'bored' : 'sleeping';
+      if (stage) {
+        stage.classList.remove('sleeping', 'bored');
+        stage.classList.add(pose);
+      }
+      if (msg) msg.textContent = texts[pose];
+    }
+    setTimeout(switchPose, 15000);
+    setInterval(switchPose, 30000);
+
+    // Partículas de fondo
+    var particles = document.getElementById('wait-particles');
+    if (particles) {
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < 18; i++) {
+        var p = document.createElement('i');
+        p.style.left = (Math.random() * 100).toFixed(1) + '%';
+        p.style.top = (20 + Math.random() * 70).toFixed(1) + '%';
+        p.style.animationDuration = (5 + Math.random() * 8).toFixed(1) + 's';
+        p.style.animationDelay = (Math.random() * 8).toFixed(1) + 's';
+        frag.appendChild(p);
+      }
+      particles.appendChild(frag);
+    }
+  })();
+</script>
+</body></html>

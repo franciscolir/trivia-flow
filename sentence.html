@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html class="dark" lang="es"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Completar la Oración - ULTRA ARENA</title>
+<title>Completar la OraciÃ³n - ULTRA ARENA</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;family=Montserrat:wght@400;700;800;900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
@@ -34,39 +34,39 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
   <button id="back-btn" onclick="mirrorGo('index')" class="p-2 rounded-full border border-outline-variant/60 text-on-surface-variant hover:bg-surface-container/50 hover:text-primary transition-all" title="Volver al inicio"><span class="material-symbols-outlined">arrow_back</span></button>
   <button id="mute-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Silenciar sonido"><span class="material-symbols-outlined">volume_up</span></button>
 <button id="theme-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Cambiar tema"><span class="material-symbols-outlined">light_mode</span></button>
-  <div id="top-progress" class="text-primary font-bold border-b-2 border-primary pb-1 font-headline-md text-headline-md">ORACIÓN</div>
+  <div id="top-progress" class="text-primary font-bold border-b-2 border-primary pb-1 font-headline-md text-headline-md">ORACIÃ“N</div>
 </div>
 </header>
-<main class="has-scorebar flex-1 pt-20 pb-32 md:pb-24 px-margin-mobile md:pl-8 md:pr-8 lg:pl-10 lg:pr-10 flex flex-col items-center relative overflow-y-auto">
-<div id="wordbar" class="mb-6 w-full max-w-4xl"></div>
-<div id="round-info" class="hidden flex flex-col items-center gap-1 mb-5">
+<main class="has-scorebar flex-1 pt-16 pb-28 md:pb-8 px-margin-mobile md:pl-8 md:pr-8 lg:pl-10 lg:pr-10 flex flex-col items-center relative overflow-y-auto">
+<div id="wordbar" class="mb-4 w-full max-w-4xl"></div>
+<div id="round-info" class="hidden flex flex-col items-center gap-1 mb-3">
   <div id="round-label" class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">RONDA 1 / 3</div>
   <div id="round-team" class="font-headline-md text-headline-md text-secondary uppercase">EQUIPO: TIGRES</div>
   <div id="round-stats" class="font-label-caps text-label-caps text-on-surface-variant">ACIERTOS: 0</div>
 </div>
-<div class="w-full flex justify-center mb-6 relative z-10">
+<div class="w-full flex justify-center mb-4 relative z-10">
 <div class="glass-panel rounded-full px-8 py-2 border border-error/50 shadow-[0_0_20px_rgba(255,180,171,0.2)]">
 <span class="font-label-caps text-label-caps text-on-surface-variant mr-4 uppercase">Tiempo</span>
 <span id="timer" class="font-display-lg-mobile text-display-lg-mobile timer-pulse">00:30</span>
 </div>
 </div>
-<h2 id="game-label" class="font-label-caps text-label-caps text-primary mb-6 tracking-widest">COMPLETAR LA ORACIÓN</h2>
-<div class="glass-panel rounded-2xl p-6 md:p-10 text-center max-w-4xl mx-auto w-full glow-active border-primary/50 relative overflow-hidden mb-5">
+<h2 id="game-label" class="font-label-caps text-label-caps text-primary mb-3 tracking-widest">COMPLETAR LA ORACIÃ“N</h2>
+<div class="glass-panel rounded-2xl p-6 md:p-10 text-center max-w-4xl mx-auto w-full glow-active border-primary/50 relative overflow-hidden mb-4">
   <div class="absolute inset-0 opacity-20 pointer-events-none bg-gradient-to-br from-primary/10 to-secondary/10"></div>
   <div id="question-text" class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface relative z-10">...</div>
 </div>
-<div id="round-controls" data-conductor class="hidden flex flex-col items-center gap-3 mb-6">
-  <div class="flex flex-wrap justify-center gap-4">
-    <button id="btn-correct" class="px-10 py-4 rounded-xl bg-tertiary/20 border-2 border-tertiary text-tertiary font-headline-md text-headline-md uppercase tracking-wider hover:bg-tertiary/30 transition-colors">✓ CORRECTA</button>
-    <button id="btn-incorrect" class="px-10 py-4 rounded-xl bg-error/10 border-2 border-error text-error font-headline-md text-headline-md uppercase tracking-wider hover:bg-error/20 transition-colors">✗ INCORRECTA</button>
+<div id="round-controls" data-conductor class="hidden flex flex-col items-center gap-3 mb-4">
+  <div class="flex flex-wrap justify-center items-center gap-4">
+    <button id="btn-correct" class="icon-btn success big" title="Correcta"><span class="material-symbols-outlined">check</span></button>
+    <button id="btn-incorrect" class="icon-btn danger big" title="Incorrecta"><span class="material-symbols-outlined">close</span></button>
   </div>
-  <p class="font-label-caps text-label-caps text-on-surface-variant">Respuesta esperada: <span id="timed-answer" class="text-primary">—</span></p>
+  <p class="font-label-caps text-label-caps text-on-surface-variant">Respuesta esperada: <span id="timed-answer" class="text-primary">â€”</span></p>
 </div>
-<div data-conductor class="flex flex-wrap justify-center gap-4 mt-4">
-<button id="restart" class="px-8 py-4 rounded-xl border border-outline-variant text-on-surface font-label-caps transition-colors hover:bg-surface-bright">REINICIAR</button>
-<a id="go-home" class="hidden px-8 py-4 rounded-xl border border-outline-variant text-on-surface font-label-caps transition-colors hover:bg-surface-bright" href="index">INICIO</a>
-<button id="next-game" class="hidden btn-primary rounded-xl px-10 py-4 font-label-caps text-label-caps uppercase tracking-wider">SIGUIENTE</button>
-<button onclick="openPublicScreen()" class="px-8 py-4 rounded-xl border border-tertiary/40 text-tertiary font-label-caps transition-colors hover:bg-tertiary/10"><span class="material-symbols-outlined align-middle mr-2 text-[18px]">tv</span>PANTALLA PÚBLICA</button>
+<div data-conductor class="flex flex-wrap justify-center items-center gap-3 mt-4">
+<button id="restart" class="icon-btn" title="Reiniciar"><span class="material-symbols-outlined">restart_alt</span></button>
+<a id="go-home" class="hidden icon-btn" href="index" title="Volver al inicio"><span class="material-symbols-outlined">home</span></a>
+<button id="next-game" class="hidden icon-btn primary" title="Siguiente juego"><span class="material-symbols-outlined">play_arrow</span></button>
+<button onclick="openPublicScreen()" class="icon-btn" title="Pantalla pÃºblica"><span class="material-symbols-outlined">tv</span></button>
 </div>
 </main>
 <aside id="scorebar" class="fixed z-40 flex flex-col right-0 top-20 bottom-0 w-48 sm:w-56 md:w-64 border-l border-primary/30 bg-surface-container-highest/85 backdrop-blur-md shadow-[-10px_0_30px_rgba(0,0,0,0.5)] max-md:top-auto max-md:left-0 max-md:right-0 max-md:bottom-0 max-md:w-full max-md:h-24 max-md:flex-row max-md:border-l-0 max-md:border-t max-md:rounded-t-xl max-md:shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
@@ -76,6 +76,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
 </aside>
 
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script src="js/firebase-config.js"></script>
 <script src="js/firestore.js"></script>
@@ -89,16 +90,16 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
 <script src="js/components.js"></script>
 <script>
   const BANK = [
-    { text: 'El perro salió corriendo porque ___', answer: 'tenía miedo' },
+    { text: 'El perro saliÃ³ corriendo porque ___', answer: 'tenÃ­a miedo' },
     { text: 'Para llegar a tiempo tuvimos que ___', answer: 'apresurarnos' },
     { text: 'Si no estudias, probablemente ___', answer: 'repruebes' },
-    { text: 'Cuando entramos al cine, ya ___', answer: 'empezaba la película' },
-    { text: 'Me compré este abrigo porque ___', answer: 'hace mucho frío' },
-    { text: 'El niño no quería dormir porque ___', answer: 'tenía pesadillas' },
-    { text: 'Después de la lluvia, el cielo quedó ___', answer: 'despejado' },
+    { text: 'Cuando entramos al cine, ya ___', answer: 'empezaba la pelÃ­cula' },
+    { text: 'Me comprÃ© este abrigo porque ___', answer: 'hace mucho frÃ­o' },
+    { text: 'El niÃ±o no querÃ­a dormir porque ___', answer: 'tenÃ­a pesadillas' },
+    { text: 'DespuÃ©s de la lluvia, el cielo quedÃ³ ___', answer: 'despejado' },
     { text: 'No pudimos salir porque ___', answer: 'estaba lloviendo' },
-    { text: 'El equipo celebró porque ___', answer: 'ganó el campeonato' },
-    { text: 'Si ahorras cada mes, en un año ___', answer: 'tendrás suficiente' }
+    { text: 'El equipo celebrÃ³ porque ___', answer: 'ganÃ³ el campeonato' },
+    { text: 'Si ahorras cada mes, en un aÃ±o ___', answer: 'tendrÃ¡s suficiente' }
   ];
   if (!isPublic()) {
 
@@ -152,10 +153,10 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
     const deck = decks[roundIndex] || [];
     const s = deck[qIndex];
     if (!s) { endRound(); return; }
-    $s.gameLabel.textContent = (cfg ? cfg.name : 'COMPLETAR LA ORACIÓN').toUpperCase();
+    $s.gameLabel.textContent = (cfg ? cfg.name : 'COMPLETAR LA ORACIÃ“N').toUpperCase();
     $s.question.textContent = s.text;
     $s.timedAnswer.textContent = s.answer;
-    $s.roundStats.textContent = 'ACIERTOS: ' + correct + ' · PREGUNTA ' + (qIndex + 1) + '/' + deck.length;
+    $s.roundStats.textContent = 'ACIERTOS: ' + correct + ' Â· PREGUNTA ' + (qIndex + 1) + '/' + deck.length;
     qTimer.start(Q_TIME,
       (sec) => { $s.timer.textContent = fmtTime(sec); playTick(); $s.timer.classList.toggle('timer-pulse', sec <= 10); },
       () => mark(false));
@@ -163,8 +164,8 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
 
   function mark(ok) {
     qTimer.stop();
-    if (ok) { correct++; if (isCircuit && roundTeams[roundIndex]) addScore(roundTeams[roundIndex].id, PTS, 'Oración', cfg ? cfg.id : null); playCorrect(); }
-    else { playWrong(); if (PENALTY && isCircuit && roundTeams[roundIndex]) subtractScore(roundTeams[roundIndex].id, PENALTY, 'Penalización oración', cfg ? cfg.id : null); }
+    if (ok) { correct++; if (isCircuit && roundTeams[roundIndex]) addScore(roundTeams[roundIndex].id, PTS, 'OraciÃ³n', cfg ? cfg.id : null); playCorrect(); }
+    else { playWrong(); if (PENALTY && isCircuit && roundTeams[roundIndex]) subtractScore(roundTeams[roundIndex].id, PENALTY, 'PenalizaciÃ³n oraciÃ³n', cfg ? cfg.id : null); }
     nextQuestion();
   }
 
@@ -201,7 +202,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
       persistSession();
       const afterWord = () => showGameResult({
         title: 'FIN DE JUEGO', subtitle: winner ? winner.name : 'Sin puntos',
-        rankings: getRanking(), nextLabel: 'SIGUIENTE JUEGO →',
+        rankings: getRanking(), nextLabel: 'SIGUIENTE JUEGO â†’',
         onNext: () => mirrorGo(nextGameUrl()), onHome: () => mirrorGo('index')
       });
       resolveGameReward(winner, afterWord);
@@ -222,7 +223,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at 0%
 
   if (isCircuit) $s.topProgress.textContent = 'JUEGO ' + (gi + 1) + ' / ' + sess.games.length;
   else $s.topProgress.textContent = 'JUGAR INDIVIDUAL';
-  $s.gameLabel.textContent = (cfg ? cfg.name : 'COMPLETAR LA ORACIÓN').toUpperCase();
+  $s.gameLabel.textContent = (cfg ? cfg.name : 'COMPLETAR LA ORACIÃ“N').toUpperCase();
   if (sess && sess.word && sess.word.active) mountWordBar('#wordbar');
   renderScoreboardTeams('#scoreboard');
   loadGameContent(cfg).then(items => {

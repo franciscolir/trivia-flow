@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="dark" lang="es"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -33,7 +33,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
   <button id="back-btn" onclick="mirrorGo('index')" class="p-2 rounded-full border border-outline-variant/60 text-on-surface-variant hover:bg-surface-container/50 hover:text-primary transition-all" title="Volver al inicio"><span class="material-symbols-outlined">arrow_back</span></button>
   <button id="mute-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Silenciar sonido"><span class="material-symbols-outlined">volume_up</span></button>
   <button id="theme-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Cambiar tema"><span class="material-symbols-outlined">light_mode</span></button>
-  <div class="font-headline-md text-headline-md text-primary">GESTIÓN DE CONTENIDOS</div>
+  <div class="font-headline-md text-headline-md text-primary">GESTIÃ“N DE CONTENIDOS</div>
 </div>
 </header>
 
@@ -42,9 +42,9 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
     <!-- Selector de tipo -->
     <div class="flex flex-wrap gap-3 mb-8">
       <button data-type="memorySets" class="type-btn btn-primary rounded-xl px-6 py-3 font-label-caps text-label-caps">MEMORICE</button>
-      <button data-type="synonymSets" class="type-btn rounded-xl px-6 py-3 font-label-caps text-label-caps border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary transition-colors">SINÓNIMOS / ANTÓNIMOS</button>
+      <button data-type="synonymSets" class="type-btn rounded-xl px-6 py-3 font-label-caps text-label-caps border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary transition-colors">SINÃ“NIMOS / ANTÃ“NIMOS</button>
       <button data-type="sentenceSets" class="type-btn rounded-xl px-6 py-3 font-label-caps text-label-caps border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary transition-colors">ORACIONES</button>
-      <a href="index" class="rounded-xl px-6 py-3 font-label-caps text-label-caps border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary transition-colors">← VOLVER</a>
+      <a href="index" class="rounded-xl px-6 py-3 font-label-caps text-label-caps border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary transition-colors">â† VOLVER</a>
     </div>
 
     <!-- LISTA -->
@@ -52,17 +52,17 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
       <div class="flex justify-between items-center mb-6">
         <div>
           <h1 class="font-headline-md text-headline-md text-primary"><span id="list-title">SETS DE MEMORICE</span></h1>
-          <p id="list-hint" class="font-body-md text-body-md text-on-surface-variant">Un set por línea: imagen (o emoji) | nombre.</p>
+          <p id="list-hint" class="font-body-md text-body-md text-on-surface-variant">Un set por lÃ­nea: imagen (o emoji) | nombre.</p>
         </div>
         <button id="new-set" class="btn-primary rounded-xl px-6 py-3 font-label-caps text-label-caps">+ NUEVO SET</button>
       </div>
       <div id="set-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
-      <p id="list-empty" class="hidden font-body-md text-body-md text-on-surface-variant text-center py-10">No hay sets todavía. Crea el primero.</p>
+      <p id="list-empty" class="hidden font-body-md text-body-md text-on-surface-variant text-center py-10">No hay sets todavÃ­a. Crea el primero.</p>
     </div>
 
     <!-- EDITOR -->
     <div id="editor-view" class="hidden">
-      <button id="back-list" class="font-label-caps text-label-caps text-primary hover:text-tertiary transition-colors mb-4">← VOLVER A LA LISTA</button>
+      <button id="back-list" class="font-label-caps text-label-caps text-primary hover:text-tertiary transition-colors mb-4">â† VOLVER A LA LISTA</button>
       <div class="glass-panel rounded-2xl p-8 flex flex-col gap-6">
         <h1 id="editor-title" class="font-headline-md text-headline-md text-primary">NUEVO SET</h1>
         <div>
@@ -70,9 +70,9 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
           <input id="set-name" class="input-glow w-full py-2 px-1 text-body-lg font-body-lg bg-transparent" placeholder="Ej: Frutas"/>
         </div>
         <div>
-          <label class="font-label-caps text-label-caps text-on-surface-variant" for="set-items"><span id="items-label">CONTENIDO</span> — un elemento por línea</label>
+          <label class="font-label-caps text-label-caps text-on-surface-variant" for="set-items"><span id="items-label">CONTENIDO</span> â€” un elemento por lÃ­nea</label>
           <textarea id="set-items" class="input-glow w-full py-2 px-2 text-body-md font-body-md bg-transparent resize-none" rows="12"></textarea>
-          <p id="format-hint" class="font-body-md text-body-md text-on-surface-variant mt-2">Formato: <span id="format-sample">🚀|Cohete</span></p>
+          <p id="format-hint" class="font-body-md text-body-md text-on-surface-variant mt-2">Formato: <span id="format-sample">ðŸš€|Cohete</span></p>
         </div>
         <div class="flex gap-4 pt-2">
           <button id="save-set" class="btn-primary flex-1 py-4 rounded-xl font-label-caps text-label-caps uppercase tracking-wider">GUARDAR SET</button>
@@ -85,6 +85,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
 </main>
 
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script src="js/firebase-config.js"></script>
 <script src="js/firestore.js"></script>
@@ -92,9 +93,9 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
 <script src="js/session.js"></script>
 <script>
   const TYPES = {
-    memorySets:   { title: 'SETS DE MEMORICE', itemLabel: 'IMÁGENES / EMOJIS', format: 'imagen|nombre', sample: '🚀|Cohete', hint: 'Un set por línea: imagen (o emoji) | nombre. Usa solo la imagen si no necesitas nombre.' },
-    synonymSets:  { title: 'SETS DE SINÓNIMOS / ANTÓNIMOS', itemLabel: 'PAREJAS DE PALABRAS', format: 'palabra1|palabra2', sample: 'feliz|contento', hint: 'Un par por línea: palabra1|palabra2. El conductor elige si es sinónimos o antónimos.' },
-    sentenceSets: { title: 'SETS DE ORACIONES', itemLabel: 'ORACIONES', format: 'oración|palabra-que-falta', sample: 'El sol sale por el |este', hint: 'Una oración por línea: texto con un hueco indicado por | seguido de la palabra que falta.' }
+    memorySets:   { title: 'SETS DE MEMORICE', itemLabel: 'IMÃGENES / EMOJIS', format: 'imagen|nombre', sample: 'ðŸš€|Cohete', hint: 'Un set por lÃ­nea: imagen (o emoji) | nombre. Usa solo la imagen si no necesitas nombre.' },
+    synonymSets:  { title: 'SETS DE SINÃ“NIMOS / ANTÃ“NIMOS', itemLabel: 'PAREJAS DE PALABRAS', format: 'palabra1|palabra2', sample: 'feliz|contento', hint: 'Un par por lÃ­nea: palabra1|palabra2. El conductor elige si es sinÃ³nimos o antÃ³nimos.' },
+    sentenceSets: { title: 'SETS DE ORACIONES', itemLabel: 'ORACIONES', format: 'oraciÃ³n|palabra-que-falta', sample: 'El sol sale por el |este', hint: 'Una oraciÃ³n por lÃ­nea: texto con un hueco indicado por | seguido de la palabra que falta.' }
   };
   let currentType = 'memorySets';
   let sets = [];
@@ -112,7 +113,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
     $e.list.innerHTML = sets.map(s => `
       <div class="glass-panel rounded-xl p-5 flex flex-col gap-3">
         <div class="flex items-center justify-between">
-          <span class="font-label-caps text-label-caps text-primary bg-primary/10 px-2 py-1 rounded">${(s.items || []).length} ítems</span>
+          <span class="font-label-caps text-label-caps text-primary bg-primary/10 px-2 py-1 rounded">${(s.items || []).length} Ã­tems</span>
           <span class="font-label-caps text-label-caps text-on-surface-variant">${new Date(s.updatedAt || Date.now()).toLocaleDateString('es')}</span>
         </div>
         <h3 class="font-headline-md text-headline-md text-on-surface">${escapeHtml(s.name)}</h3>
@@ -177,19 +178,19 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
     const name = $e.name.value.trim();
     if (!name) { alert('Escribe un nombre.'); return; }
     const items = parseItems();
-    if (items.length === 0) { alert('Agrega al menos un elemento válido siguiendo el formato.'); return; }
+    if (items.length === 0) { alert('Agrega al menos un elemento vÃ¡lido siguiendo el formato.'); return; }
     const data = { name, items, updatedAt: Date.now() };
     try {
       if (editing.id) { await db.collection(currentType).doc(editing.id).set({ ...data, createdAt: editing.createdAt }); }
       else { await db.collection(currentType).add(data); }
       $e.saveMsg.classList.remove('hidden');
-      $e.saveMsg.textContent = '✓ Set guardado correctamente.';
+      $e.saveMsg.textContent = 'âœ“ Set guardado correctamente.';
       setTimeout(() => $e.saveMsg.classList.add('hidden'), 2500);
       editing = null;
       backToList();
     } catch (err) {
       console.error(err);
-      alert('No se pudo guardar. Revisa la configuración de Firebase.');
+      alert('No se pudo guardar. Revisa la configuraciÃ³n de Firebase.');
     }
   }
 
@@ -201,7 +202,7 @@ body { background-color: #0B0E14; background-image: radial-gradient(circle at to
   }
 
   async function removeSet(id) {
-    if (!confirm('¿Eliminar este set?')) return;
+    if (!confirm('Â¿Eliminar este set?')) return;
     await db.collection(currentType).doc(id).delete();
     await load();
   }

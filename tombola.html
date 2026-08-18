@@ -92,18 +92,17 @@
 <div class="absolute top-1/2 left-0 w-full h-[80px] -translate-y-1/2 border-y-2 border-primary bg-primary/10 z-20 pointer-events-none shadow-[0_0_30px_rgba(71,214,255,0.2)]"></div>
 <div class="slot-content no-anim w-full absolute top-1/2 -translate-y-1/2" id="drum-content"></div>
 </div>
-<div data-conductor class="mt-12 flex flex-wrap justify-center gap-6 z-10">
-<button id="spin-btn" class="glass-button-primary font-display-lg-mobile px-12 py-4 rounded-xl text-on-primary font-black tracking-widest shadow-[0_0_30px_rgba(0,210,255,0.3)]">GIRAR</button>
+<div data-conductor class="mt-8 flex flex-wrap justify-center items-center gap-6 z-10">
+<button id="spin-btn" class="glass-button-primary font-display-lg-mobile text-on-primary font-black tracking-widest shadow-[0_0_30px_rgba(0,210,255,0.3)]">GIRAR</button>
 <div class="flex gap-4">
-<button id="reset-btn" class="px-6 py-3 rounded-xl border border-outline-variant hover:bg-surface-bright text-on-surface font-label-caps transition-colors">
-<span class="material-symbols-outlined align-middle mr-2">restart_alt</span>REINICIAR</button>
-<button id="exclude-btn" class="px-6 py-3 rounded-xl border border-error/50 text-error hover:bg-error/10 font-label-caps transition-colors">
-<span class="material-symbols-outlined align-middle mr-2">person_remove</span>EXCLUIR</button>
+<button id="reset-btn" class="icon-btn" title="Reiniciar"><span class="material-symbols-outlined">restart_alt</span></button>
+<button id="exclude-btn" class="icon-btn danger" title="Excluir"><span class="material-symbols-outlined">person_remove</span></button>
 </div>
 </div>
-<button id="next-game" data-conductor class="hidden glass-button-primary font-label-caps text-label-caps px-10 py-4 rounded-xl mt-8">SIGUIENTE JUEGO →</button>
-<button data-conductor onclick="openPublicScreen()" class="glass-button-secondary font-label-caps text-label-caps px-10 py-4 rounded-xl mt-8">
-<span class="material-symbols-outlined align-middle mr-2 text-[18px]">tv</span>PANTALLA PÚBLICA</button>
+<div data-conductor class="flex flex-wrap justify-center items-center gap-4 mt-6">
+<button id="next-game" class="hidden icon-btn primary" title="Siguiente juego"><span class="material-symbols-outlined">play_arrow</span></button>
+<button onclick="openPublicScreen()" class="icon-btn" title="Pantalla pública"><span class="material-symbols-outlined">tv</span></button>
+</div>
 </section>
 <!-- Sidebar -->
 <aside data-conductor class="w-full lg:w-80 flex flex-col gap-6 h-full overflow-y-auto">

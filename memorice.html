@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html class="dark" lang="es"><head>
 <meta charset="utf-8"/>
@@ -44,27 +44,27 @@
   <div id="top-progress" class="text-primary font-bold border-b-2 border-primary pb-1 font-headline-md text-headline-md">MEMORICE</div>
 </div>
 </header>
-<main class="has-scorebar flex-1 pt-20 pb-32 md:pb-24 px-margin-mobile md:pl-8 md:pr-8 lg:pl-10 lg:pr-10 flex flex-col items-center relative overflow-y-auto">
-<div id="wordbar" class="mb-6 w-full max-w-4xl"></div>
-<div class="w-full flex justify-center mb-6 relative z-10">
+<main class="has-scorebar flex-1 pt-16 pb-28 md:pb-8 px-margin-mobile md:pl-8 md:pr-8 lg:pl-10 lg:pr-10 flex flex-col items-center relative overflow-y-auto">
+<div id="wordbar" class="mb-4 w-full max-w-4xl"></div>
+<div class="w-full flex justify-center mb-4 relative z-10">
 <div class="glass-panel rounded-full px-8 py-2 border border-error/50 shadow-[0_0_20px_rgba(255,180,171,0.2)]">
 <span class="font-label-caps text-label-caps text-on-surface-variant mr-4 uppercase">Tiempo</span>
 <span id="timer" class="font-display-lg-mobile text-display-lg-mobile timer-pulse">00:00</span>
 </div>
 </div>
-<div class="flex items-center justify-center gap-8 mb-6">
+<div class="flex items-center justify-center gap-8 mb-4">
   <div class="text-center"><div class="font-label-caps text-label-caps text-on-surface-variant">PAREJAS</div><div id="pairs" class="font-headline-md text-headline-md text-primary">0 / 8</div></div>
   <div class="text-center"><div class="font-label-caps text-label-caps text-on-surface-variant">INTENTOS</div><div id="moves" class="font-headline-md text-headline-md text-secondary">0</div></div>
-  <div class="text-center"><div class="font-label-caps text-label-caps text-on-surface-variant">EQUIPO QUE JUEGA</div><div id="playing-team" class="font-headline-md text-headline-md text-tertiary">—</div></div>
+  <div class="text-center"><div class="font-label-caps text-label-caps text-on-surface-variant">EQUIPO QUE JUEGA</div><div id="playing-team" class="font-headline-md text-headline-md text-tertiary">â€”</div></div>
 </div>
-<h2 id="game-label" class="font-label-caps text-label-caps text-primary mb-6 tracking-widest">MEMORICE</h2>
-<div id="board" class="grid grid-cols-4 gap-3 md:gap-4 w-full max-w-2xl"></div>
-<div id="tombola-slot" data-conductor class="w-full max-w-md mt-8"></div>
-<div data-conductor class="flex flex-wrap justify-center gap-4 mt-10">
-<button id="next-game" class="hidden btn-primary rounded-xl px-10 py-4 font-label-caps text-label-caps uppercase tracking-wider">SIGUIENTE</button>
-<button id="restart" class="px-8 py-4 rounded-xl border border-outline-variant text-on-surface font-label-caps transition-colors hover:bg-surface-bright">REINICIAR</button>
-<a id="go-home" class="hidden px-8 py-4 rounded-xl border border-outline-variant text-on-surface font-label-caps transition-colors hover:bg-surface-bright" href="index">INICIO</a>
-<button onclick="openPublicScreen()" class="px-8 py-4 rounded-xl border border-tertiary/40 text-tertiary font-label-caps transition-colors hover:bg-tertiary/10"><span class="material-symbols-outlined align-middle mr-2 text-[18px]">tv</span>PANTALLA PÚBLICA</button>
+<h2 id="game-label" class="font-label-caps text-label-caps text-primary mb-3 tracking-widest">MEMORICE</h2>
+<div id="board" class="grid grid-cols-4 gap-3 md:gap-4 w-full"></div>
+<div id="tombola-slot" data-conductor class="w-full max-w-md mt-4"></div>
+<div data-conductor class="flex flex-wrap justify-center items-center gap-3 mt-4">
+<button id="next-game" class="hidden icon-btn primary" title="Siguiente juego"><span class="material-symbols-outlined">play_arrow</span></button>
+<button id="restart" class="icon-btn" title="Reiniciar"><span class="material-symbols-outlined">restart_alt</span></button>
+<a id="go-home" class="hidden icon-btn" href="index" title="Volver al inicio"><span class="material-symbols-outlined">home</span></a>
+<button onclick="openPublicScreen()" class="icon-btn" title="Pantalla pÃºblica"><span class="material-symbols-outlined">tv</span></button>
 </div>
 </main>
 <aside id="scorebar" class="fixed z-40 flex flex-col right-0 top-20 bottom-0 w-48 sm:w-56 md:w-64 border-l border-primary/30 bg-surface-container-highest/85 backdrop-blur-md shadow-[-10px_0_30px_rgba(0,0,0,0.5)] max-md:top-auto max-md:left-0 max-md:right-0 max-md:bottom-0 max-md:w-full max-md:h-24 max-md:flex-row max-md:border-l-0 max-md:border-t max-md:rounded-t-xl max-md:shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
@@ -74,6 +74,7 @@
 </aside>
 
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script src="js/firebase-config.js"></script>
 <script src="js/firestore.js"></script>
@@ -87,7 +88,7 @@
 <script src="js/components.js"></script>
 <script>
   if (!isPublic()) {
-  const EMOJIS = ['🚀', '🌟', '🎯', '🎲', '🦁', '🍕', '⚡', '🎵', '🌙', '🎸', '🐉', '🏆'];
+  const EMOJIS = ['ðŸš€', 'ðŸŒŸ', 'ðŸŽ¯', 'ðŸŽ²', 'ðŸ¦', 'ðŸ•', 'âš¡', 'ðŸŽµ', 'ðŸŒ™', 'ðŸŽ¸', 'ðŸ‰', 'ðŸ†'];
   initSessionFromUrlOrLocal();
   const gi = getGameIndexFromUrl();
   const sess = getSession();
@@ -126,7 +127,7 @@
   }
   function updateTurn() {
     const t = turns.current();
-    $b.playingTeam.textContent = isCircuit && t ? ('TURNO: ' + t.name) : '—';
+    $b.playingTeam.textContent = isCircuit && t ? ('TURNO: ' + t.name) : 'â€”';
     $b.playingTeam.classList.toggle('text-tertiary', !!t);
   }
   function flip(i) {
@@ -146,7 +147,7 @@
         matched++;
         $b.pairs.textContent = matched + ' / ' + boardPairs;
         playCorrect();
-        // Quien acierta la pareja continúa; suma puntos si es circuito
+        // Quien acierta la pareja continÃºa; suma puntos si es circuito
         if (isCircuit) { const t = turns.current(); if (t) addScore(t.id, ptsPerPair, 'Pareja de Memorice', cfg ? cfg.id : null); }
         flipped = []; lock = false;
         render();
@@ -191,12 +192,12 @@
       logEvent('GAME_FINISHED', { gameId: cfg ? cfg.id : null, winnerTeamId: winner ? winner.id : null });
       const afterWord = () => showGameResult({
         title: 'FIN DE JUEGO', subtitle: winner ? winner.name : 'Sin puntos',
-        rankings: getRanking(), nextLabel: 'SIGUIENTE JUEGO →',
+        rankings: getRanking(), nextLabel: 'SIGUIENTE JUEGO â†’',
         onNext: () => mirrorGo(nextGameUrl()), onHome: () => mirrorGo('index')
       });
       resolveGameReward(winner, afterWord);
     } else {
-      $b.gameLabel.textContent = '¡COMPLETADO!';
+      $b.gameLabel.textContent = 'Â¡COMPLETADO!';
       $b.goHome.classList.remove('hidden');
     }
   }

@@ -90,6 +90,7 @@
 <button id="theme-toggle" class="p-2 rounded-full border border-primary/30 text-primary hover:bg-surface-container/50 transition-all" title="Cambiar tema">
     <span class="material-symbols-outlined">light_mode</span>
   </button>
+  <button onclick="openWaitingScreen()" class="p-2 rounded-full border border-tertiary/40 text-tertiary hover:bg-surface-container/50 hover:shadow-[0_0_14px_rgba(0,253,155,0.35)] transition-all" title="Abrir pantalla pública de espera"><span class="material-symbols-outlined">tv</span></button>
   <div id="top-progress" class="hidden text-primary font-headline-md text-headline-md bg-surface-container/50 px-4 py-2 rounded-lg border border-primary/30">JUEGO 1 / 1</div>
 </div>
 </header>
@@ -122,6 +123,9 @@
 <a href="content" class="mt-2 font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2">
 <span class="material-symbols-outlined">grid_view</span> GESTIÓN DE CONTENIDOS
 </a>
+<button onclick="openWaitingScreen()" class="mt-4 font-label-caps text-label-caps text-tertiary hover:text-primary transition-colors flex items-center gap-2 cursor-pointer bg-transparent border-0">
+<span class="material-symbols-outlined">tv</span> PANTALLA PÚBLICA (ESPERA)
+</button>
 </section>
 </main>
 <!-- Marcador lateral derecho (barra inferior en móvil) -->

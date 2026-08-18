@@ -265,6 +265,12 @@ function clearSession() {
   const old = session;
   session = null;
   try { localStorage.removeItem(SESSION_KEY); } catch (e) { /* noop */ }
+  // Avisar a la pantalla pública para que también quede sin sesión.
+  try {
+    if (typeof ArenaSync !== 'undefined' && ArenaSync) {
+      ArenaSync.postMessage({ type: 'session', session: null });
+    }
+  } catch (e) { /* noop */ }
   // Borrar el documento de Firestore para que no se recupere como sesión activa
   if (typeof db !== 'undefined' && old && old.id) {
     try {

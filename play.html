@@ -63,8 +63,8 @@
   </button>
 </div>
 </aside>
-<main class="has-scorebar flex-1 pt-20 pb-32 md:pb-24 md:pl-72 px-margin-mobile md:pr-margin-mobile flex flex-col relative overflow-y-auto">
-<div id="wordbar" class="mb-6"></div>
+<main class="has-scorebar flex-1 pt-16 pb-28 md:pb-8 md:pl-72 px-margin-mobile md:pr-margin-mobile flex flex-col relative overflow-y-auto">
+<div id="wordbar" class="mb-4"></div>
 <div id="loading" class="flex-1 flex flex-col items-center justify-center gap-4 text-center">
   <div class="w-12 h-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin"></div>
   <p class="font-label-caps text-label-caps text-on-surface-variant">CARGANDO PREGUNTAS...</p>
@@ -95,21 +95,21 @@
 <div id="answers" class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 relative z-10"></div>
 </div>
 <!-- Controles de ronda (contrarreloj, conductor) -->
-<div id="round-controls" data-conductor class="hidden flex flex-col items-center gap-3 mb-6">
-  <div class="flex flex-wrap justify-center gap-4">
-    <button id="btn-correct" class="px-10 py-4 rounded-xl bg-tertiary/20 border-2 border-tertiary text-tertiary font-headline-md text-headline-md uppercase tracking-wider hover:bg-tertiary/30 transition-colors">✓ CORRECTA</button>
-    <button id="btn-incorrect" class="px-10 py-4 rounded-xl bg-error/10 border-2 border-error text-error font-headline-md text-headline-md uppercase tracking-wider hover:bg-error/20 transition-colors">✗ INCORRECTA</button>
+<div id="round-controls" data-conductor class="hidden flex flex-col items-center gap-3 mb-4">
+  <div class="flex flex-wrap justify-center items-center gap-4">
+    <button id="btn-correct" class="icon-btn success big" title="Correcta"><span class="material-symbols-outlined">check</span></button>
+    <button id="btn-incorrect" class="icon-btn danger big" title="Incorrecta"><span class="material-symbols-outlined">close</span></button>
   </div>
   <p class="font-label-caps text-label-caps text-on-surface-variant">Respuesta correcta: <span id="timed-answer" class="text-primary">—</span></p>
 </div>
-<div id="award-row" data-conductor class="hidden flex flex-col items-center gap-3 mb-6">
+<div id="award-row" data-conductor class="hidden flex flex-col items-center gap-3 mb-4">
   <p class="font-label-caps text-label-caps text-on-surface-variant">EQUIPO QUE ACERTÓ</p>
   <div id="award-buttons" class="flex flex-wrap justify-center gap-3"></div>
 </div>
-<div data-conductor class="flex flex-wrap justify-center gap-4">
-<button id="next-game" class="hidden btn-primary rounded-xl px-10 py-4 font-label-caps text-label-caps uppercase tracking-wider">SIGUIENTE</button>
-<button id="restart" class="hidden px-8 py-4 rounded-xl border border-outline-variant text-on-surface font-label-caps transition-colors hover:bg-surface-bright">REINICIAR</button>
-<a id="go-home" class="hidden px-8 py-4 rounded-xl border border-outline-variant text-on-surface font-label-caps transition-colors hover:bg-surface-bright" href="index">INICIO</a>
+<div data-conductor class="flex flex-wrap justify-center items-center gap-3">
+<button id="next-game" class="hidden icon-btn primary" title="Siguiente juego"><span class="material-symbols-outlined">play_arrow</span></button>
+<button id="restart" class="hidden icon-btn" title="Reiniciar"><span class="material-symbols-outlined">restart_alt</span></button>
+<a id="go-home" class="hidden icon-btn" href="index" title="Volver al inicio"><span class="material-symbols-outlined">home</span></a>
 </div>
 </div>
 </main>
@@ -120,6 +120,7 @@
 </aside>
 
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script src="js/firebase-config.js"></script>
 <script src="js/firestore.js"></script>

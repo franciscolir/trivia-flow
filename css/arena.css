@@ -155,6 +155,50 @@ html.light #circuit-progress .cprogress-item:not(:last-child) > .cprogress-dot::
 #grid { width: min(40rem, calc(100vh - 430px), 100%); max-width: none !important; }
 @media (max-width: 767px) { #grid { width: min(100%, calc(100vh - 430px)); } }
 
+/* ---------- Botones compactos redondos (icon-btn) ---------- */
+.icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 3rem; height: 3rem; border-radius: 9999px; flex-shrink: 0;
+  border: 1px solid rgba(133, 147, 153, 0.55);
+  background: rgba(29, 36, 38, 0.75); color: #dde3e7;
+  transition: all 0.2s ease; cursor: pointer;
+}
+.icon-btn:hover {
+  border-color: rgba(210, 244, 255, 0.75); color: #d2f4ff;
+  transform: translateY(-1px); box-shadow: 0 0 14px rgba(0, 210, 255, 0.25);
+}
+.icon-btn .material-symbols-outlined { font-size: 22px; }
+.icon-btn.primary {
+  background: linear-gradient(135deg, rgba(0, 210, 255, 0.8), rgba(71, 214, 255, 0.45));
+  color: #003543; border-color: rgba(165, 231, 255, 0.6);
+  box-shadow: 0 0 18px rgba(0, 210, 255, 0.4);
+}
+.icon-btn.success { background: rgba(0, 253, 155, 0.16); color: #8affc9; border-color: rgba(0, 253, 155, 0.55); }
+.icon-btn.danger { background: rgba(255, 180, 171, 0.14); color: #ffe0db; border-color: rgba(255, 180, 171, 0.55); }
+.icon-btn.big { width: 4rem; height: 4rem; }
+.icon-btn.big .material-symbols-outlined { font-size: 30px; }
+.icon-btn.hidden { display: none !important; }
+html.light .icon-btn { background: #ffffff; color: #16222a; border-color: #c4ccd2; }
+html.light .icon-btn:hover { color: #006b96; border-color: #006b96; box-shadow: 0 0 12px rgba(0, 107, 150, 0.2); }
+html.light .icon-btn.primary { background: linear-gradient(135deg, #47d6ff, #00d2ff); color: #003543; }
+html.light .icon-btn.success { color: #00764a; border-color: #00b06a; background: #e8faf1; }
+html.light .icon-btn.danger { color: #ba1a1a; border-color: #ba1a1a; background: #ffe8e6; }
+
+/* ---------- Tómbola: palanca circular para GIRAR ---------- */
+#spin-btn {
+  width: 6.5rem; height: 6.5rem; border-radius: 9999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1.05rem; letter-spacing: 0.15em; font-weight: 800; line-height: 1.1;
+  padding: 0; text-align: center; white-space: normal;
+}
+@media (min-width: 768px) { #spin-btn { width: 7.5rem; height: 7.5rem; font-size: 1.2rem; } }
+
+/* ---------- Tableros y textos acotados por la altura útil (sin scroll) ---------- */
+#board.grid-cols-4 { width: min(34rem, calc(100vw - 1.5rem)); }
+@media (min-width: 768px) { #board.grid-cols-4 { width: min(34rem, calc(100vw - 22rem), calc(100vh - 430px)); } }
+#question-text { font-size: clamp(1.35rem, 3vw, 3rem); }
+#question-text.font-display-xl { font-size: clamp(1.5rem, 4.2vw, 3.2rem); }
+
 /* ---------- Proyección: alto contraste (modo oscuro) ----------
    Para que se vea nítido en proyector: textos más brillantes,
    bordes más gruesos, mayor glow y fondos más sólidos. */
@@ -208,6 +252,332 @@ html.dark footer { border-top-width: 0; }
 html.dark #scorebar { background: rgba(6, 10, 12, 0.96); border-left-width: 2px; }
 html.dark #scorebar [data-score] { text-shadow: 0 0 14px rgba(0, 210, 255, 0.5); }
 html.dark #scorebar .font-headline-md { font-weight: 800; }
+
+/* ============================================================
+   Capibara: la mascota de ULTRA ARENA.
+   Dibujada 100% en CSS (sin imágenes externas). Se reutiliza en
+   dos tamaños: el "companion" (durante los juegos, espejo
+   público) y la versión grande de la pantalla de espera.
+   ============================================================ */
+.capy {
+  position: relative;
+  width: 150px;
+  height: 140px;
+  flex-shrink: 0;
+}
+.capy-ear {
+  position: absolute;
+  top: 6px;
+  width: 24px;
+  height: 26px;
+  border-radius: 50% 50% 45% 45%;
+  background: #6b4423;
+  border: 2px solid #3f2612;
+  z-index: 3;
+  transform-origin: 50% 100%;
+}
+.capy-ear.left { left: 26px; }
+.capy-ear.right { right: 26px; }
+.capy-head {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 82px;
+  border-radius: 50px 50px 44px 44px;
+  background: linear-gradient(180deg, #a06a3a 0%, #8a5a33 60%, #7a4d2a 100%);
+  border: 3px solid #3f2612;
+  z-index: 2;
+  box-shadow: inset 0 -6px 12px rgba(0, 0, 0, 0.18);
+}
+.capy-eye {
+  position: absolute;
+  top: 30px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #241207;
+  transition: all 0.3s ease;
+}
+.capy-eye.left { left: 24px; }
+.capy-eye.right { right: 24px; }
+.capy-nose {
+  position: absolute;
+  top: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 9px;
+  border-radius: 50%;
+  background: #241207;
+}
+.capy-mouth {
+  position: absolute;
+  top: 58px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 8px;
+  border-radius: 0 0 12px 12px;
+  border-bottom: 3px solid #241207;
+}
+.capy-body {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 138px;
+  height: 64px;
+  border-radius: 40px;
+  background: linear-gradient(180deg, #8a5a33 0%, #71452a 100%);
+  border: 3px solid #3f2612;
+  z-index: 1;
+  box-shadow: inset 0 4px 8px rgba(255, 255, 255, 0.12);
+}
+.capy-belly {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 72px;
+  height: 30px;
+  border-radius: 50%;
+  background: #d9a576;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+.capy-paw {
+  position: absolute;
+  bottom: 2px;
+  width: 18px;
+  height: 16px;
+  border-radius: 7px 7px 9px 9px;
+  background: #5d3a1e;
+  border: 2px solid #3f2612;
+  z-index: 2;
+}
+.capy-paw.l1 { left: 24px; }
+.capy-paw.l2 { left: 48px; }
+.capy-paw.r1 { right: 48px; }
+.capy-paw.r2 { right: 24px; }
+
+/* zZz flotando (solo cuando duerme) */
+.capy-zzz {
+  position: absolute;
+  top: -26px;
+  right: -8px;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+}
+.capy-zzz i {
+  font-style: normal;
+  font-family: 'JetBrains Mono', monospace;
+  color: #a5e7ff;
+  text-shadow: 0 0 12px rgba(165, 231, 255, 0.8);
+  animation: capyZzzFloat 3s ease-in-out infinite;
+}
+.capy-zzz i:nth-child(1) { font-size: 13px; animation-delay: 0s; }
+.capy-zzz i:nth-child(2) { font-size: 19px; animation-delay: 0.6s; }
+.capy-zzz i:nth-child(3) { font-size: 25px; animation-delay: 1.2s; }
+@keyframes capyZzzFloat {
+  0%   { transform: translateY(6px) rotate(0deg); opacity: 0; }
+  30%  { opacity: 1; }
+  100% { transform: translateY(-18px) rotate(-10deg); opacity: 0; }
+}
+
+/* Parpadeo compartido */
+@keyframes capyBlink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  94% { transform: scaleY(0.12); }
+}
+
+/* ---- Estados de la espera: durmiendo / aburrido ----
+   La clase de pose vive en el contenedor `.capy-stage`. */
+.capy-stage.sleeping .capy { animation: capyBreath 3.2s ease-in-out infinite; }
+@keyframes capyBreath {
+  0%, 100% { transform: scaleY(1); }
+  50%      { transform: scaleY(1.03); }
+}
+.capy-stage.sleeping .capy-eye {
+  width: 13px;
+  height: 4px;
+  border-radius: 4px;
+  top: 33px;
+  background: #241207;
+  animation: none;
+}
+.capy-stage.sleeping .capy-ear { animation: capyEarTwitch 5s ease-in-out infinite; }
+@keyframes capyEarTwitch {
+  0%, 86%, 100% { transform: rotate(0deg); }
+  90% { transform: rotate(-9deg); }
+  95% { transform: rotate(5deg); }
+}
+.capy-stage.sleeping .capy-zzz { opacity: 1; }
+
+.capy-stage.bored .capy { animation: capySway 5s ease-in-out infinite; }
+@keyframes capySway {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  50%      { transform: rotate(-2deg) translateY(2px); }
+}
+.capy-stage.bored .capy-eye { width: 6px; height: 6px; animation: capyBlink 3.6s infinite; }
+.capy-stage.bored .capy-mouth { height: 9px; width: 16px; }
+
+/* ---- Companion: capibara chico acompañando los juegos ---- */
+.capy-companion {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 30;
+  pointer-events: none;
+}
+.capy-companion .capy {
+  width: 96px;
+  height: 90px;
+  transform: scale(0.62);
+  transform-origin: bottom left;
+  animation: capyIdle 4.5s ease-in-out infinite;
+}
+@keyframes capyIdle {
+  0%, 100% { transform: scale(0.62) translateY(0) rotate(0deg); }
+  50%      { transform: scale(0.62) translateY(-3px) rotate(-1.5deg); }
+}
+.capy-companion .capy-eye { animation: capyBlink 5s infinite; }
+.capy-companion .capy-head { animation: capyNod 6s ease-in-out infinite; }
+@keyframes capyNod {
+  0%, 88%, 100% { transform: translateX(-50%) rotate(0deg); }
+  93% { transform: translateX(-50%) rotate(-3deg); }
+}
+
+/* ============================================================
+   Pantalla de espera (espera.html) — salvapantallas público
+   ============================================================ */
+body.wait-scene {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.75rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  padding: 2rem 1rem;
+  background-color: #0B0E14 !important;
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(0, 210, 255, 0.14) 0%, transparent 45%),
+    radial-gradient(circle at 80% 90%, rgba(255, 36, 228, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 70% 20%, rgba(0, 253, 155, 0.08) 0%, transparent 40%) !important;
+  color: #dde3e7 !important;
+}
+html.light body.wait-scene {
+  background-color: #0B0E14 !important;
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(0, 210, 255, 0.14) 0%, transparent 45%),
+    radial-gradient(circle at 80% 90%, rgba(255, 36, 228, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 70% 20%, rgba(0, 253, 155, 0.08) 0%, transparent 40%) !important;
+  color: #dde3e7 !important;
+}
+.wait-scene .wait-brand {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  color: #d2f4ff;
+  text-shadow: 0 0 40px rgba(0, 210, 255, 0.5);
+}
+.wait-scene .wait-brand em {
+  font-style: normal;
+  color: #8affc9;
+  text-shadow: 0 0 40px rgba(0, 253, 155, 0.5);
+}
+.wait-scene .wait-stage { display: flex; flex-direction: column; align-items: center; }
+.wait-scene .capy-stage { transform: scale(1.65); margin: 1.5rem 0 0.5rem; }
+.wait-scene .capy-stage .capy { filter: drop-shadow(0 0 34px rgba(165, 231, 255, 0.22)); }
+.wait-scene .capy-shadow {
+  width: 150px;
+  height: 20px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.55) 0%, transparent 72%);
+}
+.wait-scene .wait-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.8rem, 1.8vw, 1rem);
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #8affc9;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(0, 253, 155, 0.4);
+  border-radius: 9999px;
+  background: rgba(0, 253, 155, 0.07);
+}
+.wait-scene .wait-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #00fd9b;
+  animation: waitPulse 1.8s ease-in-out infinite;
+}
+@keyframes waitPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 253, 155, 0.55); }
+  50%      { box-shadow: 0 0 0 9px rgba(0, 253, 155, 0); }
+}
+.wait-scene .wait-clock {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  text-shadow: 0 0 30px rgba(165, 231, 255, 0.35);
+  font-variant-numeric: tabular-nums;
+}
+.wait-scene .wait-hint {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  color: rgba(216, 226, 232, 0.78);
+  max-width: 34rem;
+  min-height: 1.6em;
+}
+.wait-scene .wait-back {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1.4rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(210, 244, 255, 0.4);
+  background: rgba(210, 244, 255, 0.08);
+  color: #d2f4ff;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.wait-scene .wait-back:hover { background: rgba(210, 244, 255, 0.18); }
+.public-mode .wait-back { display: none !important; }
+.wait-particles { position: absolute; inset: 0; pointer-events: none; }
+.wait-particles i {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(165, 231, 255, 0.5);
+  animation: waitDrift linear infinite;
+}
+@keyframes waitDrift {
+  0%   { transform: translateY(0); opacity: 0; }
+  20%  { opacity: 0.9; }
+  100% { transform: translateY(-46vh); opacity: 0; }
+}
 
 /* ---------- Scrollbars ---------- */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
